@@ -1,0 +1,22 @@
+{
+  "name": "mithril-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "proxy": "browser-sync start --proxy \"http://localhost:3000\" --files \"static/*.js, views/*.html\"",
+    "server": "nodemon ./server.js",
+    "dev": "npm-run-all --parallel proxy server",
+    "devmac": "npm run server && npm run proxy "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mithril": "^0.2.5",
+    "npm-run-all": "^3.1.2",
+    "rx": "^4.1.0"
+  }
+}
