@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "proxy": "browser-sync start --proxy \"http://localhost:3000\" --files \"static/**/*.js, views/**/*.html\"",
+    "test": "mocha -w",
+    "proxy": "browser-sync start --port 8888 --proxy \"http://localhost:3000\" --files \"static/**/*.js, views/**/*.html\"",
     "server": "nodemon ./server.js",
     "dev": "npm-run-all --parallel proxy server",
     "devmac": "npm run server && npm run proxy "

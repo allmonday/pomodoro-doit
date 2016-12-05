@@ -1,4 +1,5 @@
 var express = require("express");
+var today = require("./utils/today");
 var pomodoro = express();
 
 var SCHEDULED = 0;
@@ -8,7 +9,7 @@ var FINISHED = 2;
 
 var task = [
     { id: 0, name: "task 1", completed: SCHEDULED , date: "", clocks: [], note: ""},
-    { id: 1, name: "task 2", completed: WORKING, date: "2016-12-5", clocks: [
+    { id: 1, name: "task 2", completed: WORKING, date: "2016-12-4", clocks: [
         {
             validTime: "",
             interuptCount: 0,
@@ -33,12 +34,21 @@ var task = [
         },
     ], note: ""},
     { id: 3, name: "task 4", completed: SCHEDULED , date: "", clocks: [], note: ""},
+    { id: 4, name: "task 5", completed: WORKING , date: "2016-12-4", clocks: [
+        {
+            validTime: "23",
+            interuptCount: 1,
+            start: "14:00",
+        },
+    ], note: ""},
 ];
 
 
 pomodoro.get("/task", function (req, res) {
     res.send(task.filter(function(item) {
-        return item.completed == SCHEDULED; 
+        return item.completed == SCHEDULED || item.completed == WORKING; 
+    }).filter(function (item) {
+        return item.date !== today();
     }));
 });
 

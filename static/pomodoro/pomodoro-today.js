@@ -14,9 +14,14 @@ app.Today.view = function (ctrl) {
     return m("div", [
         m("p", "Task Today"),
         m("ul.list-unstyled", [
-            app.Today.vm.list().map(function (Today, index) {
+            app.Today.vm.list().map(function (today, index) {
                 return m("li", [
-                    m("button.btn.btn-default", Today.name())
+                    m("button.btn.btn-default", today.name()),
+                    m("ul", [
+                        today.clocks().map(function (pomo, index) {
+                            return m("li", "pomodoro")
+                        })
+                    ])
                 ])
             })
         ])
