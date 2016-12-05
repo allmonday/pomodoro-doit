@@ -1,3 +1,6 @@
+var app = require("./pomodoro");
+var m = require("mithril");
+
 app.Today.vm = (function () {
     var vm = {};
     vm.init = function () {
@@ -6,21 +9,24 @@ app.Today.vm = (function () {
     return vm;
 })();
 
+
 app.Today.controller = function () {
     app.Today.vm.init();
 };
 
 app.Today.view = function (ctrl) {
-    return m("div", [
+    return m(".task-today", [
         m("p", "Task Today"),
         m("ul.list-unstyled", [
             app.Today.vm.list().map(function (today, index) {
                 return m("li", [
-                    m("button.btn.btn-default", today.name()),
-                    m("ul", [
-                        today.clocks().map(function (pomo, index) {
-                            return m("li", "pomodoro")
-                        })
+                    m("div.btn.btn-default.btn-block", today.name()),
+                    m(".task-today_task-block", [
+                        m("ul.list-unstyled", [
+                            today.clocks().map(function (pomo, index) {
+                                return m("li.btn.btn-default.btn-block", "pomodoro")
+                            })
+                        ])
                     ])
                 ])
             })
