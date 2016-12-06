@@ -1,4 +1,6 @@
-var app = app || {};
+var m = require("mithril");
+var app = {};
+
 
 app.Task = function (data) {
     this.name = m.prop(data.name || "");
@@ -23,3 +25,5 @@ app.Today.list = function (data) {
 app.Clock = function (data) {
     this.time = m.prop(data.time || new Date());
 } 
+
+module.exports = app;
