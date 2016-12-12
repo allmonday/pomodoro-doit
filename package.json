@@ -6,13 +6,14 @@
   "scripts": {
     "test": "mocha -w",
     "watch": "webpack -w",
-    "proxy": "browser-sync start --port 8888 -b chrome --startPath /page/pomodoro --proxy \"http://localhost:3000\" --files \"static/bundle/*.js, views/**/*.html\"",
+    "proxy": "browser-sync start --port 8888 -b \"google chrome\" --startPath /page/pomodoro --proxy \"http://localhost:3000\" --files \"static/bundle/*.js, views/**/*.html\"",
     "server": "nodemon ./server.js",
     "dev": "npm-run-all --parallel proxy server watch"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "jquery": "^3.1.1",
     "mithril": "^0.2.5",
     "rx": "^4.1.0"
   },

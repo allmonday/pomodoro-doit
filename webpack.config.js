@@ -1,6 +1,7 @@
 var config = {
     entry: { 
         pomodoro: "./static/pomodoro/main.js",
+        rxdemo: "./static/rx-demo.js",
     },
     output:{
         filename: "./static/bundle/[name].js"
