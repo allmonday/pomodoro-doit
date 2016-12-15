@@ -41,3 +41,11 @@ suggestions.subscribe(data => {
     $('<li>Error: ' + error + '</li>').appendTo($results);
 });
 
+
+var obs = Rx.Observable.create(function (observer) {
+    $(".button").on("click", (e) => {
+        observer.next(e);
+    });
+});
+obs.scan(count => count +1, 0)
+    .subscribe(count => console.log(count));
