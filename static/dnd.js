@@ -21,8 +21,8 @@ function onLoadFn() {
     clock.ondragstart = function (event) {
         var event = event || window.event;
         var dt = event.dataTransfer;
-        // dt.setData('text', Date() + "\n");
-        dt.setData('text/html', "hello <a>welcome</a>");
+        dt.setData('text', Date() + "\n");
+        //dt.setData('text/html', "hello <a>welcome</a>");
         if (dt.setDragImage) dt.setDragImage(icon, 0, 0);
     };
 }
