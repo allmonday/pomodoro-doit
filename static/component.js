@@ -1,4 +1,5 @@
 // define the model 
+var Rx = require("rxjs/Rx");
 
 var Contact = function (data) {
     data = data || {};
@@ -15,20 +16,24 @@ Contact.save = function (data) {
     return m.request({method: "POST", url:"/api/contact", data: data });
 }
 
+let widgetObservable = new Rx.Subject();
+
 var ContactsWidget = {
     controller: function update() {
-        this.contacts = Contact.list();
-        this.save = function(contact) {
-            if (contact.name() && contact.email()) {
-                Contact.save(contact).then(update.bind(this))
-            } else {
-                console.log("error")
-            }
-        }.bind(this)
+
+        let vm = this;
+        widgetObservable
+            .filter(contact =>  { return contact.name().length > 0; } )
+            .subscribe(contact => {
+                Contact.save(contact).then(() => {
+                    vm.contacts = Contact.list();
+                });
+            });
+        vm.contacts = Contact.list();
     },
     view: function(ctrl) {
         return [
-            m.component(ContactForm, {onsave: ctrl.save}),
+            m.component(ContactForm, {}),
             m.component(ContactList, {contacts: ctrl.contacts})
         ]
     }
@@ -53,7 +58,7 @@ var ContactForm = {
         };
         this.submit = function (contact) {
             dirty = true;
-            args.onsave(contact);
+            widgetObservable.next(contact);
         }
     },
     view: function(ctrl, args) {
