@@ -1,8 +1,40 @@
 ul {
-  border: 1px solid #ccc;
+  // border: 1px solid #ccc;
+  padding: 0;
 }
 
 ul.left,
 ul.right {
   width: 200px;
+  float: left;
+  margin-left: 20px;
+  overflow: hidden;
+}
+ul.right {
+  min-height: 20px;
+  border: 1px solid #ccc;
+}
+
+ul li {
+  $height: 30px;
+  border: 1px solid #ccc;
+  list-style-type: none;
+  min-height: $height;
+  line-height: $height;
+  text-align: center;
+}
+
+.selected {
+  border: 1px solid #ccc;
+  &.top {
+    border-top-width: 32px;
+    border-top-color: #ccc;
+  }
+  &.bottom {
+    border-bottom-width: 32px;
+    border-top-color: #ccc;
+  }
+}
+.ondrag {
+  background: #eee;
 }
