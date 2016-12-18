@@ -2,6 +2,9 @@ var m = require("mithril");
 var _ = require("lodash");
 require("./mithril-dnd.scss");
 
+var addItem = require("./dnd/add");
+var pomoItem = require("./dnd/pomo");
+
 function isTop(e) {
 	let top = e.target.offsetTop,
 		bottom = top + e.target.clientHeight,
@@ -38,29 +41,41 @@ var todo = function(data) {
 	data = data || {};
 	this.id = m.prop(data.id ||"");
 	this.name = m.prop(data.name || "");
+	this.pomo = m.prop(data.pomo || []);
 };
 
-todo.left = function(data) {
-	return m.request({ method: "GET", url: "/api/dnd/left", type: todo})
+todo.task = function(data) {
+	return m.request({ method: "GET", url: "/api/dnd/task", type: todo})
 }
-todo.right = function (data) {
-	return m.request({ method: "GET", url: "/api/dnd/right", type: todo})
+todo.today = function (data) {
+	return m.request({ method: "GET", url: "/api/dnd/today", type: todo})
 }
+
 todo.move = (sourceid, targetid, isInter, top) => {
-	return m.request({ method: "post", url: "/api/dnd/right", data: {
+	console.log(sourceid, targetid, isInter, top);
+	return m.request({ method: "post", url: "/api/dnd/today", data: {
 		sourceid: sourceid,
 		targetid: targetid,
 		isinter: isInter,
 		top: top
 	}})
 }
+todo.addPomo = (id) => {
+	return m.request({method: "post", url: "/api/dnd/today/add", data: {id: id}});
+}
+todo.subPomo = (id) => {
+	return m.request({method: "post", url: "/api/dnd/today/sub", data: {id: id}});
+}
+todo.addTask = (name) => {
+	return m.request({ method: "post", url: "/api/dnd/addtask", data: {name: name}});
+}
 
 var widget = {
 	controller: function update() {
 		
 		let vm = this;
-		vm.left = todo.left();
-		vm.right = todo.right();
+		vm.task = todo.task();
+		vm.today = todo.today();
 		vm.dragstart = (item, e) => {
 			let dt = e.dataTransfer;
 			dt.setData("Text", item.id());
@@ -69,6 +84,15 @@ var widget = {
 		vm.interdragstart = (item, e) => {
 			let dt = e.dataTransfer;
 			dt.setData("Text", `inter-${item.id()}`);
+		}
+		vm.addPomo = (id) => {
+			todo.addPomo(id).then(update.bind(this));
+		}
+		vm.subPomo = (id) => {
+			todo.subPomo(id).then(update.bind(this));
+		}
+		vm.addTask = (name) => {
+			todo.addTask(name).then(update.bind(this));
 		}
 
 		vm.onchange = (item, e) => {
@@ -87,7 +111,7 @@ var widget = {
 			sourceid = +sourceid;
 
 			// source id already in target group? ignore it
-			let duplicateCheck = _.findIndex(vm.right(), item => {
+			let duplicateCheck = _.findIndex(vm.today(), item => {
 				return item.id() === sourceid;
 			});
 			if (!isInter && duplicateCheck !== -1) {
@@ -102,26 +126,26 @@ var widget = {
 			}
 			todo.move(sourceid, targetid, isInter, top).then(update.bind(this));
 		}
-
 	},
 	view : function (ctrl) {
 		return [
 			m(".container", [
-				m("ul.left", [
-					ctrl.left().map(function (item) {
+				m("ul.task", [
+					ctrl.task().map(function (item) {
 						return m("li", {
 							draggable: true,
 							ondragstart: ctrl.dragstart.bind(ctrl, item)
 						}, `${item.name()}-${item.id()}`);
-					})
+					}),
+					m(addItem, {addHandler: ctrl.addTask})
 				]),
-				m("ul.right", {
+				m("ul.today", {
 					ondrop: ctrl.onchange.bind(null, null),
 					config: function (element, isInitialized) {
 						if (!isInitialized) { dragdrop(element) }
 					}
 				}, [
-					ctrl.right().map(function(item) {
+					ctrl.today().map(function(item) {
 						return m("li", {
 							draggable: true,
 							ondrop: ctrl.onchange.bind(null, item),
@@ -129,7 +153,18 @@ var widget = {
 							config: function (element, isInitialized) {
 								if (!isInitialized) { dragdrop(element); }
 							}
-						}, `${item.name()}-${item.id()}`)
+						}, [
+							m("div", [
+								m("span", `${item.name()}-${item.id()}`),
+								m("button", {
+									onclick: ctrl.addPomo.bind(null, item.id())
+								}, 'add'),
+								m("button", {
+									onclick: ctrl.subPomo.bind(null, item.id())
+								}, 'sub')
+							]),
+							m(pomoItem, {pomo: item.pomo(), key: `${item.id()}-${item.pomo().length}`})
+						])
 					})
 				]),
 			])

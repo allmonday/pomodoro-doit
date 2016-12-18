@@ -3,14 +3,14 @@ ul {
   padding: 0;
 }
 
-ul.left,
-ul.right {
+ul.task,
+ul.today {
   width: 200px;
   float: left;
   margin-left: 20px;
   overflow: hidden;
 }
-ul.right {
+ul.today {
   min-height: 20px;
   border: 1px solid #ccc;
 }
@@ -27,14 +27,11 @@ ul li {
 .selected {
   border: 1px solid #ccc;
   &.top {
-    border-top-width: 32px;
+    border-top-width: 5px;
     border-top-color: #ccc;
   }
   &.bottom {
-    border-bottom-width: 32px;
+    border-bottom-width: 5px;
     border-top-color: #ccc;
   }
-}
-.ondrag {
-  background: #eee;
 }
