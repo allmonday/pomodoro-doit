@@ -60,6 +60,10 @@ todo.move = (sourceid, targetid, isInter, top) => {
 		top: top
 	}})
 }
+
+todo.cancelTask = (id) => {
+	return m.request({method: "post", url: "/api/dnd/task/cancel", data: {id: id}});
+}
 todo.addPomo = (id) => {
 	return m.request({method: "post", url: "/api/dnd/today/add", data: {id: id}});
 }
@@ -93,6 +97,9 @@ var widget = {
 		}
 		vm.addTask = (name) => {
 			todo.addTask(name).then(update.bind(this));
+		}
+		vm.cancelTask = (name) => {
+			todo.cancelTask(name).then(update.bind(this));
 		}
 
 		vm.onchange = (item, e) => {
@@ -161,7 +168,10 @@ var widget = {
 								}, 'add'),
 								m("button", {
 									onclick: ctrl.subPomo.bind(null, item.id())
-								}, 'sub')
+								}, 'sub'),
+								m("button", {
+									onclick: ctrl.cancelTask.bind(null, item.id())
+								}, 'cancel')
 							]),
 							m(pomoItem, {pomo: item.pomo(), key: `${item.id()}-${item.pomo().length}`})
 						])

@@ -1,3 +1,5 @@
+'use strict';
+
 var express = require("express");
 var contact = express();
 var _ = require("lodash");
@@ -30,6 +32,15 @@ contact.get("/task", function (req, res) {
 contact.get("/today", function (req, res) {
     res.send(todayTask);
 });
+
+contact.post("/task/cancel", function (req, res) {
+    var id = req.body.id;
+    let index = _.findIndex(todoTask, {id: id});
+    todoTask[index].assigned = false;
+    let todayIndex = _.findIndex(todayTask, {id: id});
+    todayTask.splice(todayIndex, 1);
+    res.send();
+})
 
 contact.post("/addtask", function (req, res) {
     var id = todoTask.length + 1;
