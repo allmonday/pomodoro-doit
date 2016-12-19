@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require("body-parser");
 var pomodoro = require("./server/pomodoro");
 var contact = require("./server/contact");
+var dnd = require("./server/dnd");
 
 app.set("views", "./views");
 app.use(express.static("static"));
@@ -11,6 +12,7 @@ app.use(bodyParser.json())
 
 app.use("/api/pomodoro/", pomodoro);
 app.use("/api/contact/", contact);
+app.use("/api/dnd/", dnd);
 
 app.get("/page/:pageName", function (req, res) {
     res.sendfile("./views/"+ req.params.pageName +".html");

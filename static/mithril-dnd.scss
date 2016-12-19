@@ -1,8 +1,37 @@
 ul {
+  // border: 1px solid #ccc;
+  padding: 0;
+}
+
+ul.task,
+ul.today {
+  width: 200px;
+  float: left;
+  margin-left: 20px;
+  overflow: hidden;
+}
+ul.today {
+  min-height: 20px;
   border: 1px solid #ccc;
 }
 
-ul.left,
-ul.right {
-  width: 200px;
+ul li {
+  $height: 30px;
+  border: 1px solid #ccc;
+  list-style-type: none;
+  min-height: $height;
+  line-height: $height;
+  text-align: center;
+}
+
+.selected {
+  border: 1px solid #ccc;
+  &.top {
+    border-top-width: 5px;
+    border-top-color: #ccc;
+  }
+  &.bottom {
+    border-bottom-width: 5px;
+    border-top-color: #ccc;
+  }
 }
