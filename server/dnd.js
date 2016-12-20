@@ -1,5 +1,6 @@
 "use strict";
 
+var q = require("q");
 var express = require("express");
 var contact = express();
 var _ = require("lodash");
@@ -7,12 +8,15 @@ var mongourl = "mongodb://localhost:27017/pomodoro"
 var mongoose = require("mongoose");
 mongoose.connect(mongourl);
 var db = mongoose.connection;
+var todayGetter = require("./utils/today");
+var Task = require("./model/task");
+var Today = require("./model/today");
+
 db.once("open", function () {
     console.log('open');
     console.log
 })
 
-var Task = require("./model/task");
 
 var todoTask = [
     {name: "a", email:"111@111.com", id: 1},
@@ -22,15 +26,6 @@ var todoTask = [
 ];
 
 var todayTask = [
-    // {name: "a", email:"111@111.com", id: 1, pomo: [
-    //     {status: true},
-    //     {status: false},
-    //     {status: false}
-    // ]},
-    // {name: "b", email:"111@111.com", id: 2, pomo: [
-    //     {status: true},
-    //     {status: false},
-    // ]},
 ];
 
 contact.get("/task", function (req, res) {
@@ -54,9 +49,27 @@ contact.post("/addtask", function (req, res) {
         })
 })
 
-
 contact.get("/today", function (req, res) {
-    res.send(todayTask);
+    let todayString = todayGetter();
+    Today.count({ date: todayString })
+        .then((count)=> {
+            if (count > 0) {
+                // return Today.findOne({ date: todayString }) // return empty promise
+                return q.when();
+            } else {
+                let brandnew = new Today({
+                    date: todayString,
+                    tasks: []
+                })
+                return brandnew.save();
+            }
+        })
+        .then(() => {
+            return Today.findOne({ date: todayString })
+        })
+        .then((item) => {
+            res.send(item.tasks);
+        })
 });
 
 contact.post("/task/cancel", function (req, res) {
@@ -66,7 +79,7 @@ contact.post("/task/cancel", function (req, res) {
     let todayIndex = _.findIndex(todayTask, {id: id});
     todayTask.splice(todayIndex, 1);
     res.send();
-})
+});
 
 contact.post("/today", function (req, res) {
     // sourceid. item in todo list
@@ -86,7 +99,7 @@ contact.post("/today", function (req, res) {
         targetindex += (top? 0: 1);
         todayTask.splice(targetindex, 0, item);
 
-    } else {
+    } else { // move from task
         let item = _.find(todoTask, {id: sourceid});
         let exist = _.findIndex(todayTask, {id: sourceid});
         if (exist !== -1) {

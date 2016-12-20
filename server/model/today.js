@@ -1,17 +1,22 @@
 var mongoose = require("mongoose");
 
 var Today = mongoose.Schema({
-    taskId: Schema.Types.ObjectId,
-    name: String,
-    note: String,
-    createTime: Date,
-    updateTime: Date,
-    pomodoros: [{
-        status: Boolean,
-        startTime: Date,
-        interuptCount: Number,
-        validTime: Number
-    }]
+    date: String,
+    tasks: [
+        {
+            taskId: String,
+            name: String,
+            note: String,
+            createTime: Date,
+            updateTime: Date,
+            pomodoros: [{
+                status: Boolean,
+                startTime: Date,
+                interuptCount: Number,
+                validTime: Number
+            }]
+        }
+    ],
 })
 
 Today.virtual("id").get(function () {
@@ -21,4 +26,48 @@ Today.set("toJSON", {
     virtuals: true
 })
 
-module.exports = mongoose.model(Today);
+// var mongourl = "mongodb://localhost:27017/pomodoro"
+// var mongoose = require("mongoose");
+// mongoose.connect(mongourl);
+
+TodayModel = mongoose.model('Today', Today);
+
+// var today = new TodayModel({
+//     date: '20161201',
+//     tasks: [
+//         {
+//             taskId: "5858e27ae61b9d991242d0e8",
+//             name: "task",
+//             note: "",
+//             craeteTime: new Date(),
+//             updateTime: new Date(),
+//             pomodoros: [
+//                 { 
+//                     status: false, 
+//                     startTime: new Date(),
+//                     interuptCount: 1,
+//                     validTime: 21
+//                 },
+//             ]
+//         },
+//         {
+//             taskId: "5858e27ae61b9d991242d0e8",
+//             name: "task",
+//             note: "",
+//             craeteTime: new Date(),
+//             updateTime: new Date(),
+//             pomodoros: [
+//                 { 
+//                     status: false, 
+//                     startTime: new Date(),
+//                     interuptCount: 1,
+//                     validTime: 22
+//                 },
+//             ]
+//         }
+//     ]
+// })
+
+// today.save();
+
+module.exports = TodayModel;
