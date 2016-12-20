@@ -1,8 +1,18 @@
-'use strict';
+"use strict";
 
 var express = require("express");
 var contact = express();
 var _ = require("lodash");
+var mongourl = "mongodb://localhost:27017/pomodoro"
+var mongoose = require("mongoose");
+mongoose.connect(mongourl);
+var db = mongoose.connection;
+db.once("open", function () {
+    console.log('open');
+    console.log
+})
+
+var Task = require("./model/task");
 
 var todoTask = [
     {name: "a", email:"111@111.com", id: 1},
@@ -24,10 +34,26 @@ var todayTask = [
 ];
 
 contact.get("/task", function (req, res) {
-    res.send(todoTask.filter(function (item) {
-        return !item.assigned;
-    }));
+    Task.find({assigned: false})
+        .then(function (data) {
+            res.send(data);
+        })
 });
+
+contact.post("/addtask", function (req, res) {
+    var task = new Task({
+        name: req.body.name,
+        note: "",
+        createTime: new Date(),
+        updateTime: new Date(),
+        assigned: false
+    })
+    task.save()
+        .then((data) => {
+            res.send();
+        })
+})
+
 
 contact.get("/today", function (req, res) {
     res.send(todayTask);
@@ -39,16 +65,6 @@ contact.post("/task/cancel", function (req, res) {
     todoTask[index].assigned = false;
     let todayIndex = _.findIndex(todayTask, {id: id});
     todayTask.splice(todayIndex, 1);
-    res.send();
-})
-
-contact.post("/addtask", function (req, res) {
-    var id = todoTask.length + 1;
-    todoTask.push({
-        name: req.body.name,
-        email: "default@12.com",
-        id: id
-    })
     res.send();
 })
 
