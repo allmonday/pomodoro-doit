@@ -1,10 +1,11 @@
 "use strict";
 
+var config = require("../config");
 var q = require("q");
 var express = require("express");
 var contact = express();
 var _ = require("lodash");
-var mongourl = "mongodb://localhost:27017/pomodoro"
+var mongourl = config.mongourl || "mongodb://localhost:27017/pomodoro";
 var mongoose = require("mongoose");
 mongoose.connect(mongourl);
 var db = mongoose.connection;
@@ -14,7 +15,6 @@ var Today = require("./model/today");
 
 db.once("open", function () {
     console.log('open');
-    console.log
 })
 
 
@@ -54,7 +54,6 @@ contact.get("/today", function (req, res) {
     Today.count({ date: todayString })
         .then((count)=> {
             if (count > 0) {
-                // return Today.findOne({ date: todayString }) // return empty promise
                 return q.when();
             } else {
                 let brandnew = new Today({
@@ -65,7 +64,7 @@ contact.get("/today", function (req, res) {
             }
         })
         .then(() => {
-            return Today.findOne({ date: todayString })
+            return Today.getToday();
         })
         .then((item) => {
             res.send(item.tasks);
@@ -98,28 +97,52 @@ contact.post("/today", function (req, res) {
         let targetindex = _.findIndex(todayTask, {id: targetid});
         targetindex += (top? 0: 1);
         todayTask.splice(targetindex, 0, item);
+        res.send();
 
     } else { // move from task
-        let item = _.find(todoTask, {id: sourceid});
-        let exist = _.findIndex(todayTask, {id: sourceid});
-        if (exist !== -1) {
-            console.log('already has it');
-        } else {
-            let originindex = _.findIndex(todoTask, {id: sourceid});
-            todoTask[originindex].assigned = true;
 
-            item.pomo = [{ status: false}];
-            if (!targetid) {
-                todayTask.push(item);
-
+        q.all([
+            Task.findById(sourceid),
+            Today.getToday()
+        ]).then((data) => {
+            let task = data[0],
+                today = data[1],
+                todayTasks = today.tasks;
+            let exist = _.findIndex(todayTasks, {id: sourceid});
+            if (exist !== -1) {
+                console.log('alread has it');
             } else {
-                let index = _.findIndex(todayTask, {id: targetid});
-                index += (top? 0: 1);
-                todayTask.splice(index, 0, item);
+                // update task  
+                Task.update({_id: sourceid}, { $set: { assigned: true }}).exec();
+
+                var saveItem = {
+                    taskId: sourceid,
+                    name: task.name,
+                    note: task.note,
+                    createTime: task.createTime,
+                    updateTime: task.updateTime,
+                    pomodoros: [{
+                        status: false,
+                        startTime: new Date(),
+                        interuptCount: 0,
+                        validTime: 0
+                    }]
+                }
+
+                if( !targetid) {
+                    todayTasks.push(saveItem);
+
+                } else {
+                    let index = _.findIndex(todayTasks, {taskId: targetid});
+                    index += (top ? 0: 1);
+                    todayTasks.splice(index, 0, saveItem);
+                }
+                let todayString = todayGetter();
+                Today.update({date: todayString}, { $set: { tasks: todayTasks }}).exec();
             }
-        }
+            return res.send();
+        })
     }
-    res.send();
 });
 
 contact.post("/today/add", function (req, res) {

@@ -7,11 +7,11 @@ var Task = mongoose.Schema({
     updateTime: Date,
     assigned: Boolean,
 })
-Task.virtual("id").get(function () {
-    return this._id;
-})
-Task.set("toJSON", {
-    virtuals: true
-})
+// Task.virtual("id").get(function () {
+//     return this._id;
+// })
+// Task.set("toJSON", {
+//     virtuals: true
+// })
 
 module.exports = mongoose.model('Task', Task);

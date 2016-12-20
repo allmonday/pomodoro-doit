@@ -39,9 +39,10 @@ function dragdrop(element, options) {
 
 var todo = function(data) {
 	data = data || {};
-	this.id = m.prop(data.id ||"");
+	this._id = m.prop(data._id ||"");
 	this.name = m.prop(data.name || "");
-	this.pomo = m.prop(data.pomo || []);
+	this.pomodoros = m.prop(data.pomodoros || []);
+	this.taskId = m.prop(data.taskId || "");
 };
 
 todo.task = function(data) {
@@ -82,12 +83,12 @@ var widget = {
 		vm.today = todo.today();
 		vm.dragstart = (item, e) => {
 			let dt = e.dataTransfer;
-			dt.setData("Text", item.id());
+			dt.setData("Text", item._id());
 		}
 
 		vm.interdragstart = (item, e) => {
 			let dt = e.dataTransfer;
-			dt.setData("Text", `inter-${item.id()}`);
+			dt.setData("Text", `inter-${item.taskId()}`);
 		}
 		vm.addPomo = (id) => {
 			todo.addPomo(id).then(update.bind(this));
@@ -107,7 +108,7 @@ var widget = {
 			e.target.classList.remove("selected");
 			e.stopPropagation();  // ul also has it
 
-			let interTest = /^inter\-\d$/;
+			let interTest = /^inter\-([0-9a-fA-F]){24}$/;
 			let sourceid = e.dataTransfer.getData("Text");
 			let isInter = false;
 
@@ -115,11 +116,10 @@ var widget = {
 				sourceid = sourceid.replace("inter-", "");	
 				isInter = true
 			}
-			sourceid = +sourceid;
 
 			// source id already in target group? ignore it
 			let duplicateCheck = _.findIndex(vm.today(), item => {
-				return item.id() === sourceid;
+				return item.taskId() === sourceid;
 			});
 			if (!isInter && duplicateCheck !== -1) {
 				return;
@@ -127,7 +127,7 @@ var widget = {
 
 			let targetid;
 			if (item) {
-				targetid = item.id();
+				targetid = item.taskId();
 			} else {
 				targetid = null
 			}
@@ -142,7 +142,7 @@ var widget = {
 						return m("li", {
 							draggable: true,
 							ondragstart: ctrl.dragstart.bind(ctrl, item)
-						}, `${item.name()}-${item.id()}`);
+						}, `${item.name()}-${item._id()}`);
 					}),
 					m(addItem, {addHandler: ctrl.addTask})
 				]),
@@ -162,18 +162,18 @@ var widget = {
 							}
 						}, [
 							m("div", [
-								m("span", `${item.name()}-${item.id()}`),
+								m("span", `${item.name()}-${item.taskId()}`),
 								m("button", {
-									onclick: ctrl.addPomo.bind(null, item.id())
+									onclick: ctrl.addPomo.bind(null, item._id())
 								}, 'add'),
 								m("button", {
-									onclick: ctrl.subPomo.bind(null, item.id())
+									onclick: ctrl.subPomo.bind(null, item._id())
 								}, 'sub'),
 								m("button", {
-									onclick: ctrl.cancelTask.bind(null, item.id())
+									onclick: ctrl.cancelTask.bind(null, item._id())
 								}, 'cancel')
 							]),
-							m(pomoItem, {pomo: item.pomo(), key: `${item.id()}-${item.pomo().length}`})
+							m(pomoItem, {pomo: item.pomodoros(), key: `${item._id()}-${item.pomodoros().length}`})
 						])
 					})
 				]),
