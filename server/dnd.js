@@ -79,7 +79,7 @@ contact.post("/today", function (req, res) {
             let originindex = _.findIndex(todoTask, {id: sourceid});
             todoTask[originindex].assigned = true;
 
-            item.pomo = [];
+            item.pomo = [{ status: false}];
             if (!targetid) {
                 todayTask.push(item);
 
