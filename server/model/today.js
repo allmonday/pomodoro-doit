@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var todayGetter = require("../utils/today");
 
 var Today = mongoose.Schema({
     date: String,
@@ -18,13 +19,17 @@ var Today = mongoose.Schema({
         }
     ],
 })
+Today.static('getToday', function () {
+    let today = todayGetter();
+    return this.findOne({date: today});
+})
 
-Today.virtual("id").get(function () {
-    return this._id;
-})
-Today.set("toJSON", {
-    virtuals: true
-})
+// Today.virtual("id").get(function () {
+//     return this._id;
+// })
+// Today.set("toJSON", {
+//     virtuals: true
+// })
 
 // var mongourl = "mongodb://localhost:27017/pomodoro"
 // var mongoose = require("mongoose");
