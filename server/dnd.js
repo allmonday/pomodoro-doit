@@ -12,6 +12,7 @@ var db = mongoose.connection;
 var todayGetter = require("./utils/today");
 var Task = require("./model/task");
 var Today = require("./model/today");
+var sortList = require("./utils/sort-today");
 
 db.once("open", function () {
     console.log('open');
@@ -52,6 +53,9 @@ contact.post("/addtask", function (req, res) {
 contact.get("/today", function (req, res) {
     Task.getToday()
         .then((data) => {
+            // console.log(data);
+            data = sortList(data);
+            // console.log(data);
             res.send(data);
         })
 });
@@ -69,8 +73,13 @@ contact.post("/today", function(req, res) {
                 {$set: { 
                     date: todayGetter(), 
                     assigned: true,
-                    prevNode: targetid
+                    isHead: !targetid,
                 }})
+        .then(() => {
+            return !targetid ? 
+                q.when():
+                Task.update({_id: req.body.targetid}, {$set: { nextNode: sourceid}});
+        })
         .then(() => { res.send() });
 })
 

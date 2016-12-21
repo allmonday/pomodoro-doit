@@ -1,3 +1,4 @@
+"use strict";
 var mongoose = require("mongoose");
 var todayString = require("../utils/today");
 
@@ -8,7 +9,8 @@ var Task = mongoose.Schema({
     createTime: { type: Date, default: Date.now },
     updateTime: { type: Date, default: Date.now },
     assigned: Boolean,
-    prevNode: { type: String, default: ""},
+    nextNode: { type: String, default: ""},
+    isHead: {type: Boolean, default: false },
     pomodoros: [
         {
             status: Boolean,
@@ -20,7 +22,7 @@ var Task = mongoose.Schema({
 })
 
 Task.static("getToday", function () {
-    let today = todayString();
+    var today = todayString();
     return this.find({date: today, assigned: true });
 })
 

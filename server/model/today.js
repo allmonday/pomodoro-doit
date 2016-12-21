@@ -20,7 +20,7 @@ var Today = mongoose.Schema({
     ],
 })
 Today.static('getToday', function () {
-    let today = todayGetter();
+    var today = todayGetter();
     return this.findOne({date: today});
 })
 
