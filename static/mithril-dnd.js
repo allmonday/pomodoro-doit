@@ -42,7 +42,7 @@ var todo = function(data) {
 	this._id = m.prop(data._id ||"");
 	this.name = m.prop(data.name || "");
 	this.pomodoros = m.prop(data.pomodoros || []);
-	this.taskId = m.prop(data.taskId || "");
+	this.prevNode = m.prop(data.prevNode || "");
 };
 
 todo.task = function(data) {
@@ -88,7 +88,7 @@ var widget = {
 
 		vm.interdragstart = (item, e) => {
 			let dt = e.dataTransfer;
-			dt.setData("Text", `inter-${item.taskId()}`);
+			dt.setData("Text", `inter-${item._id()}`);
 		}
 		vm.addPomo = (id) => {
 			todo.addPomo(id).then(update.bind(this));
@@ -119,7 +119,7 @@ var widget = {
 
 			// source id already in target group? ignore it
 			let duplicateCheck = _.findIndex(vm.today(), item => {
-				return item.taskId() === sourceid;
+				return item._id() === sourceid;
 			});
 			if (!isInter && duplicateCheck !== -1) {
 				return;
@@ -127,7 +127,7 @@ var widget = {
 
 			let targetid;
 			if (item) {
-				targetid = item.taskId();
+				targetid = item._id();
 			} else {
 				targetid = null
 			}
@@ -162,7 +162,7 @@ var widget = {
 							}
 						}, [
 							m("div", [
-								m("span", `${item.name()}-${item.taskId()}`),
+								m("span", `${item.name()}-${item._id()}`),
 								m("button", {
 									onclick: ctrl.addPomo.bind(null, item._id())
 								}, 'add'),
