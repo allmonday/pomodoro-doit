@@ -82,7 +82,7 @@ dnd.post("/task/cancel", function (req, res) {
         .then(() => { res.send() });
 });
 
-dnd.post("/today", function(req, res) {
+dnd.post("/today", function(req, res) {  // logic holy sucks..
     let sourceid = req.body.sourceid,
         targetid = req.body.targetid,
         isinter = req.body.isinter;
@@ -149,9 +149,12 @@ dnd.post("/today", function(req, res) {
                         throw "no operation";
                     }
 
-                    if (source.isHead) { // is source header
-                        // set next one ishead: true
-                        return Task.update({_id: source.nextNode}, {$set: {isHead: true}});
+                    if (source.isHead) { // is source head
+                        // set next one ishead: true, set self isHead false
+                        return q.all([
+                            Task.update({_id: source.nextNode}, {$set: {isHead: true}}),
+                            Task.update({_id: sourceid}, {$set: {isHead: false}}),
+                        ]);
                     }
 
                     if (!source.nextNode) { // is last one
