@@ -7,7 +7,7 @@
     "test": "mocha -w",
     "watch": "webpack -w",
     "proxy": "browser-sync start --port 8888 -b \"google chrome\" --startPath /page/pomodoro --proxy \"http://localhost:3000\" --files \"static/bundle/*.js, views/**/*.html\"",
-    "server": "nodemon ./server.js",
+    "server": "nodemon --debug ./server.js",
     "dev": "npm-run-all --parallel proxy server watch"
   },
   "author": "",

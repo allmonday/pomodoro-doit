@@ -43,6 +43,7 @@ var todo = function(data) {
 	this.name = m.prop(data.name || "");
 	this.pomodoros = m.prop(data.pomodoros || []);
 	this.prevNode = m.prop(data.prevNode || "");
+	this.nextNode = m.prop(data.nextNode || "");
 };
 
 todo.task = function(data) {
@@ -52,13 +53,11 @@ todo.today = function (data) {
 	return m.request({ method: "GET", url: "/api/dnd/today", type: todo})
 }
 
-todo.move = (sourceid, targetid, isInter, top) => {
-	console.log(sourceid, targetid, isInter, top);
+todo.move = (sourceid, targetid, isInter) => {
 	return m.request({ method: "post", url: "/api/dnd/today", data: {
 		sourceid: sourceid,
 		targetid: targetid,
-		isinter: isInter,
-		top: top
+		isinter: isInter
 	}})
 }
 
@@ -104,7 +103,7 @@ var widget = {
 		}
 
 		vm.onchange = (item, e) => {
-			let top = isTop(e);
+			let prev = isTop(e);
 			e.target.classList.remove("selected");
 			e.stopPropagation();  // ul also has it
 
@@ -127,24 +126,30 @@ var widget = {
 
 			let targetid;
 			if (item) {
-				targetid = item._id();
+				if (prev) {
+					targetid = item.prevNode();
+				} else {
+					targetid = item._id();
+				}
 			} else {
 				targetid = null
 			}
-			todo.move(sourceid, targetid, isInter, top).then(update.bind(this));
+			todo.move(sourceid, targetid, isInter).then(update.bind(this));
 		}
 	},
 	view : function (ctrl) {
 		return [
 			m(".container", [
 				m("ul.task", [
+					m("li", [
+						m(addItem, {addHandler: ctrl.addTask}),
+					]),
 					ctrl.task().map(function (item) {
 						return m("li", {
 							draggable: true,
 							ondragstart: ctrl.dragstart.bind(ctrl, item)
 						}, `${item.name()}-${item._id()}`);
-					}),
-					m(addItem, {addHandler: ctrl.addTask})
+					})
 				]),
 				m("ul.today", {
 					ondrop: ctrl.onchange.bind(null, null),

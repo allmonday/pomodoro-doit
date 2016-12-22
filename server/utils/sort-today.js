@@ -6,7 +6,6 @@ function sortLinkedList(inputList) {
         prev[item._id] = item;
         return prev;
     }, {});
-    console.log(map);
 
     if (_.isEmpty(map)) {
         return [];
@@ -14,13 +13,19 @@ function sortLinkedList(inputList) {
 
     var result = [];
     var firstIndex = _.findIndex(inputList, {isHead: true});
-    console.log(firstIndex);
     var firstItem = inputList[firstIndex];
     var hasnext = firstItem.nextNode;
+
+    firstItem['prevNode']= "";
+    var prevNode = firstItem._id;
     result.push(firstItem);
 
+
     while(!!hasnext) {
-        result.push(map[hasnext]);
+        var next = map[hasnext];
+        next['prevNode'] = prevNode;
+        result.push(next);
+        prevNode = next._id;
         hasnext = map[hasnext].nextNode;
     }
     return result;

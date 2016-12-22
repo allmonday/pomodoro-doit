@@ -9,6 +9,7 @@ var Task = mongoose.Schema({
     createTime: { type: Date, default: Date.now },
     updateTime: { type: Date, default: Date.now },
     assigned: Boolean,
+    prevNode: { type: String, default: ""},
     nextNode: { type: String, default: ""},
     isHead: {type: Boolean, default: false },
     pomodoros: [
