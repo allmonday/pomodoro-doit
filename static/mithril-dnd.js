@@ -52,7 +52,6 @@ todo.task = function(data) {
 todo.today = function (data) {
 	return m.request({ method: "GET", url: "/api/dnd/today", type: todo})
 }
-
 todo.move = (sourceid, targetid, isInter) => {
 	return m.request({ method: "post", url: "/api/dnd/today", data: {
 		sourceid: sourceid,
@@ -62,16 +61,16 @@ todo.move = (sourceid, targetid, isInter) => {
 }
 
 todo.cancelTask = (id) => {
-	return m.request({method: "post", url: "/api/dnd/task/cancel", data: {id: id}});
-}
-todo.addPomo = (id) => {
-	return m.request({method: "post", url: "/api/dnd/today/add", data: {id: id}});
-}
-todo.subPomo = (id) => {
-	return m.request({method: "post", url: "/api/dnd/today/sub", data: {id: id}});
+	return m.request({method: "delete", url: "/api/dnd/task", data: {id: id}});
 }
 todo.addTask = (name) => {
-	return m.request({ method: "post", url: "/api/dnd/addtask", data: {name: name}});
+	return m.request({ method: "post", url: "/api/dnd/task", data: {name: name}});
+}
+todo.addPomo = (id) => {
+	return m.request({method: "post", url: "/api/dnd/today/pomodoro", data: {id: id}});
+}
+todo.subPomo = (id) => {
+	return m.request({method: "delete", url: "/api/dnd/today/pomodoro", data: {id: id}});
 }
 
 var widget = {
@@ -167,7 +166,7 @@ var widget = {
 							}
 						}, [
 							m("div", [
-								m("span", `${item.name()}-${item._id()}`),
+								m("p", `${item.name()}-${item._id()}`),
 								m("button", {
 									onclick: ctrl.addPomo.bind(null, item._id())
 								}, 'add'),

@@ -1,10 +1,11 @@
 "use strict";
 var mongoose = require("mongoose");
 var todayString = require("../utils/today");
+var pomodoroSchema = require("./pomodoro");
 
 var Task = mongoose.Schema({
     date: { type: String, default: ""},
-    name: String,
+    name: { type: String, required: true},
     note: String,
     createTime: { type: Date, default: Date.now },
     updateTime: { type: Date, default: Date.now },
@@ -13,12 +14,7 @@ var Task = mongoose.Schema({
     nextNode: { type: String, default: ""},
     isHead: {type: Boolean, default: false },
     pomodoros: [
-        {
-            status: Boolean,
-            startTime: Date,
-            interuptCount: Number,
-            validTime: Number
-        }
+        pomodoroSchema
     ]
 })
 
