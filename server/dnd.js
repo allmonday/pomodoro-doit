@@ -199,18 +199,41 @@ dnd.route("/today")
 
 dnd.route("/today/pomodoro")
     .post(function (req, res) {
-        var receive = req.body;
-        let id = receive.id;
-        let index = _.findIndex(todayTask, {id: id});
-        todayTask[index].pomo.push({status: false});
-        res.send();
+        let id = req.body.id;
+        Task.findById(id)
+            .then((task) => {
+                task.pomodoros.push({})
+                return task.save()
+            })
+            .then(() => {
+                res.send();
+            })
+    })
+    .put(function (req, res) {
+        let taskid = req.body.task,
+            pomoid = req.body.pomo;
+        Task.findById(taskid)
+            .then((task) => {
+                let t = task.pomodoros.id(pomoid)
+                t.startTime = new Date();
+                t.status = true;
+                return task.save();
+            })
+            .then(() => {
+                res.send();
+            })
+
     })
     .delete(function (req, res) {
-        var receive = req.body;
-        let id = receive.id;
-        let index = _.findIndex(todayTask, {id: id});
-        todayTask[index].pomo.pop();
-        res.send();
+        let id = req.body.id;
+        Task.findById(id)
+            .then((task) => {
+                task.pomodoros.pop();
+                return task.save();
+            })
+            .then(() => {
+                res.send();
+            })
     })
 
 module.exports = dnd;

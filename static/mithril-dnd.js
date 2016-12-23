@@ -1,9 +1,11 @@
 var m = require("mithril");
 var _ = require("lodash");
 require("./mithril-dnd.scss");
+var clockObserver = require("./dnd/clockObserver");
 
 var addItem = require("./dnd/add");
 var pomoItem = require("./dnd/pomo");
+var clock = require("./dnd/clock");
 
 function isTop(e) {
 	let top = e.target.offsetTop,
@@ -72,6 +74,9 @@ todo.addPomo = (id) => {
 todo.subPomo = (id) => {
 	return m.request({method: "delete", url: "/api/dnd/today/pomodoro", data: {id: id}});
 }
+todo.startClock = (taskId, pomoId) => {
+	return m.request({ method: 'put', url: "/api/dnd/today/pomodoro", data: {task: taskId, pomo: pomoId }});
+}
 
 var widget = {
 	controller: function update() {
@@ -83,7 +88,6 @@ var widget = {
 			let dt = e.dataTransfer;
 			dt.setData("Text", item._id());
 		}
-
 		vm.interdragstart = (item, e) => {
 			let dt = e.dataTransfer;
 			dt.setData("Text", `inter-${item._id()}`);
@@ -99,6 +103,10 @@ var widget = {
 		}
 		vm.cancelTask = (name) => {
 			todo.cancelTask(name).then(update.bind(this));
+		}
+		vm.startClock = (taskId, pomoId) => {
+			console.log(taskId, pomoId);
+			todo.startClock(taskId, pomoId).then(update.bind(this));
 		}
 
 		vm.onchange = (item, e) => {
@@ -177,10 +185,12 @@ var widget = {
 									onclick: ctrl.cancelTask.bind(null, item._id())
 								}, 'cancel')
 							]),
-							m(pomoItem, {pomo: item.pomodoros(), key: `${item._id()}-${item.pomodoros().length}`})
+							// m(pomoItem, {item: item, start: ctrl.startClock, key: `${item._id()}-${item.pomodoros().length}`})
+							m(pomoItem, {item: item, start: ctrl.startClock, key: JSON.stringify(item)})
 						])
 					})
 				]),
+				m(clock)
 			])
 		]
 	}
