@@ -2,9 +2,10 @@ var m = require("mithril");
 var _ = require("lodash");
 require("./mithril-dnd.scss");
 var clockObserver = require("./dnd/clockObserver");
+var util = require("./dnd/util");
 
 var addItem = require("./dnd/add");
-var pomoItem = require("./dnd/pomo");
+var pomoItem = require("./dnd/pomodoro");
 var clock = require("./dnd/clock");
 
 function isTop(e) {
@@ -43,10 +44,28 @@ var todo = function(data) {
 	data = data || {};
 	this._id = m.prop(data._id ||"");
 	this.name = m.prop(data.name || "");
-	this.pomodoros = m.prop(data.pomodoros || []);
+	this.pomodoros = m.prop((data.pomodoros || []).map((item) => {
+		return new pomodoro(item);
+	}));
 	this.prevNode = m.prop(data.prevNode || "");
 	this.nextNode = m.prop(data.nextNode || "");
 };
+
+var pomodoro = function (data) {
+	data = data || {};
+	this._id = m.prop(data._id || "");
+	this.status = m.prop(data.status || false);
+	this.startTime = m.prop(data.startTime || "");
+    this.interuptCount = m.prop(data.interuptCount || 0);
+    this.validTime = m.prop(data.validTime || 0);
+}
+
+pomodoro.prototype.isFinished = function() {
+	return this.status && util.isFinished(this.startTime());
+}
+pomodoro.prototype.hasStarted = function () {
+	return !!this.startTime();
+}
 
 todo.task = function(data) {
 	return m.request({ method: "GET", url: "/api/dnd/task", type: todo})
@@ -105,7 +124,6 @@ var widget = {
 			todo.cancelTask(name).then(update.bind(this));
 		}
 		vm.startClock = (taskId, pomoId) => {
-			console.log(taskId, pomoId);
 			todo.startClock(taskId, pomoId).then(update.bind(this));
 		}
 
@@ -185,7 +203,6 @@ var widget = {
 									onclick: ctrl.cancelTask.bind(null, item._id())
 								}, 'cancel')
 							]),
-							// m(pomoItem, {item: item, start: ctrl.startClock, key: `${item._id()}-${item.pomodoros().length}`})
 							m(pomoItem, {item: item, start: ctrl.startClock, key: JSON.stringify(item)})
 						])
 					})
