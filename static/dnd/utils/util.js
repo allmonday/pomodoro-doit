@@ -9,6 +9,16 @@ function isFinished(date, range) {
     }
 }
 
+function isRunning(status, date, range) {
+    range = range || 25;
+    if (!status) {
+        return false;
+    } else {
+        return !isFinished(date, range);
+    }
+}
+
 module.exports = {
-    isFinished
+    isFinished,
+    isRunning
 }

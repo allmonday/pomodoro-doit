@@ -1,21 +1,42 @@
 var m = require("mithril");
 var pomodoro = require("./pomodoro");
+var util = require("../utils/util");
 
 var todo = {};
+var global_runnable = false;
 
 todo.TODO = function (data) {  // class
+    let hasOneUnrunPomo = false || global_runnable;
 	data = data || {};
 	this._id = m.prop(data._id ||"");
 	this.name = m.prop(data.name || "");
-	this.pomodoros = m.prop((data.pomodoros || []).map((item) => {
-		return new pomodoro(item);
-	}));
-	this.prevNode = m.prop(data.prevNode || "");
 	this.nextNode = m.prop(data.nextNode || "");
+
+    // calculated prop
+	this.prevNode = m.prop(data.prevNode || "");
+	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
+        let runnable = false;
+        if (!hasOneUnrunPomo) { 
+            runnable = (!item.status || util.isRunning(item.status, item.date));  // not start and running pomodo will take the only chance.
+            if (runnable) { 
+                hasOneUnrunPomo = true; 
+                global_runnable = true;
+            }
+        } 
+        item.runnable = runnable;
+        prev.push(new pomodoro(item));
+        return prev;
+	}, []));
 };
 
 todo.task = function() {
-	return m.request({ method: "GET", url: "/api/dnd/task", type: todo.TODO})
+    global_runnable = false;
+	return m.request({ method: "GET", url: "/api/dnd/task"}).then((tasks) => {
+        return tasks.reduce((prev, item) => {
+            prev.push(new todo.TODO(item));
+            return prev;
+        }, []);
+    });
 }
 
 todo.today = function (data) {
