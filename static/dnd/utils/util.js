@@ -14,7 +14,7 @@ function isRunning(status, date, range) {
     if (!status) {
         return false;
     } else {
-        return !isFinished(date, range);
+        return !isFinished(date, range);  // is running and has not finished
     }
 }
 

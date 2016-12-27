@@ -17,7 +17,7 @@ todo.TODO = function (data) {  // class
 	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
         let runnable = false;
         if (!hasOneUnrunPomo) { 
-            runnable = (!item.status || util.isRunning(item.status, item.date));  // not start and running pomodo will take the only chance.
+            runnable = (!item.status || util.isRunning(item.status, item.startTime));  // not start and running pomodo will take the only chance.
             if (runnable) { 
                 hasOneUnrunPomo = true; 
                 global_runnable = true;

@@ -1,6 +1,7 @@
 var m = require("mithril");
 var moment = require("moment");
 var clockObserver = require("../utils/clockObserver");
+var timerObservable = require("../utils/timerObservable");
 
 function elapsed(date) {
    return moment().diff(date, 'minute'); 
@@ -18,9 +19,15 @@ var timer = {
 
             ctrl.eachPomo.hasStarted()? m("div", {config: function (el, init) {
                 if (!init) {
-                    setInterval(() => {
+                    let interval = setInterval(() => {
                         let elapsedTime = elapsed(ctrl.eachPomo.startTime());
-                        el.innerHTML = `has elapsed ${elapsedTime} minutes`;
+                        if (elapsedTime <= 25)  {
+                            el.innerHTML = `has elapsed ${elapsedTime} minutes`;
+                        } else {
+                            timerObservable.next({});
+                            el.innerHTML = `has finished`;
+                            clearInterval(interval);
+                        }
                     }, 1000);
                 }
             }}, `has elapsed ${elapsed(ctrl.eachPomo.startTime())} minutes`): 

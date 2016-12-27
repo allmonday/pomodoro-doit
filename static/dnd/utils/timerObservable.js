@@ -1,4 +1,4 @@
-// watch timer start event
+// watch timer end event
 var Rx = require("rxjs");
 
 var subject = new Rx.Subject();

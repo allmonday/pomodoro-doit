@@ -4,6 +4,7 @@ var _ = require("lodash");
 require("./mithril-dnd.scss");
 
 var clockObserver = require("./dnd/utils/clockObserver");
+var timerObservable = require("./dnd/utils/timerObservable");
 var todo = require("./dnd/model/todo");
 var pomodoro = require("./dnd/model/pomodoro");
 var addItem = require("./dnd/components/add");
@@ -76,6 +77,9 @@ var widget = {
 		clockObserver.subscribe((obj) => {
 			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(this));
 		})
+		timerObservable.subscribe(() => {
+			update.bind(this)();
+		});
 
 
 		vm.onchange = (item, e) => {
