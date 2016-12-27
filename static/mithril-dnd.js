@@ -78,7 +78,8 @@ var widget = {
 			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(this));
 		})
 		timerObservable.subscribe(() => {
-			update.bind(this)();
+		}, () => {}, () => {
+			vm.task = todo.task();
 		});
 
 
