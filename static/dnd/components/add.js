@@ -7,6 +7,7 @@ var AddItem = {
         vm.name = m.prop("");
         vm.add = () => {
             data.addHandler(vm.name());
+            vm.name("");
         }
     }, 
     view: function (ctrl) {

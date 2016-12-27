@@ -1,13 +1,13 @@
 var m = require("mithril");
-var clockObserver = require("./clockObserver");
+var clockObserver = require("../utils/clockObserver");
 
 var clock = {
     controller: function (data) {
         let vm = this;
         vm.data = {};
         clockObserver.subscribe((obj) => {
-            vm.data.task = obj.task;
-            vm.data.pomodoro = obj.pomodoro;
+            vm.data.task = obj.taskId;
+            vm.data.pomodoro = obj.pomodoroId;
         });
     },
     view: function (ctrl) {

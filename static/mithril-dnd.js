@@ -1,11 +1,15 @@
 var m = require("mithril");
 var _ = require("lodash");
-require("./mithril-dnd.scss");
-var clockObserver = require("./dnd/clockObserver");
 
-var addItem = require("./dnd/add");
-var pomoItem = require("./dnd/pomo");
-var clock = require("./dnd/clock");
+require("./mithril-dnd.scss");
+
+var clockObserver = require("./dnd/utils/clockObserver");
+var timerObservable = require("./dnd/utils/timerObservable");
+var todo = require("./dnd/model/todo");
+var pomodoro = require("./dnd/model/pomodoro");
+var addItem = require("./dnd/components/add");
+var pomoItem = require("./dnd/components/pomodoro");
+var clock = require("./dnd/components/clock");
 
 function isTop(e) {
 	let top = e.target.offsetTop,
@@ -39,45 +43,6 @@ function dragdrop(element, options) {
 	}
 }
 
-var todo = function(data) {
-	data = data || {};
-	this._id = m.prop(data._id ||"");
-	this.name = m.prop(data.name || "");
-	this.pomodoros = m.prop(data.pomodoros || []);
-	this.prevNode = m.prop(data.prevNode || "");
-	this.nextNode = m.prop(data.nextNode || "");
-};
-
-todo.task = function(data) {
-	return m.request({ method: "GET", url: "/api/dnd/task", type: todo})
-}
-todo.today = function (data) {
-	return m.request({ method: "GET", url: "/api/dnd/today", type: todo})
-}
-todo.move = (sourceid, targetid, isInter) => {
-	return m.request({ method: "post", url: "/api/dnd/today", data: {
-		sourceid: sourceid,
-		targetid: targetid,
-		isinter: isInter
-	}})
-}
-
-todo.cancelTask = (id) => {
-	return m.request({method: "delete", url: "/api/dnd/task", data: {id: id}});
-}
-todo.addTask = (name) => {
-	return m.request({ method: "post", url: "/api/dnd/task", data: {name: name}});
-}
-todo.addPomo = (id) => {
-	return m.request({method: "post", url: "/api/dnd/today/pomodoro", data: {id: id}});
-}
-todo.subPomo = (id) => {
-	return m.request({method: "delete", url: "/api/dnd/today/pomodoro", data: {id: id}});
-}
-todo.startClock = (taskId, pomoId) => {
-	return m.request({ method: 'put', url: "/api/dnd/today/pomodoro", data: {task: taskId, pomo: pomoId }});
-}
-
 var widget = {
 	controller: function update() {
 		
@@ -92,8 +57,11 @@ var widget = {
 			let dt = e.dataTransfer;
 			dt.setData("Text", `inter-${item._id()}`);
 		}
-		vm.addPomo = (id) => {
-			todo.addPomo(id).then(update.bind(this));
+		vm.addPomo = (item) => {
+			if (item.pomodoros().length >= 5) {
+				return false;
+			}
+			todo.addPomo(item._id()).then(update.bind(this));
 		}
 		vm.subPomo = (id) => {
 			todo.subPomo(id).then(update.bind(this));
@@ -104,10 +72,15 @@ var widget = {
 		vm.cancelTask = (name) => {
 			todo.cancelTask(name).then(update.bind(this));
 		}
-		vm.startClock = (taskId, pomoId) => {
-			console.log(taskId, pomoId);
-			todo.startClock(taskId, pomoId).then(update.bind(this));
-		}
+
+		// set observables
+		clockObserver.subscribe((obj) => {
+			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(this));
+		})
+		timerObservable.subscribe(() => {
+			update.bind(this)();
+		});
+
 
 		vm.onchange = (item, e) => {
 			let prev = isTop(e);
@@ -176,7 +149,7 @@ var widget = {
 							m("div", [
 								m("p", `${item.name()}-${item._id()}`),
 								m("button", {
-									onclick: ctrl.addPomo.bind(null, item._id())
+									onclick: ctrl.addPomo.bind(null, item)
 								}, 'add'),
 								m("button", {
 									onclick: ctrl.subPomo.bind(null, item._id())
@@ -185,8 +158,10 @@ var widget = {
 									onclick: ctrl.cancelTask.bind(null, item._id())
 								}, 'cancel')
 							]),
-							// m(pomoItem, {item: item, start: ctrl.startClock, key: `${item._id()}-${item.pomodoros().length}`})
-							m(pomoItem, {item: item, start: ctrl.startClock, key: JSON.stringify(item)})
+							m(pomoItem, {
+								item: item,
+								key: JSON.stringify(item)
+							})
 						])
 					})
 				]),

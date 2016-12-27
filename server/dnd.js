@@ -228,8 +228,13 @@ dnd.route("/today/pomodoro")
         let id = req.body.id;
         Task.findById(id)
             .then((task) => {
-                task.pomodoros.pop();
-                return task.save();
+                let last = task.pomodoros[task.pomodoros.length - 1];
+                if (last.status) {
+                    return q.when();
+                } else {
+                    task.pomodoros.pop();
+                    return task.save();
+                }
             })
             .then(() => {
                 res.send();
