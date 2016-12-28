@@ -47,8 +47,12 @@ var widget = {
 	controller: function update() {
 		
 		let vm = this;
-		vm.task = todo.task();
-		vm.today = todo.today();
+		vm.init = () => {
+			vm.task = todo.task();
+			vm.today = todo.today();
+			vm.clock = todo.runningTask();
+		}
+		vm.init();
 		vm.dragstart = (item, e) => {
 			let dt = e.dataTransfer;
 			dt.setData("Text", item._id());
@@ -61,25 +65,32 @@ var widget = {
 			if (item.pomodoros().length >= 5) {
 				return false;
 			}
-			todo.addPomo(item._id()).then(update.bind(this));
+			todo.addPomo(item._id()).then(update.bind(vm));
 		}
 		vm.subPomo = (id) => {
-			todo.subPomo(id).then(update.bind(this));
+			todo.subPomo(id).then(update.bind(vm));
 		}
 		vm.addTask = (name) => {
-			todo.addTask(name).then(update.bind(this));
+			todo.addTask(name).then(update.bind(vm));
 		}
 		vm.cancelTask = (name) => {
-			todo.cancelTask(name).then(update.bind(this));
+			todo.cancelTask(name).then(update.bind(vm));
 		}
-
+		vm.updateNote = (taskId, note) => {
+			todo.updateNote(taskId, note).then(update.bind(vm));
+		}
+		vm.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
+			todo.updatePomodoro(taskId, pomodoroId, validTime, interuptCount).then(update.bind(vm));
+		}
 		// set observables
 		clockObserver.subscribe((obj) => {
-			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(this));
+			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(vm));
 		})
-		timerObservable.subscribe(() => {
-		}, () => {}, () => {
-			vm.task = todo.task();
+		timerObservable.subscribe(() => { }, () => {}, () => { 
+			// redraw
+			m.startComputation();
+			vm.init();
+			m.endComputation();
 		});
 
 
@@ -129,7 +140,9 @@ var widget = {
 						return m("li", {
 							draggable: true,
 							ondragstart: ctrl.dragstart.bind(ctrl, item)
-						}, `${item.name()}-${item._id()}`);
+						},[
+							m("p", `${item.name()}-${item._id()}`), 
+						]);
 					})
 				]),
 				m("ul.today", {
@@ -166,7 +179,12 @@ var widget = {
 						])
 					})
 				]),
-				m(clock)
+				m(clock, {
+					task: ctrl.clock.task,
+					pomodoro: ctrl.clock.pomodoro,
+					updateNote: ctrl.updateNote,
+					updatePomodoro: ctrl.updatePomodoro
+				})
 			])
 		]
 	}
