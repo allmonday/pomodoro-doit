@@ -24,6 +24,12 @@ dnd.route("/task")
                 res.send(data);
             })
     })
+    .put(function (req, res) {
+        var taskId = req.body._id;
+        var note = req.body.note;
+
+        Task.update({_id: taskId}, {$set: {note: note}}).then(() => res.send());
+    })
     .post(function (req, res) {
         var task = new Task({
             name: req.body.name,
@@ -197,6 +203,23 @@ dnd.route("/today")
         }
     })
 
+dnd.route("/today/pomodoro/start")
+    .put(function (req, res) {  // start pomodoro
+        let taskid = req.body.task,
+            pomoid = req.body.pomo;
+        Task.findById(taskid)
+            .then((task) => {
+                let t = task.pomodoros.id(pomoid)
+                t.startTime = new Date();
+                t.status = true;
+                return task.save();
+            })
+            .then(() => {
+                res.send();
+            })
+
+    })
+
 dnd.route("/today/pomodoro")
     .post(function (req, res) {
         let id = req.body.id;
@@ -210,13 +233,15 @@ dnd.route("/today/pomodoro")
             })
     })
     .put(function (req, res) {
-        let taskid = req.body.task,
-            pomoid = req.body.pomo;
-        Task.findById(taskid)
+        let taskId = req.body.taskId,
+            pomodoroId = req.body.pomodoroId,
+            validTime = req.body.validTime,
+            interuptCount = req.body.interuptCount;
+        Task.findById(taskId)
             .then((task) => {
-                let t = task.pomodoros.id(pomoid)
-                t.startTime = new Date();
-                t.status = true;
+                let t = task.pomodoros.id(pomodoroId);
+                t.validTime = validTime;
+                t.interuptCount = interuptCount;
                 return task.save();
             })
             .then(() => {

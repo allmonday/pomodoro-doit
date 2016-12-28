@@ -18,7 +18,19 @@ function isRunning(status, date, range) {
     }
 }
 
+function elapsed(date) {
+    let minutes = moment().diff(date, 'minute'); 
+    let seconds = moment().diff(date, 'second');
+    seconds = seconds - 60 * minutes;
+    return {
+        formatted: `${minutes} minutes and ${seconds} seconds`,
+        minutes: minutes,
+    }
+}
+
+
 module.exports = {
     isFinished,
-    isRunning
+    isRunning,
+    elapsed
 }
