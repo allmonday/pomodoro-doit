@@ -70,7 +70,7 @@ dnd.route("/task")
 
 dnd.route("/today")
     .get(function (req, res) {
-        Task.getToday()
+        Task.getToday(req.query.date)
             .then((data) => {
                 data = sortList(data);
                 res.send(data);

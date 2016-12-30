@@ -1,5 +1,6 @@
 var m = require("mithril");
 var _ = require("lodash");
+var moment = require("moment");
 
 require("./mithril-dnd.scss");
 
@@ -82,6 +83,18 @@ var widget = {
 		vm.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
 			todo.updatePomodoro(taskId, pomodoroId, validTime, interuptCount).then(update.bind(vm));
 		}
+		vm.offset = 0;
+		vm.prevDate = function () {
+			vm.offset += 1;
+			vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
+		};
+		vm.backToday = function () {
+			vm.today = todo.today();
+		};
+		vm.nextDate = function () {
+			vm.offset -= 1;
+			vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
+		};
 		// set observables
 		clockObserver.subscribe((obj) => {
 			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(vm));
@@ -145,39 +158,49 @@ var widget = {
 						]);
 					})
 				]),
-				m("ul.today", {
-					ondrop: ctrl.onchange.bind(null, null),
-					config: function (element, isInitialized) {
-						if (!isInitialized) { dragdrop(element) }
-					}
-				}, [
-					ctrl.today().map(function(item) {
-						return m("li", {
-							draggable: true,
-							ondrop: ctrl.onchange.bind(null, item),
-							ondragstart: ctrl.interdragstart.bind(ctrl, item),
-							config: function (element, isInitialized) {
-								if (!isInitialized) { dragdrop(element); }
-							}
-						}, [
-							m("div", [
-								m("p", `${item.name()}-${item._id()}`),
-								m("button", {
-									onclick: ctrl.addPomo.bind(null, item)
-								}, 'add'),
-								m("button", {
-									onclick: ctrl.subPomo.bind(null, item._id())
-								}, 'sub'),
-								m("button", {
-									onclick: ctrl.cancelTask.bind(null, item._id())
-								}, 'cancel')
-							]),
-							m(pomoItem, {
-								item: item,
-								key: JSON.stringify(item)
-							})
-						])
-					})
+				m(".today-list", [
+					m(".operate", [
+						m("button", { onclick: ctrl.prevDate }, "<"),
+						m("span", `${ctrl.offset} days ago`),
+						m("button", { onclick: ctrl.nextDate }, ">"),
+						m("button", { onclick: ctrl.backToday }, "today")
+					]),
+
+					m("ul.today", {
+						ondrop: ctrl.onchange.bind(null, null),
+						config: function (element, isInitialized) {
+							if (!isInitialized) { dragdrop(element) }
+						}
+					}, [
+						ctrl.today().map(function(item) {
+							return m("li", {
+								draggable: true,
+								ondrop: ctrl.onchange.bind(null, item),
+								ondragstart: ctrl.interdragstart.bind(ctrl, item),
+								config: function (element, isInitialized) {
+									if (!isInitialized) { dragdrop(element); }
+								}
+							}, [
+								m("div", [
+									m("p", `${item.name()}-${item._id()}`),
+									m("button", {
+										onclick: ctrl.addPomo.bind(null, item)
+									}, 'add'),
+									m("button", {
+										onclick: ctrl.subPomo.bind(null, item._id())
+									}, 'sub'),
+									m("button", {
+										onclick: ctrl.cancelTask.bind(null, item._id())
+									}, 'cancel')
+								]),
+								m(pomoItem, {
+									item: item,
+									key: JSON.stringify(item)
+								})
+							])
+						})
+					]),
+
 				]),
 				m(clock, {
 					task: ctrl.clock.task,

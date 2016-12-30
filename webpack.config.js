@@ -1,3 +1,5 @@
+var path = require("path");
+
 var config = {
     entry: { 
         pomodoro: "./static/pomodoro/main.js",
@@ -11,6 +13,11 @@ var config = {
     },
     external: {
         "mithril": "m"
+    },
+    resolve: {
+        root: [
+            path.resolve("./")
+        ]
     },
     module: {
         loaders: [
