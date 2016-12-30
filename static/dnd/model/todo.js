@@ -49,10 +49,10 @@ todo.TODO = function (data) {  // class
 	}, []));
 };
 
-todo.task = function() {
+todo.task = function(date) {
     global_runnable = false;
     todo.resetRunningTask();
-	return m.request({ method: "GET", url: "/api/dnd/task"}).then((tasks) => {
+	return m.request({ method: "GET", url: `/api/dnd/task/`}).then((tasks) => {
         return tasks.reduce((prev, item) => {
             prev.push(new todo.TODO(item));
             return prev;
@@ -60,8 +60,9 @@ todo.task = function() {
     });
 }
 
-todo.today = function (data) {
-	return m.request({ method: "GET", url: "/api/dnd/today", type: todo.TODO})
+todo.today = function (date) {
+    date = date || "";
+	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODO})
 }
 
 todo.updateNote = (taskId, note) => {

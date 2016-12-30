@@ -19,8 +19,8 @@ var Task = mongoose.Schema({
     ]
 })
 
-Task.static("getToday", function () {
-    var today = todayString();
+Task.static("getToday", function (date) {
+    var today = date ? date: todayString();
     return this.find({date: today, assigned: true });
 })
 
