@@ -5,6 +5,8 @@ var timerObservable = require("../utils/timerObservable");
 var util = require("../utils/util");
 var updateClockObservable = require("../utils/updateObservable");
 
+require("./timer.scss");
+
 var timer = {
     controller: function (data) {
         let vm = this;
@@ -13,7 +15,8 @@ var timer = {
     },
     view: function (ctrl) {
         return m(".pomo-item", [
-            m(".pomo-title", `finished-${ctrl.eachPomo.isFinished()}`),
+            // m(".pomo-title", `finished-${ctrl.eachPomo.isFinished()}`),
+			m("img[src='/imgs/tomato.svg'].pomodoro-today-list_display_img"),
 
             ctrl.eachPomo.hasStarted()? util.isRunning(ctrl.eachPomo.status(), ctrl.eachPomo.startTime()) ? m("div", {config: function (el, init) {
                 if (!init) {
@@ -29,15 +32,20 @@ var timer = {
                     }, 1000);
                 }
             }}, `has elapsed ${util.elapsed(ctrl.eachPomo.startTime()).formatted}`): m("div", "has finished!"):
-            m("button", {
-                disabled: !ctrl.eachPomo.runnable(),
-                onclick: () => {
-                    clockObserver.next({
-                        taskId: ctrl.task,
-                        pomodoroId: ctrl.eachPomo
-                    })
-                }                        // onclick: console.log.bind(null, "click")
-            }, "start")
+            m(".ui.vertical.labeled.icon.buttons", [
+                m("button.ui.button", {
+                    disabled: !ctrl.eachPomo.runnable(),
+                    onclick: () => {
+                        clockObserver.next({
+                            taskId: ctrl.task,
+                            pomodoroId: ctrl.eachPomo
+                        })
+                    }                        // onclick: console.log.bind(null, "click")
+                }, [
+                    m("i.play.icon"),
+                    m("span", "start")
+                ])
+            ])
         ]);
     }
 }

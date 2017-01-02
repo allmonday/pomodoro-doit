@@ -10,15 +10,16 @@ var AddItem = {
             vm.name("");
         }
     }, 
+
     view: function (ctrl) {
-        return m(".add-item", [
-            m("input[type='text'].add-item_input", {
+        return m("#pomodoro-add.ui.form", [
+            m("input[type='text']#pomodoro-add-item_input", {
                 onchange: m.withAttr("value", ctrl.name),
                 value: ctrl.name()
             }),
-            m("button.add-item_submit", {
+            m("button.ui.button.primary", {
                 onclick: ctrl.add
-            },"add"),
+            },"Add"),
         ]);
     }
 }
