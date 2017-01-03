@@ -9,17 +9,27 @@ var AddItem = {
             data.addHandler(vm.name());
             vm.name("");
         }
+        vm.addToday = () => {
+            data.addTodayHandler(vm.name());
+            vm.name("");
+        }
     }, 
 
     view: function (ctrl) {
-        return m("#pomodoro-add.ui.form", [
-            m("input[type='text']#pomodoro-add-item_input", {
+        return m("#pomodoro-add.ui.mini.form", [
+            m("input[type='text'][autocomplete='off']#pomodoro-add-item_input", {
                 onchange: m.withAttr("value", ctrl.name),
                 value: ctrl.name()
             }),
-            m("button.ui.button.primary", {
-                onclick: ctrl.add
-            },"Add"),
+            m("#pomodoro-add_buttons", [
+                m("button.ui.button.primary", {
+                    onclick: ctrl.add
+                },"Add Task"),
+                m("button.ui.button.orange", {
+                    onclick: ctrl.addToday
+                },"Add Today"),
+
+            ])
         ]);
     }
 }

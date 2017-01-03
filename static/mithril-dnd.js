@@ -65,8 +65,9 @@ var widget = {
 		vm.addPomo = (item) => {
 			if (item.pomodoros().length >= 5) {
 				return false;
+			} else {
+				todo.addPomo(item._id()).then(update.bind(vm));
 			}
-			todo.addPomo(item._id()).then(update.bind(vm));
 		}
 		vm.subPomo = (id) => {
 			todo.subPomo(id).then(update.bind(vm));
@@ -83,18 +84,26 @@ var widget = {
 		vm.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
 			todo.updatePomodoro(taskId, pomodoroId, validTime, interuptCount).then(update.bind(vm));
 		}
+
 		vm.offset = 0;
+
 		vm.prevDate = function () {
 			vm.offset += 1;
 			vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
 		};
+
 		vm.backToday = function () {
+			vm.offset = 0;
 			vm.today = todo.today();
 		};
+
 		vm.nextDate = function () {
-			vm.offset -= 1;
-			vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
+			if (vm.offset > 0) {
+				vm.offset -= 1;
+				vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
+			}
 		};
+
 		// set observables
 		clockObserver.subscribe((obj) => {
 			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(vm));
@@ -106,8 +115,16 @@ var widget = {
 			m.endComputation();
 		});
 
+		vm.addTodayTask = function (name) {
+			if (_.isEmpty(vm.today())) {
+				todo.addTodayTask(name, null).then(update.bind(vm));
+			} else {
+				let prevNode = _.last(vm.today())._id();
+				todo.addTodayTask(name, prevNode).then(update.bind(vm));
+			}
+		};
 
-		vm.onchange = (item, e) => {
+		vm.onchange = function moveTask(item, e) {
 			let prev = isTop(e);
 			e.target.classList.remove("selected");
 			e.stopPropagation();  // ul also has it
@@ -146,8 +163,7 @@ var widget = {
 		return [
 			m("#pomodoro-container", [
 				m("#pomodoro-task", [
-					m(addItem, {addHandler: ctrl.addTask}),
-
+					m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
 					m("#pomodoro-task_items.ui.list", [
 						ctrl.task().map(function (item) {
 							return m(".pomodoro-task_item", {
@@ -162,10 +178,10 @@ var widget = {
 
 				m("#pomodoro-today", [
 					m("#pomodoro-today-operate", [
-						m("button", { onclick: ctrl.prevDate }, "<"),
+						m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
 						m("span", `${ctrl.offset} days ago`),
-						m("button", { onclick: ctrl.nextDate }, ">"),
-						m("button", { onclick: ctrl.backToday }, "today")
+						m("button.ui.button.mini", { onclick: ctrl.nextDate }, ">"),
+						m("button.ui.button.mini.primary", { onclick: ctrl.backToday }, "today"),
 					]),
 
 					m(".#pomodoro-today-list.ui.list", {

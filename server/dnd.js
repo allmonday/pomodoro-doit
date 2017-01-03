@@ -31,19 +31,54 @@ dnd.route("/task")
         Task.update({_id: taskId}, {$set: {note: note}}).then(() => res.send());
     })
     .post(function (req, res) {
-        var task = new Task({
-            name: req.body.name,
-            note: "",
-            createTime: new Date(),
-            updateTime: new Date(),
-            assigned: false
-        })
-        task.save()
-            .then((data) => {
-                res.send();
-            }, (err) => {
-                res.status(404).send(err); 
+        let prevNode = req.body.prevNode;
+
+        if (typeof prevNode === "undefined") {  // just create task 
+            var task = new Task({
+                name: req.body.name,
+                note: "",
+                createTime: new Date(),
+                updateTime: new Date(),
             })
+            task.save()
+                .then((data) => {
+                    res.send();
+                }, (err) => {
+                    res.status(404).send(err); 
+                });
+
+        } else if (prevNode === null) {  // first element of today task
+            var task = new Task({
+                name: req.body.name,
+                note: "",
+                assigned: true,
+                isHead: true,
+                date: todayGetter(),
+                createTime: new Date(),
+                updateTime: new Date(),
+            })
+            task.save()
+                .then((data) => {
+                    res.send();
+                })
+        } else {  // append to today tasks
+            console.log('else');
+            var task = new Task({
+                name: req.body.name,
+                note: "",
+                date: todayGetter(),
+                assigned: true,
+                createTime: new Date(),
+                updateTime: new Date(),
+            })
+            task.save()
+                .then((data) => {
+                    return Task.update({_id: prevNode}, {$set: {nextNode: data._id}})
+                }).then(() =>{
+                    res.send(); 
+                })
+        }
+
     })
     .delete(function (req, res) {
         let currentid = req.body.id;

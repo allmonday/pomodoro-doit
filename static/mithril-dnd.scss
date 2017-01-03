@@ -29,6 +29,7 @@ body {
     border-right-width: 0;
     width: 300px;
     &_items {
+      margin-top: 0;
       overflow-y: auto;
       flex-grow: 1;
     }
@@ -39,10 +40,15 @@ body {
     // parent 
     display: flex;
     flex-direction: column;
-
     // child
     flex-grow: 0;
+    &-operate {
+      border-bottom: 1px solid #ccc;
+      padding: 12px;
+      padding-bottom: 13px;
+    }
     &-list {
+      margin-top: 0;
       min-height: 50px;
       border-top: 1px solid #ccc;
       border-bottom: 1px solid #ccc;
@@ -60,7 +66,7 @@ body {
   &_item {
     $height: 50px;
     padding: 10px;
-    font-size: 18px;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-top-width: 0;
     border-left-width: 0;
@@ -79,6 +85,9 @@ body {
 
 .pomodoro-today-list {
   &_item {
+    &:first-child {
+      border-top-width: 0;
+    }
     border: 1px solid #ccc;
     border-width: 0;
     border-top-width: 1px;
@@ -86,7 +95,7 @@ body {
   }
   &_display {
     &_name {
-      font-size: 18px;
+      font-size: 16px;
     }
     &_img {
       height: 36px;

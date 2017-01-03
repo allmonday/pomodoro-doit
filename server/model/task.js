@@ -10,7 +10,7 @@ var Task = mongoose.Schema({
     createTime: { type: Date, default: Date.now },
     updateTime: { type: Date, default: Date.now },
     finished: {type: Boolean, default: false }, 
-    assigned: Boolean,
+    assigned: { type: Boolean, default: false },
     prevNode: { type: String, default: ""},
     nextNode: { type: String, default: ""},
     isHead: {type: Boolean, default: false },

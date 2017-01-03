@@ -15,7 +15,6 @@ var timer = {
     },
     view: function (ctrl) {
         return m(".pomo-item", [
-            // m(".pomo-title", `finished-${ctrl.eachPomo.isFinished()}`),
 			m("img[src='/imgs/tomato.svg'].pomodoro-today-list_display_img"),
 
             ctrl.eachPomo.hasStarted()? util.isRunning(ctrl.eachPomo.status(), ctrl.eachPomo.startTime()) ? m("div", {config: function (el, init) {
@@ -27,11 +26,11 @@ var timer = {
                             el.innerHTML = `has finished`;
                             clearInterval(interval);
                         } else {
-                            el.innerHTML = `has elapsed ${elapsedTime.formatted}`;
+                            el.innerHTML = `${elapsedTime.formatted}`;
                         }
                     }, 1000);
                 }
-            }}, `has elapsed ${util.elapsed(ctrl.eachPomo.startTime()).formatted}`): m("div", "has finished!"):
+            }}, `${util.elapsed(ctrl.eachPomo.startTime()).formatted}`): m("div", "Finished"):
             m(".ui.vertical.labeled.icon.buttons", [
                 m("button.ui.button", {
                     disabled: !ctrl.eachPomo.runnable(),

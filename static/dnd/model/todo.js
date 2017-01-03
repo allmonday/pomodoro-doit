@@ -85,6 +85,10 @@ todo.addTask = (name) => {
 	return m.request({ method: "post", url: "/api/dnd/task", data: {name: name}});
 }
 
+todo.addTodayTask = (name, prevNode) => {
+    return m.request({ method: 'post', url: "/api/dnd/task", data: { name: name, prevNode: prevNode}});
+}
+
 todo.addPomo = function (id) {
 	return m.request({method: "post", url: "/api/dnd/today/pomodoro", data: {id: id}});
 }
