@@ -26,11 +26,11 @@ var timer = {
                             el.innerHTML = `has finished`;
                             clearInterval(interval);
                         } else {
-                            el.innerHTML = `${elapsedTime.formatted}`;
+                            el.innerHTML = `running...`;
                         }
                     }, 1000);
                 }
-            }}, `${util.elapsed(ctrl.eachPomo.startTime()).formatted}`): m("div", "Finished"):
+            }}, ""): m("div", "Finished"):
             m(".ui.vertical.labeled.icon.buttons", [
                 m("button.ui.button", {
                     disabled: !ctrl.eachPomo.runnable(),

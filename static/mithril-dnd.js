@@ -107,12 +107,12 @@ var widget = {
 		// set observables
 		clockObserver.subscribe((obj) => {
 			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(vm));
-		})
+		});
+
 		timerObservable.subscribe(() => { }, () => {}, () => { 
 			// redraw
-			m.startComputation();
 			vm.init();
-			m.endComputation();
+			m.redraw();
 		});
 
 		vm.addTodayTask = function (name) {
@@ -156,7 +156,7 @@ var widget = {
 			} else {
 				targetid = null
 			}
-			todo.move(sourceid, targetid, isInter).then(update.bind(this));
+			todo.move(sourceid, targetid, isInter).then(update.bind(vm));
 		}
 	},
 	view : function (ctrl) {

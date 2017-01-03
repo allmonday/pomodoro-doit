@@ -62,7 +62,6 @@ dnd.route("/task")
                     res.send();
                 })
         } else {  // append to today tasks
-            console.log('else');
             var task = new Task({
                 name: req.body.name,
                 note: "",
