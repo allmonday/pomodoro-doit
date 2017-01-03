@@ -32,11 +32,15 @@ dnd.route("/task")
     })
     .post(function (req, res) {
         let prevNode = req.body.prevNode;
+        if (!req.body.name) {
+            return res.status(400).send({error: 'name is empty'});
+        }
 
         if (typeof prevNode === "undefined") {  // just create task 
             var task = new Task({
                 name: req.body.name,
                 note: "",
+                pomodoros: [{}],
                 createTime: new Date(),
                 updateTime: new Date(),
             })
@@ -44,7 +48,7 @@ dnd.route("/task")
                 .then((data) => {
                     res.send();
                 }, (err) => {
-                    res.status(404).send(err); 
+                    res.status(400).send(err); 
                 });
 
         } else if (prevNode === null) {  // first element of today task
@@ -53,6 +57,7 @@ dnd.route("/task")
                 note: "",
                 assigned: true,
                 isHead: true,
+                pomodoros: [{}],
                 date: todayGetter(),
                 createTime: new Date(),
                 updateTime: new Date(),
@@ -67,6 +72,7 @@ dnd.route("/task")
                 note: "",
                 date: todayGetter(),
                 assigned: true,
+                pomodoros: [{}],
                 createTime: new Date(),
                 updateTime: new Date(),
             })
@@ -80,27 +86,11 @@ dnd.route("/task")
 
     })
     .delete(function (req, res) {
-        let currentid = req.body.id;
-        Task.findById(currentid)
-            .then((item) => {
-                let nextNode = item.nextNode;
-
-                if (item.isHead && item.nextNode) {  // if element is head element, set nextNode isHead true
-                    return Task.update({_id: nextNode }, {$set: { isHead: true }});
-                } else {  // if element is not head element, find prevNode use nextNode, set it's nextNode;
-                    return Task.update({nextNode: currentid}, {$set: { nextNode: nextNode }});
-                }
+        Task.remove({_id: req.body._id})
+            .then(() => {
+                res.send();
             })
-            .then(() => {  // clear task
-                return Task.update({_id: req.body.id}, {$set: { 
-                    date: "", 
-                    assigned: false, 
-                    isHead: false, 
-                    nextNode: "" 
-                }});
-            })
-            .then(() => { res.send() });
-    });
+    })
 
 dnd.route("/today")
     .get(function (req, res) {
@@ -236,6 +226,29 @@ dnd.route("/today")
             }
         }
     })
+    .delete(function (req, res) {
+        let currentid = req.body.id;
+        Task.findById(currentid)
+            .then((item) => {
+                let nextNode = item.nextNode;
+
+                if (item.isHead && item.nextNode) {  // if element is head element, set nextNode isHead true
+                    return Task.update({_id: nextNode }, {$set: { isHead: true }});
+                } else {  // if element is not head element, find prevNode use nextNode, set it's nextNode;
+                    return Task.update({nextNode: currentid}, {$set: { nextNode: nextNode }});
+                }
+            })
+            .then(() => {  // clear task
+                return Task.update({_id: req.body.id}, {$set: { 
+                    date: "", 
+                    assigned: false, 
+                    isHead: false, 
+                    nextNode: "" 
+                }});
+            })
+            .then(() => { res.send() });
+    });
+
 
 dnd.route("/today/pomodoro/start")
     .put(function (req, res) {  // start pomodoro

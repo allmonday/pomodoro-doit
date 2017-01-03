@@ -30,17 +30,14 @@ function dragdrop(element, options) {
     element.addEventListener("dragend", deactivate)
 
     function activate(e) {
-		if (e.target.localName === 'li') {
-			let top = isTop(e);
-			e.target.classList.remove('top');
-			e.target.classList.remove('bottom');
-			e.target.classList.add(top? 'top': 'bottom');
-			e.target.classList.add('selected');
-		}
+		e.target.classList.add("over");
+		let top = isTop(e);
+		e.target.classList.remove('top', 'bottom');
+		e.target.classList.add(top? 'top': 'bottom');
         e.preventDefault()
     }
     function deactivate(e) { 
-		e.target.classList.remove('selected'); 
+		e.target.classList.remove("over");
 	}
 }
 
@@ -56,10 +53,12 @@ var widget = {
 		vm.init();
 		vm.dragstart = (item, e) => {
 			let dt = e.dataTransfer;
+			// e.target.classList.add("no-over");
 			dt.setData("Text", item._id());
 		}
 		vm.interdragstart = (item, e) => {
 			let dt = e.dataTransfer;
+			// e.target.classList.add("no-over");
 			dt.setData("Text", `inter-${item._id()}`);
 		}
 		vm.addPomo = (item) => {
@@ -74,6 +73,9 @@ var widget = {
 		}
 		vm.addTask = (name) => {
 			todo.addTask(name).then(update.bind(vm));
+		}
+		vm.removeTask = (taskId) => {
+			todo.removeTask(taskId).then(update.bind(vm));
 		}
 		vm.cancelTask = (name) => {
 			todo.cancelTask(name).then(update.bind(vm));
@@ -126,7 +128,7 @@ var widget = {
 
 		vm.onchange = function moveTask(item, e) {
 			let prev = isTop(e);
-			e.target.classList.remove("selected");
+			e.target.classList.remove("over");
 			e.stopPropagation();  // ul also has it
 
 			let interTest = /^inter\-([0-9a-fA-F]){24}$/;
@@ -167,10 +169,11 @@ var widget = {
 					m("#pomodoro-task_items.ui.list", [
 						ctrl.task().map(function (item) {
 							return m(".pomodoro-task_item", {
-								draggable: true,
+								draggable: todo.runningTask().hasRunning()? false: true,
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
 							},[
-								m("p.pomodoro-task_item-content", `${item.name()}`), 
+								m("i.remove.outline.icon.circle.pomodoro-task_item_remove", {onclick: ctrl.removeTask.bind(null, item._id())}),
+								m("p.pomodoro-task_item-content", `${item.name()}`)
 							]);
 						})
 					]),
@@ -192,7 +195,7 @@ var widget = {
 					}, [
 						ctrl.today().map(function(item) {
 							return m(".pomodoro-today-list_item", {
-								draggable: true,
+								draggable: todo.runningTask().hasRunning()? false : true,  // freeze if task is running
 								ondrop: ctrl.onchange.bind(null, item),
 								ondragstart: ctrl.interdragstart.bind(ctrl, item),
 								config: function (element, isInitialized) {
@@ -201,10 +204,11 @@ var widget = {
 							}, [
 								m(".pomodoro-today-list_display", [
 									m("p.pomodoro-today-list_display_name", `${item.name()}`),
-									m("button.button.mini.ui.primary", {
+									item.pomodoros().length >= 5 ? m("span"): m("button.button.mini.ui.primary", {
 										onclick: ctrl.addPomo.bind(null, item)
 									}, 'add'),
-									m("button.button.mini.ui.teal", {
+
+									item.pomodoros().length <= 1? m("span"): m("button.button.mini.ui.teal", {
 										onclick: ctrl.subPomo.bind(null, item._id())
 									}, 'sub'),
 									m("button.button.mini.ui", {

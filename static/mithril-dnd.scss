@@ -65,7 +65,7 @@ body {
 
 .pomodoro-task {
   &_item {
-    $height: 50px;
+    $height: 70px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -81,11 +81,28 @@ body {
       word-wrap: break-word;
       word-break: normal;
     }
+    &_remove {
+      float: right;
+    }
   }
 }
 
 .pomodoro-today-list {
   &_item {
+    &.over {
+      * {
+        pointer-events: none;
+      }
+      &.no-over {
+        background: #fff!important;
+      }
+      &.top {
+          background: linear-gradient(to bottom, #ddd, white);
+      }
+      &.bottom {
+          background: linear-gradient(to top, #ddd, white);
+      }
+    }
     &:first-child {
       border-top-width: 0;
     }

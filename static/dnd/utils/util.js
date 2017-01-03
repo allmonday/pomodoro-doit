@@ -21,10 +21,13 @@ function isRunning(status, date, range) {
 function elapsed(date) {
     let minutes = moment().diff(date, 'minute'); 
     let seconds = moment().diff(date, 'second');
-    seconds = seconds - 60 * minutes;
+    let percent = seconds / (25 * 60) * 100;
+    let left_seconds = seconds - 60 * minutes;
+
     return {
-        formatted: `${minutes} minutes and ${seconds} seconds`,
+        formatted: `${minutes} minutes and ${left_seconds} seconds`,
         minutes: minutes,
+        percent: percent,
     }
 }
 

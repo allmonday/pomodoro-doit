@@ -31,7 +31,7 @@ var timer = {
                     }, 1000);
                 }
             }}, ""): m("div", "Finished"):
-            m(".ui.vertical.labeled.icon.buttons", [
+            m(".ui.vertical.labeled.icon.buttons.tiny", [
                 m("button.ui.button", {
                     disabled: !ctrl.eachPomo.runnable(),
                     onclick: () => {
