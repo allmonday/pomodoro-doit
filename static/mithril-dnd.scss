@@ -1,41 +1,95 @@
-ul {
-  // border: 1px solid #ccc;
-  padding: 0;
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
-ul.task,
-ul.today {
-  width: 300px;
-  float: left;
-  margin-left: 20px;
-  overflow: hidden;
-}
-ul.today {
-  min-height: 20px;
-  border: 1px solid #ccc;
+body {
+  padding: 10px;
 }
 
-ul li {
-  $height: 30px;
-  border: 1px solid #ccc;
-  list-style-type: none;
-  min-height: $height;
-  line-height: $height;
-  text-align: center;
+#pomodoro-app {
+  height: 100%;
+}
+#pomodoro-container {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
-.selected {
-  border: 1px solid #ccc;
-  &.top {
-    border-top-width: 5px;
-    border-top-color: #ccc;
+#pomodoro {
+  &-task {
+    // parent
+    display: flex;
+    flex-direction: column;
+
+    // child
+    flex-grow: 0;
+    border: 1px solid #ccc;
+    border-right-width: 0;
+    width: 300px;
+    &_items {
+      overflow-y: auto;
+      flex-grow: 1;
+    }
   }
-  &.bottom {
-    border-bottom-width: 5px;
-    border-top-color: #ccc;
+  &-today {
+    border: 1px solid #ccc;
+    width: 300px;
+    // parent 
+    display: flex;
+    flex-direction: column;
+
+    // child
+    flex-grow: 0;
+    &-list {
+      min-height: 50px;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      overflow-y: auto;
+    }
+  }
+  &-clock {
+    border: 1px solid #ccc;
+    border-left-width: 0;
+    flex-grow: 1;
   }
 }
 
-.pomo-item {
-  border-top: 1px solid #ccc;
+.pomodoro-task {
+  &_item {
+    $height: 50px;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    min-height: $height;;
+    vertical-align: middle;
+    &:first-child {
+      border-top-width: 1px;
+    }
+    &-content {
+      word-wrap: break-word;
+      word-break: normal;
+    }
+  }
+}
+
+.pomodoro-today-list {
+  &_item {
+    border: 1px solid #ccc;
+    border-width: 0;
+    border-top-width: 1px;
+    padding: 10px;
+  }
+  &_display {
+    &_name {
+      font-size: 18px;
+    }
+    &_img {
+      height: 36px;
+    }
+  }
 }

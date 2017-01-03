@@ -144,36 +144,38 @@ var widget = {
 	},
 	view : function (ctrl) {
 		return [
-			m(".container", [
-				m("ul.task", [
-					m("li", [
-						m(addItem, {addHandler: ctrl.addTask}),
+			m("#pomodoro-container", [
+				m("#pomodoro-task", [
+					m(addItem, {addHandler: ctrl.addTask}),
+
+					m("#pomodoro-task_items.ui.list", [
+						ctrl.task().map(function (item) {
+							return m(".pomodoro-task_item", {
+								draggable: true,
+								ondragstart: ctrl.dragstart.bind(ctrl, item)
+							},[
+								m("p.pomodoro-task_item-content", `${item.name()}`), 
+							]);
+						})
 					]),
-					ctrl.task().map(function (item) {
-						return m("li", {
-							draggable: true,
-							ondragstart: ctrl.dragstart.bind(ctrl, item)
-						},[
-							m("p", `${item.name()}-${item._id()}`), 
-						]);
-					})
 				]),
-				m(".today-list", [
-					m(".operate", [
+
+				m("#pomodoro-today", [
+					m("#pomodoro-today-operate", [
 						m("button", { onclick: ctrl.prevDate }, "<"),
 						m("span", `${ctrl.offset} days ago`),
 						m("button", { onclick: ctrl.nextDate }, ">"),
 						m("button", { onclick: ctrl.backToday }, "today")
 					]),
 
-					m("ul.today", {
+					m(".#pomodoro-today-list.ui.list", {
 						ondrop: ctrl.onchange.bind(null, null),
 						config: function (element, isInitialized) {
 							if (!isInitialized) { dragdrop(element) }
 						}
 					}, [
 						ctrl.today().map(function(item) {
-							return m("li", {
+							return m(".pomodoro-today-list_item", {
 								draggable: true,
 								ondrop: ctrl.onchange.bind(null, item),
 								ondragstart: ctrl.interdragstart.bind(ctrl, item),
@@ -181,15 +183,15 @@ var widget = {
 									if (!isInitialized) { dragdrop(element); }
 								}
 							}, [
-								m("div", [
-									m("p", `${item.name()}-${item._id()}`),
-									m("button", {
+								m(".pomodoro-today-list_display", [
+									m("p.pomodoro-today-list_display_name", `${item.name()}`),
+									m("button.button.mini.ui.primary", {
 										onclick: ctrl.addPomo.bind(null, item)
 									}, 'add'),
-									m("button", {
+									m("button.button.mini.ui.teal", {
 										onclick: ctrl.subPomo.bind(null, item._id())
 									}, 'sub'),
-									m("button", {
+									m("button.button.mini.ui", {
 										onclick: ctrl.cancelTask.bind(null, item._id())
 									}, 'cancel')
 								]),
@@ -200,17 +202,18 @@ var widget = {
 							])
 						})
 					]),
-
 				]),
-				m(clock, {
-					task: ctrl.clock.task,
-					pomodoro: ctrl.clock.pomodoro,
-					updateNote: ctrl.updateNote,
-					updatePomodoro: ctrl.updatePomodoro
-				})
+				m("#pomodoro-clock", [
+					m(clock, {
+						task: ctrl.clock.task,
+						pomodoro: ctrl.clock.pomodoro,
+						updateNote: ctrl.updateNote,
+						updatePomodoro: ctrl.updatePomodoro
+					})
+				])
 			])
 		]
 	}
 };
 
-m.mount(document.body, widget);
+m.mount(document.querySelector("#pomodoro-app"), widget);

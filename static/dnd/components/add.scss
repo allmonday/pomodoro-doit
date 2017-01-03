@@ -1,9 +1,10 @@
-.add-item {
+#pomodoro-add {
+    flex-grow: 0;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
     &_input {
-        float: left;
-        width: 100px;
-    }
-    &_submit {
-        float: left;
+        margin-right: 10px;
     }
 }
+
