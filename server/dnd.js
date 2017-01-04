@@ -5,12 +5,10 @@ var q = require("q");
 var express = require("express");
 var dnd = express();
 var _ = require("lodash");
-var mongourl = config.mongourl || "mongodb://localhost:27017/pomodoro";
 var mongoose = require("mongoose");
-mongoose.connect(mongourl);
 var db = mongoose.connection;
-var todayGetter = require("./utils/today");
 var Task = require("./model/task");
+var todayGetter = require("./utils/today");
 var sortList = require("./utils/sort-today");
 
 db.once("open", function () {
