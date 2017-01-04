@@ -1,6 +1,7 @@
 var m = require("mithril");
 var _ = require("lodash");
 var moment = require("moment");
+var markdown = require( "markdown" ).markdown;
 
 require("./mithril-dnd.scss");
 
@@ -53,12 +54,10 @@ var widget = {
 		vm.init();
 		vm.dragstart = (item, e) => {
 			let dt = e.dataTransfer;
-			// e.target.classList.add("no-over");
 			dt.setData("Text", item._id());
 		}
 		vm.interdragstart = (item, e) => {
 			let dt = e.dataTransfer;
-			// e.target.classList.add("no-over");
 			dt.setData("Text", `inter-${item._id()}`);
 		}
 		vm.addPomo = (item) => {
@@ -106,10 +105,9 @@ var widget = {
 			}
 		};
 
-		// set observables
-		clockObserver.subscribe((obj) => {
-			todo.startClock(obj.taskId, obj.pomodoroId).then(update.bind(vm));
-		});
+		vm.startHandler = function (obj) {
+			todo.startClock(obj.taskId._id(), obj.pomodoroId._id()).then(vm.init); 
+		}
 
 		timerObservable.subscribe(() => { }, () => {}, () => { 
 			// redraw
@@ -163,28 +161,36 @@ var widget = {
 	},
 	view : function (ctrl) {
 		return [
-			m("#pomodoro-container", [
-				m("#pomodoro-task", [
+			m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments", [
+				m("#pomodoro-task.ui.segment", [
 					m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
+					todo.runningTask().hasRunning() ? m(".ui.message.yellow", [
+						m("p", "pomodoro is running, unable to drag")
+					]): m("div"),
 					m("#pomodoro-task_items.ui.list", [
 						ctrl.task().map(function (item) {
-							return m(".pomodoro-task_item", {
+							return m(".pomodoro-task_item.orange.ui.segment", {
 								draggable: todo.runningTask().hasRunning()? false: true,
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
 							},[
-								m("i.remove.outline.icon.circle.pomodoro-task_item_remove", {onclick: ctrl.removeTask.bind(null, item._id())}),
-								m("p.pomodoro-task_item-content", `${item.name()}`)
+								m("p.pomodoro-task_item-content", `${item.name()}`),
+								m("button.ui.button.mini.pomodoro-task_item-content_delete", {
+									onclick: ctrl.removeTask.bind(null, item._id())
+								}, [
+									m("i.minus.square.icon"),
+									m("span", "Delete")
+								]),
 							]);
 						})
 					]),
 				]),
 
-				m("#pomodoro-today", [
+				m("#pomodoro-today.ui.segment", [
 					m("#pomodoro-today-operate", [
+						m("label.ui.button.mini.disabled", `${ctrl.offset} days ago`),
 						m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
-						m("span", `${ctrl.offset} days ago`),
 						m("button.ui.button.mini", { onclick: ctrl.nextDate }, ">"),
-						m("button.ui.button.mini.primary", { onclick: ctrl.backToday }, "today"),
+						m("button.ui.button.mini.orange", { onclick: ctrl.backToday }, "Today"),
 					]),
 
 					m(".#pomodoro-today-list.ui.list", {
@@ -194,7 +200,7 @@ var widget = {
 						}
 					}, [
 						ctrl.today().map(function(item) {
-							return m(".pomodoro-today-list_item", {
+							return m(".pomodoro-today-list_item.ui.orange.segment", {
 								draggable: todo.runningTask().hasRunning()? false : true,  // freeze if task is running
 								ondrop: ctrl.onchange.bind(null, item),
 								ondragstart: ctrl.interdragstart.bind(ctrl, item),
@@ -204,18 +210,31 @@ var widget = {
 							}, [
 								m(".pomodoro-today-list_display", [
 									m("p.pomodoro-today-list_display_name", `${item.name()}`),
-									item.pomodoros().length >= 5 ? m("span"): m("button.button.mini.ui.primary", {
+									item.note() ?  m(".ui.stacked.segment.pomodoro-today-list_display_note", [
+										m("div", m.trust(markdown.toHTML(item.note())))
+									]) : m("div"),
+									m("button.button.mini.ui.orange", {
+										disabled: item.pomodoros().length >= 5,
 										onclick: ctrl.addPomo.bind(null, item)
-									}, 'add'),
+									}, [
+										m("i.add.square.icon"),
+										m("span", 'Add')
+									]),
 
-									item.pomodoros().length <= 1? m("span"): m("button.button.mini.ui.teal", {
-										onclick: ctrl.subPomo.bind(null, item._id())
-									}, 'sub'),
 									m("button.button.mini.ui", {
+										disabled: item.pomodoros().length <= 1,
+										onclick: ctrl.subPomo.bind(null, item._id())
+									}, [
+										m("i.minus.square.icon"),
+										m("span", 'Sub')
+									]),
+									m("button.button.mini.ui", {
+										disabled: todo.runningTask().hasRunning(),
 										onclick: ctrl.cancelTask.bind(null, item._id())
-									}, 'cancel')
+									}, 'Cancel')
 								]),
 								m(pomoItem, {
+									startHandler: ctrl.startHandler,
 									item: item,
 									key: JSON.stringify(item)
 								})
@@ -223,7 +242,7 @@ var widget = {
 						})
 					]),
 				]),
-				m("#pomodoro-clock", [
+				m("#pomodoro-clock.ui.segment", [
 					m(clock, {
 						task: ctrl.clock.task,
 						pomodoro: ctrl.clock.pomodoro,

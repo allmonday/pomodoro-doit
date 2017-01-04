@@ -25,7 +25,7 @@ function elapsed(date) {
     let left_seconds = seconds - 60 * minutes;
 
     return {
-        formatted: `${minutes} minutes and ${left_seconds} seconds`,
+        formatted: `${minutes<=9 ? '0'+minutes: minutes} : ${left_seconds<=9 ? '0'+left_seconds: left_seconds}`,
         minutes: minutes,
         percent: percent,
     }

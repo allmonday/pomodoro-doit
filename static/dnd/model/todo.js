@@ -31,7 +31,7 @@ todo.TODO = function (data) {  // class
 	this.prevNode = m.prop(data.prevNode || "");
 	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
         let runnable = false;
-        if (!hasOneUnrunPomo) { 
+        if (!hasOneUnrunPomo && data.assigned) { 
             let isRunning = util.isRunning(item.status, item.startTime);
             runnable = (!item.status || isRunning);  // not start and running pomodo will take the only chance.
             if (runnable) { 
