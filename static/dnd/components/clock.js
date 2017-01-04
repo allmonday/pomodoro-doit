@@ -3,13 +3,13 @@ var _ = require("lodash")
 var util = require("../utils/util");
 require("./clock.scss");
 
-function notifyMe() {
+function notifyMe(name) {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
-    var notification = new Notification('Notification title', {
+    var notification = new Notification('pomodoro finished', {
       icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-      body: `pomodoro finished! take a break`,
+      body: `pomodoro of ${name} has finished! take a break`,
     });
   }
 }
@@ -31,6 +31,7 @@ var clock = {
                 if (elapsedTime.minutes >= 25)  {
                     vm.progress("width: 100%;");
                     vm.timeFormatted('has finished');
+                    notifyMe(vm.task().name());
                     clearInterval(interval);
                 } else {
                     vm.progress(`width: ${elapsedTime.percent}%;`);
@@ -46,10 +47,11 @@ var clock = {
             !_.isEmpty(ctrl.data.pomodoro()) ? m(".pomodoro-clock_view", [
                 m(".pomodoro-clock_view_progress", [
                     m(".pomodoro-clock_progress.ui.progress.orange",[
-                        m(".bar", {style: ctrl.progress()})
+                        m(".bar", {style: ctrl.progress()}, [
+                            m(".progress", `${Math.floor(ctrl.percent())}%`),
+                        ])
                     ]),
-                    m(".ui.label.large", ctrl.timeFormatted()),
-                    m(".ui.label.large", `${Math.floor(ctrl.percent())}%`),
+                    m(".ui.label.huge.orange", ctrl.timeFormatted()),
                 ]),
                 m(".ui.form", {style: 'overflow: hidden;'}, [
                     m(".field", [
@@ -72,7 +74,7 @@ var clock = {
                     ]),
                     m("button.ui.button.orange.mini.right.floated", {onclick: () => ctrl.data.updateNote(ctrl.data.task()._id, ctrl.note())}, "update"),
                 ])
-            ]): m("h2", "select a pomodoro to start!"),
+            ]): m(".ui.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
         ])
     }
 }

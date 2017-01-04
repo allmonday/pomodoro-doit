@@ -49,7 +49,7 @@ var timer = {
                         } 
                     }, [
                         m("i.play.icon"),
-                        m("span", "start")
+                        m("span", "Start")
                     ])
                 ])
         ]);

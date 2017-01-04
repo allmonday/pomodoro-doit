@@ -8,9 +8,8 @@ require("./mithril-dnd.scss");
 var clockObserver = require("./dnd/utils/clockObserver");
 var timerObservable = require("./dnd/utils/timerObservable");
 var todo = require("./dnd/model/todo");
-var pomodoro = require("./dnd/model/pomodoro");
 var addItem = require("./dnd/components/add");
-var pomoItem = require("./dnd/components/pomodoro");
+var pomodoro = require("./dnd/components/pomodoro");
 var clock = require("./dnd/components/clock");
 
 function isTop(e) {
@@ -113,6 +112,7 @@ var widget = {
 			// redraw
 			vm.init();
 			m.redraw();
+			// update.bind(vm)();
 		});
 
 		vm.addTodayTask = function (name) {
@@ -197,7 +197,8 @@ var widget = {
 						ondrop: ctrl.onchange.bind(null, null),
 						config: function (element, isInitialized) {
 							if (!isInitialized) { dragdrop(element) }
-						}
+						},
+						class: ctrl.today().length > 0? "not-empty": "empty" 
 					}, [
 						ctrl.today().map(function(item) {
 							return m(".pomodoro-today-list_item.ui.orange.segment", {
@@ -213,27 +214,30 @@ var widget = {
 									item.note() ?  m(".ui.stacked.segment.pomodoro-today-list_display_note", [
 										m("div", m.trust(markdown.toHTML(item.note())))
 									]) : m("div"),
-									m("button.button.mini.ui.orange", {
-										disabled: item.pomodoros().length >= 5,
-										onclick: ctrl.addPomo.bind(null, item)
-									}, [
-										m("i.add.square.icon"),
-										m("span", 'Add')
-									]),
 
-									m("button.button.mini.ui", {
-										disabled: item.pomodoros().length <= 1,
-										onclick: ctrl.subPomo.bind(null, item._id())
-									}, [
-										m("i.minus.square.icon"),
-										m("span", 'Sub')
+									m(".pomodoro-today-list_operate", [
+										m("button.button.mini.ui.orange", {
+											disabled: item.pomodoros().length >= 5,
+											onclick: ctrl.addPomo.bind(null, item)
+										}, [
+											m("i.add.square.icon"),
+											m("span", 'Add')
+										]),
+
+										m("button.button.mini.ui", {
+											disabled: item.pomodoros().length <= 1,
+											onclick: ctrl.subPomo.bind(null, item._id())
+										}, [
+											m("i.minus.square.icon"),
+											m("span", 'Sub')
+										]),
+										m("button.button.mini.ui", {
+											disabled: todo.runningTask().hasRunning(),
+											onclick: ctrl.cancelTask.bind(null, item._id())
+										}, 'Cancel')
 									]),
-									m("button.button.mini.ui", {
-										disabled: todo.runningTask().hasRunning(),
-										onclick: ctrl.cancelTask.bind(null, item._id())
-									}, 'Cancel')
 								]),
-								m(pomoItem, {
+								m(pomodoro, {
 									startHandler: ctrl.startHandler,
 									item: item,
 									key: JSON.stringify(item)
@@ -244,10 +248,11 @@ var widget = {
 				]),
 				m("#pomodoro-clock.ui.segment", [
 					m(clock, {
+						key: JSON.stringify(ctrl.clock.pomodoro),
 						task: ctrl.clock.task,
 						pomodoro: ctrl.clock.pomodoro,
-						updateNote: ctrl.updateNote,
-						updatePomodoro: ctrl.updatePomodoro
+						updateNote: ctrl.updateNote,  //cb 
+						updatePomodoro: ctrl.updatePomodoro  //cb
 					})
 				])
 			])

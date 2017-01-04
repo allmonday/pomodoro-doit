@@ -56,10 +56,11 @@ todo.task = function(date) {
     global_runnable = false;
     todo.resetRunningTask();
 	return m.request({ method: "GET", url: `/api/dnd/task/`}).then((tasks) => {
-        return tasks.reduce((prev, item) => {
+        let retVal = tasks.reduce((prev, item) => {
             prev.push(new todo.TODO(item));
             return prev;
         }, []);
+        return retVal;
     });
 }
 
