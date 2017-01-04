@@ -6,7 +6,8 @@ var todo = {};
 var global_runnable = false;
 var running = {
     task: m.prop({}),
-    pomodoro: m.prop({}) 
+    pomodoro: m.prop({}),
+    hasRunning: m.prop(false)
 }
 
 todo.runningTask = function () {
@@ -15,6 +16,7 @@ todo.runningTask = function () {
 todo.resetRunningTask = () => {
     running.task({});
     running.pomodoro({});
+    running.hasRunning(false);
 }
 
 todo.TODO = function (data) {  // class
@@ -29,13 +31,14 @@ todo.TODO = function (data) {  // class
 	this.prevNode = m.prop(data.prevNode || "");
 	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
         let runnable = false;
-        if (!hasOneUnrunPomo) { 
+        if (!hasOneUnrunPomo && data.assigned) { 
             let isRunning = util.isRunning(item.status, item.startTime);
             runnable = (!item.status || isRunning);  // not start and running pomodo will take the only chance.
             if (runnable) { 
                 if (isRunning) {
                     running.task(data);
                     running.pomodoro(item);
+                    running.hasRunning(true);
                 }
                 // set clock!
                 hasOneUnrunPomo = true; 
@@ -65,8 +68,20 @@ todo.today = function (date) {
 	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODO})
 }
 
+todo.addTask = (name) => {
+	return m.request({ method: "post", url: "/api/dnd/task", data: {name: name}});
+}
+
 todo.updateNote = (taskId, note) => {
     return m.request({ method: 'put', url: "/api/dnd/task", data: {_id: taskId, note: note}});
+}
+
+todo.removeTask = (taskId) => {
+    return m.request({method: 'delete', url: "/api/dnd/task", data: {_id: taskId}});
+}
+
+todo.addTodayTask = (name, prevNode) => {
+    return m.request({ method: 'post', url: "/api/dnd/task", data: { name: name, prevNode: prevNode}});
 }
 
 todo.move = (sourceid, targetid, isInter) => {
@@ -78,15 +93,7 @@ todo.move = (sourceid, targetid, isInter) => {
 }
 
 todo.cancelTask = (id) => {
-	return m.request({method: "delete", url: "/api/dnd/task", data: {id: id}});
-}
-
-todo.addTask = (name) => {
-	return m.request({ method: "post", url: "/api/dnd/task", data: {name: name}});
-}
-
-todo.addTodayTask = (name, prevNode) => {
-    return m.request({ method: 'post', url: "/api/dnd/task", data: { name: name, prevNode: prevNode}});
+	return m.request({method: "delete", url: "/api/dnd/today", data: {id: id}});
 }
 
 todo.addPomo = function (id) {

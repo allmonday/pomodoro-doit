@@ -11,6 +11,7 @@ body {
   height: 100%;
 }
 #pomodoro-container {
+  margin: 0;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -25,9 +26,8 @@ body {
 
     // child
     flex-grow: 0;
-    border: 1px solid #ccc;
     border-right-width: 0;
-    width: 300px;
+    min-width: 300px;
     &_items {
       margin-top: 0;
       overflow-y: auto;
@@ -35,37 +35,32 @@ body {
     }
   }
   &-today {
-    border: 1px solid #ccc;
-    width: 300px;
+    // width: 300px;
     // parent 
     display: flex;
     flex-direction: column;
     // child
     flex-grow: 0;
     &-operate {
-      border-bottom: 1px solid #ccc;
       padding: 12px;
       padding-bottom: 13px;
     }
     &-list {
-      margin-top: 0;
+      &::-webkit-scrollbar { width: 0 !important }
       min-height: 50px;
-      border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;
       overflow-y: auto;
     }
   }
   &-clock {
     padding: 10px;
-    border: 1px solid #ccc;
-    border-left-width: 0;
     flex-grow: 1;
   }
 }
 
 .pomodoro-task {
   &_item {
-    $height: 50px;
+    $height: 70px;
+    overflow: hidden;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -80,12 +75,32 @@ body {
     &-content {
       word-wrap: break-word;
       word-break: normal;
+      &_delete {
+        float: right;
+      }
+    }
+    &_remove {
+      float: right;
     }
   }
 }
 
 .pomodoro-today-list {
   &_item {
+    &.over {
+      * {
+        pointer-events: none;
+      }
+      &.no-over {
+        background: #fff!important;
+      }
+      &.top {
+          background: linear-gradient(to bottom, #ddd, white);
+      }
+      &.bottom {
+          background: linear-gradient(to top, #ddd, white);
+      }
+    }
     &:first-child {
       border-top-width: 0;
     }
@@ -100,6 +115,10 @@ body {
     }
     &_img {
       height: 36px;
+    }
+    &_note.ui.segment {
+      margin-top: 1em;
+      margin-bottom: 1em;
     }
   }
 }

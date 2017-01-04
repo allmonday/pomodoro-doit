@@ -16,19 +16,18 @@ var AddItem = {
     }, 
 
     view: function (ctrl) {
-        return m("#pomodoro-add.ui.mini.form", [
-            m("input[type='text'][autocomplete='off']#pomodoro-add-item_input", {
-                onchange: m.withAttr("value", ctrl.name),
+        return m("#pomodoro-add.ui.form", [
+            m("input[type='text'][autocomplete='off'][placeholder='enter task']#pomodoro-add-item_input", {
+                oninput: m.withAttr("value", ctrl.name),
                 value: ctrl.name()
             }),
             m("#pomodoro-add_buttons", [
-                m("button.ui.button.primary", {
-                    onclick: ctrl.add
-                },"Add Task"),
-                m("button.ui.button.orange", {
+                m("button.ui.button.orange.mini", {
                     onclick: ctrl.addToday
                 },"Add Today"),
-
+                m("button.ui.button.teal.mini", {
+                    onclick: ctrl.add
+                },"Add Task"),
             ])
         ]);
     }
