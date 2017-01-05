@@ -1,4 +1,5 @@
 $orange: rgba(242,113,28, 0.53);
+$light-orange: rgba(242,113,28, 0.23);
 
 html, body {
   height: 100%;
@@ -13,6 +14,7 @@ body {
   height: 100%;
 }
 #pomodoro-container {
+  
   margin: 0;
   height: 100%;
   display: flex;
@@ -29,7 +31,7 @@ body {
     // child
     flex-grow: 0;
     border-right-width: 0;
-    min-width: 300px;
+    min-width: 250px;
     &_items {
       margin-top: 0;
       overflow-y: auto;
@@ -44,10 +46,10 @@ body {
     // child
     flex-grow: 0;
     &-operate {
-      padding: 12px;
       padding-bottom: 13px;
     }
     &-list {
+      margin-top: 0;
       &.empty {
         background: repeating-linear-gradient(-45deg, #eee, #eee 8px, white 2px, white 13px);
       }
@@ -58,14 +60,16 @@ body {
   }
   &-clock {
     overflow-y: auto;
-    padding: 10px;
     flex-grow: 1;
   }
 }
 
 .pomodoro-task {
   &_item {
-    $height: 70px;
+    &.ui.segment:first-child {
+      margin-top: 20px;
+    }
+    $height: 30px;
     overflow: hidden;
     padding: 10px;
     font-size: 16px;
@@ -79,6 +83,7 @@ body {
       border-top-width: 1px;
     }
     &-content {
+      margin-bottom: 0.3em;
       word-wrap: break-word;
       word-break: normal;
       &_delete {
@@ -97,6 +102,9 @@ body {
     justify-content: space-around; 
   }
   &_item {
+    &.ui.segment:first-child {
+      margin-top: 15px;
+    }
     &.over {
       * {
         pointer-events: none;
@@ -105,10 +113,10 @@ body {
         background: #fff!important;
       }
       &.top {
-          background: linear-gradient(to bottom, $orange, white 30%, white);
+          background: linear-gradient(to bottom, $orange, $light-orange 10%, white);
       }
       &.bottom {
-          background: linear-gradient(to top, $orange, white 30%, white);
+          background: linear-gradient(to top, $orange, $light-orange 10%, white);
       }
     }
     &:first-child {
@@ -136,5 +144,16 @@ body {
 .pomodoro-clock {
   &-new.ui.label {
     border-top-left-radius: 0;
+  }
+}
+
+.pomodoro-util {
+  &_cover {
+    display: block;
+    width: 100%;
+    height: 20px;
+    margin-bottom: -9px;
+    z-index: 10;
+    background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.1));
   }
 }

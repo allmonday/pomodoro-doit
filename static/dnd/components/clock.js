@@ -36,7 +36,7 @@ var clock = {
                 } else {
                     vm.progress(`width: ${elapsedTime.percent}%;`);
                     vm.percent(elapsedTime.percent);
-                    vm.timeFormatted(elapsedTime.formatted);
+                    vm.timeFormatted(elapsedTime.reversedFormatted);
                 }
                 m.redraw();
             }, 1000);

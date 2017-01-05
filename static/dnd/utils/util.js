@@ -17,17 +17,29 @@ function isRunning(status, date, range) {
         return !isFinished(date, range);  // is running and has not finished
     }
 }
+function prefix_zero(num) {
+    if (num <= 9) {
+        return '0' + num;
+    } else {
+        return `${num}`;
+    }
+}
 
 function elapsed(date) {
     let minutes = moment().diff(date, 'minute'); 
     let seconds = moment().diff(date, 'second');
     let percent = seconds / (25 * 60) * 100;
     let left_seconds = seconds - 60 * minutes;
+    let rev_seconds = moment(date).add(25, 'minute').diff(new Date, 'second');
+    let reversed_minutes = Math.floor(rev_seconds / 60);
+    let reversed_seconds = rev_seconds % 60;
 
     return {
-        formatted: `${minutes<=9 ? '0'+minutes: minutes} : ${left_seconds<=9 ? '0'+left_seconds: left_seconds}`,
+        formatted: `${prefix_zero(minutes)} : ${prefix_zero(seconds)}`,
         minutes: minutes,
+        seconds: left_seconds,
         percent: percent,
+        reversedFormatted: `${prefix_zero(reversed_minutes)} : ${prefix_zero(reversed_seconds)}`
     }
 }
 

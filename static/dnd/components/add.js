@@ -6,12 +6,20 @@ var AddItem = {
         let vm = this;
         vm.name = m.prop("");
         vm.add = (e) => {
-            data.addHandler(vm.name());
-            vm.name("");
+            if (vm.name()) {
+                data.addHandler(vm.name());
+                vm.name("");
+            } else {
+                $("#pomodoro-add-item_input").focus();
+            }
         }
         vm.addToday = () => {
-            data.addTodayHandler(vm.name());
-            vm.name("");
+            if (vm.name()) {
+                data.addTodayHandler(vm.name());
+                vm.name("");
+            } else {
+                $("#pomodoro-add-item_input").focus();
+            }
         }
     }, 
 

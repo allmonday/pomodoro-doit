@@ -11,6 +11,7 @@ var todo = require("./dnd/model/todo");
 var addItem = require("./dnd/components/add");
 var pomodoro = require("./dnd/components/pomodoro");
 var clock = require("./dnd/components/clock");
+var confirm = require("./dnd/components/confirm");
 
 function isTop(e) {
 	let top = e.target.offsetTop,
@@ -73,7 +74,16 @@ var widget = {
 			todo.addTask(name).then(update.bind(vm));
 		}
 		vm.removeTask = (taskId) => {
-			todo.removeTask(taskId).then(update.bind(vm));
+			$(".ui.basic.modal")
+				.modal({ 
+					closable: false,
+					onDeny: function () {
+					},
+					onApprove: function () {
+						todo.removeTask(taskId).then(update.bind(vm));
+					}
+				})
+				.modal("show");
 		}
 		vm.cancelTask = (name) => {
 			todo.cancelTask(name).then(update.bind(vm));
@@ -94,13 +104,16 @@ var widget = {
 
 		vm.backToday = function () {
 			vm.offset = 0;
-			vm.today = todo.today();
+			// vm.today = todo.today();
+			vm.init();
 		};
 
 		vm.nextDate = function () {
-			if (vm.offset > 0) {
+			if (vm.offset > 1) {
 				vm.offset -= 1;
 				vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
+			} else {
+				vm.init();
 			}
 		};
 
@@ -164,13 +177,17 @@ var widget = {
 			m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments", [
 				m("#pomodoro-task.ui.segment", [
 					m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
-					todo.runningTask().hasRunning() ? m(".ui.message.yellow", [
+					todo.runningTask().hasRunning() ? m(".ui.message.yellow", {
+						style: 'flex-shrink: 0;'
+					}, [
 						m("p", "pomodoro is running, unable to drag")
 					]): m("div"),
+					m(".pomodoro-util_cover"),
 					m("#pomodoro-task_items.ui.list", [
 						ctrl.task().map(function (item) {
-							return m(".pomodoro-task_item.orange.ui.segment", {
-								draggable: todo.runningTask().hasRunning()? false: true,
+							return m(".pomodoro-task_item.ui.segment", {
+								class: !(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'orange': '', 
+								draggable: (todo.runningTask().hasRunning() || ctrl.offset !== 0)? false: true,
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
 							},[
 								m("p.pomodoro-task_item-content", `${item.name()}`),
@@ -189,11 +206,11 @@ var widget = {
 					m("#pomodoro-today-operate", [
 						m("label.ui.button.mini.disabled", `${ctrl.offset} days ago`),
 						m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
-						m("button.ui.button.mini", { onclick: ctrl.nextDate }, ">"),
 						m("button.ui.button.mini.orange", { onclick: ctrl.backToday }, "Today"),
+						m("button.ui.button.mini", { onclick: ctrl.nextDate }, ">"),
 					]),
-
-					m(".#pomodoro-today-list.ui.list", {
+					m(".pomodoro-util_cover"),
+					m("#pomodoro-today-list.ui.list", {
 						ondrop: ctrl.onchange.bind(null, null),
 						config: function (element, isInitialized) {
 							if (!isInitialized) { dragdrop(element) }
@@ -202,7 +219,7 @@ var widget = {
 					}, [
 						ctrl.today().map(function(item) {
 							return m(".pomodoro-today-list_item.ui.orange.segment", {
-								draggable: todo.runningTask().hasRunning()? false : true,  // freeze if task is running
+								draggable: (todo.runningTask().hasRunning())? false : true,  // freeze if task is running
 								ondrop: ctrl.onchange.bind(null, item),
 								ondragstart: ctrl.interdragstart.bind(ctrl, item),
 								config: function (element, isInitialized) {
@@ -254,7 +271,8 @@ var widget = {
 						updateNote: ctrl.updateNote,  //cb 
 						updatePomodoro: ctrl.updatePomodoro  //cb
 					})
-				])
+				]),
+				m(confirm)
 			])
 		]
 	}

@@ -31,7 +31,9 @@ var timer = {
     },
     view: function (ctrl) {
         return m(".pomo-item", [
-			m("img[src='/imgs/tomato.svg'].pomodoro-today-list_display_img"),
+            ctrl.eachPomo.isFinished() ? 
+                m("img[src='/imgs/tomato-complete.svg'].pomodoro-today-list_display_img"):
+                m("img[src='/imgs/tomato.svg'].pomodoro-today-list_display_img"),
 
             ctrl.eachPomo.hasStarted()? util.isRunning(ctrl.eachPomo.status(), ctrl.eachPomo.startTime()) ? 
                 m("div", ctrl.statusText()):   // running
