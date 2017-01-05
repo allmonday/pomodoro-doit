@@ -46,6 +46,7 @@ body {
     // child
     flex-grow: 0;
     &-operate {
+      margin-top: 15px;
       padding-bottom: 13px;
     }
     &-list {
@@ -113,14 +114,14 @@ body {
         background: #fff!important;
       }
       &.top {
-          background: linear-gradient(to bottom, $orange, $light-orange 10%, white);
+          background: linear-gradient(to bottom, $orange, $light-orange 5%, white 40%);
       }
       &.bottom {
-          background: linear-gradient(to top, $orange, $light-orange 10%, white);
+          background: linear-gradient(to top, $orange, $light-orange 5%, white 40%);
       }
     }
     &:first-child {
-      border-top-width: 0;
+      // border-top-width: 0;
     }
     border: 1px solid #ccc;
     border-width: 0;

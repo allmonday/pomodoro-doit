@@ -10,7 +10,7 @@ var confirm = {
                 m("p", "Confirm")
             ]),
             m(".content", [
-                m("p", "This task will be deleted, are you sure?")
+                m("p", "Are you sure?")
             ]),
             m(".actions", [
                 m(".ui.red.basic.cancel.inverted.button", [

@@ -20,5 +20,8 @@ pomodoro.prototype.isFinished = function() {
 pomodoro.prototype.hasStarted = function () {
 	return !!this.startTime();
 }
+pomodoro.prototype.isRunning = function () {
+	return this.hasStarted() && !this.isFinished();
+}
 
 module.exports = pomodoro;
