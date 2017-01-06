@@ -14,6 +14,7 @@ var pomo = {
                 return m(timer, {
                     eachPomo: eachPomo, 
                     startHandler: ctrl.data.startHandler,
+                    resetPomodoro: ctrl.data.resetPomodoro,
                     task: ctrl.task,
                     key: JSON.stringify(eachPomo)
                 })

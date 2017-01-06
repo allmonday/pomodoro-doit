@@ -12,6 +12,7 @@ var addItem = require("./dnd/components/add");
 var pomodoro = require("./dnd/components/pomodoro");
 var clock = require("./dnd/components/clock");
 var confirm = require("./dnd/components/confirm");
+var util = require("./dnd/utils/util");
 
 function isTop(e) {
 	let top = e.target.offsetTop,
@@ -33,8 +34,8 @@ function dragdrop(element, options) {
     function activate(e) {
 		e.target.classList.add("over");
 		let top = isTop(e);
-		e.target.classList.remove('top', 'bottom');
-		e.target.classList.add(top? 'top': 'bottom');
+		e.target.classList.remove('drag-top', 'drag-bottom');
+		e.target.classList.add(top? 'drag-top': 'drag-bottom');
         e.preventDefault()
     }
     function deactivate(e) { 
@@ -85,6 +86,20 @@ var widget = {
 				})
 				.modal("show");
 		}
+
+		vm.resetPomodoro = (taskId, pomodoroId) => {
+			$(".ui.basic.modal")
+				.modal({ 
+					closable: false,
+					onDeny: function () {
+					},
+					onApprove: function () {
+						todo.resetPomodoro(taskId, pomodoroId).then(update.bind(vm));
+					}
+				})
+				.modal("show");
+		}
+
 		vm.cancelTask = (name) => {
 			todo.cancelTask(name).then(update.bind(vm));
 		}
@@ -103,6 +118,9 @@ var widget = {
 		};
 
 		vm.backToday = function () {
+			if (vm.offset === 0) {
+				return;
+			}
 			vm.offset = 0;
 			// vm.today = todo.today();
 			vm.init();
@@ -112,7 +130,8 @@ var widget = {
 			if (vm.offset > 1) {
 				vm.offset -= 1;
 				vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
-			} else {
+			} else if (vm.offset === 1) {
+				vm.offset -= 1;
 				vm.init();
 			}
 		};
@@ -175,7 +194,7 @@ var widget = {
 	view : function (ctrl) {
 		return [
 			m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments", [
-				m("#pomodoro-task.ui.segment", [
+				m("#pomodoro-task.ui.teal.segment", [
 					m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
 					todo.runningTask().hasRunning() ? m(".ui.message.yellow", {
 						style: 'flex-shrink: 0;'
@@ -184,9 +203,9 @@ var widget = {
 					]): m("div"),
 					m(".pomodoro-util_cover"),
 					m("#pomodoro-task_items.ui.list", [
-						ctrl.task().map(function (item) {
+						(ctrl.task() || []).map(function (item) {
 							return m(".pomodoro-task_item.ui.segment", {
-								class: !(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'orange': '', 
+								class: !(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'teal': '', 
 								draggable: (todo.runningTask().hasRunning() || ctrl.offset !== 0)? false: true,
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
 							},[
@@ -202,7 +221,11 @@ var widget = {
 					]),
 				]),
 
-				m("#pomodoro-today.ui.segment", [
+				m("#pomodoro-today.ui.segment.orange", [
+					m(".pomodoro-today-list_display_estimated.ui.top.large.label", [
+						m("i.icon.wait"),
+						m("span", `${ (ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday())} pomodoros left, need ${ util.minToHour(25 *(ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday()))}.`)
+					]),
 					m("#pomodoro-today-operate", [
 						m("label.ui.button.mini.disabled", `${ctrl.offset} days ago`),
 						m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
@@ -217,8 +240,9 @@ var widget = {
 						},
 						class: ctrl.today().length > 0? "not-empty": "empty" 
 					}, [
-						ctrl.today().map(function(item) {
-							return m(".pomodoro-today-list_item.ui.orange.segment", {
+						(ctrl.today() || []).map(function(item) {
+							return m(".pomodoro-today-list_item.ui.segment", {
+								class: !(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'orange': '', 
 								draggable: (todo.runningTask().hasRunning())? false : true,  // freeze if task is running
 								ondrop: ctrl.onchange.bind(null, item),
 								ondragstart: ctrl.interdragstart.bind(ctrl, item),
@@ -227,8 +251,12 @@ var widget = {
 								}
 							}, [
 								m(".pomodoro-today-list_display", [
+									m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
+										m("i.icon.hourglass.end"),
+										m("span", `${25 * item.pomodoros().length} minutes`)
+									]),
 									m("p.pomodoro-today-list_display_name", `${item.name()}`),
-									item.note() ?  m(".ui.stacked.segment.pomodoro-today-list_display_note", [
+									item.note() ?  m(".ui.pomodoro-today-list_display_note", [
 										m("div", m.trust(markdown.toHTML(item.note())))
 									]) : m("div"),
 
@@ -256,12 +284,20 @@ var widget = {
 								]),
 								m(pomodoro, {
 									startHandler: ctrl.startHandler,
+									resetPomodoro: ctrl.resetPomodoro,
 									item: item,
 									key: JSON.stringify(item)
 								})
 							])
 						})
 					]),
+					m(".pomodoro-util_cover.above"),
+					m(".pomodoro-today-list_summary.ui.button.orange", 
+					{ style: 'flex-shrink: 0;'},
+					[
+						m("i.icon.book"),
+						m("span", "summary")
+					])
 				]),
 				m("#pomodoro-clock.ui.segment", [
 					m(clock, {

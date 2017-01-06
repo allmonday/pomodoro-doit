@@ -43,13 +43,17 @@ body {
     // parent 
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     // child
     flex-grow: 0;
     &-operate {
+      margin-top: 15px;
       padding-bottom: 13px;
     }
     &-list {
+      flex-grow: 1;
       margin-top: 0;
+      margin-bottom: 0;
       &.empty {
         background: repeating-linear-gradient(-45deg, #eee, #eee 8px, white 2px, white 13px);
       }
@@ -112,15 +116,15 @@ body {
       &.no-over {
         background: #fff!important;
       }
-      &.top {
-          background: linear-gradient(to bottom, $orange, $light-orange 10%, white);
+      &.drag-top {
+          background: linear-gradient(to bottom, $orange, $light-orange 5%, white 40%);
       }
-      &.bottom {
-          background: linear-gradient(to top, $orange, $light-orange 10%, white);
+      &.drag-bottom {
+          background: linear-gradient(to top, $orange, $light-orange 5%, white 40%);
       }
     }
     &:first-child {
-      border-top-width: 0;
+      // border-top-width: 0;
     }
     border: 1px solid #ccc;
     border-width: 0;
@@ -155,5 +159,11 @@ body {
     margin-bottom: -9px;
     z-index: 10;
     background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.1));
+    &.above {
+      margin-bottom: 20px;
+      height: 20px;
+      margin-top: -9px;
+      background: linear-gradient( rgba(255,255,255,0.1), #fff);
+    }
   }
 }

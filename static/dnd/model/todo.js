@@ -7,17 +7,23 @@ var global_runnable = false;
 var running = {
     task: m.prop({}),
     pomodoro: m.prop({}),
-    hasRunning: m.prop(false)
+    hasRunning: m.prop(false),
+    totalPomodoroToday: m.prop(0),
+    completedPomodoroToday: m.prop(0)
+}
+
+todo.resetRunningTask = () => {
+    running.task({});
+    running.pomodoro({});
+    running.hasRunning(false);
+    running.totalPomodoroToday(0);
+    running.completedPomodoroToday(0);
 }
 
 todo.runningTask = function () {
     return running;
 }
-todo.resetRunningTask = () => {
-    running.task({});
-    running.pomodoro({});
-    running.hasRunning(false);
-}
+
 
 todo.TODO = function (data) {  // class
     let hasOneUnrunPomo = false || global_runnable;
@@ -30,6 +36,9 @@ todo.TODO = function (data) {  // class
     // calculated prop
 	this.prevNode = m.prop(data.prevNode || "");
 	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
+
+        if (data.assigned) { running.totalPomodoroToday(running.totalPomodoroToday() + 1); }
+
         let runnable = false;
         if (!hasOneUnrunPomo && data.assigned) { 
             let isRunning = util.isRunning(item.status, item.startTime);
@@ -43,6 +52,9 @@ todo.TODO = function (data) {  // class
                 // set clock!
                 hasOneUnrunPomo = true; 
                 global_runnable = true;
+            } else {
+                // is finished
+                running.completedPomodoroToday(running.completedPomodoroToday() + 1);
             }
         } 
         item.runnable = runnable;
@@ -56,11 +68,10 @@ todo.task = function(date) {
     global_runnable = false;
     todo.resetRunningTask();
 	return m.request({ method: "GET", url: `/api/dnd/task/`}).then((tasks) => {
-        let retVal = tasks.reduce((prev, item) => {
+        return tasks.reduce((prev, item) => {
             prev.push(new todo.TODO(item));
             return prev;
         }, []);
-        return retVal;
     });
 }
 
@@ -110,8 +121,11 @@ todo.startClock = (taskId, pomoId) => {
 }
 
 todo.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
-    console.log(taskId, pomodoroId)
 	return m.request({ method: 'put', url: "/api/dnd/today/pomodoro", data: {taskId: taskId, pomodoroId: pomodoroId, validTime: validTime, interuptCount: interuptCount }});
+}
+
+todo.resetPomodoro = (taskId, pomodoroId) => {
+	return m.request({ method: 'put', url: "/api/dnd/today/pomodoro/state", data: {taskId: taskId, pomodoroId: pomodoroId}});
 }
 
 module.exports = todo;

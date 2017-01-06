@@ -37,12 +37,12 @@ var AddItem = {
                 value: ctrl.name()
             }),
             m("#pomodoro-add_buttons", [
-                m("button.ui.button.orange.mini", {
-                    onclick: ctrl.addToday
-                },"Add to Today"),
                 m("button.ui.button.teal.mini", {
                     onclick: ctrl.add
                 },"Add to Task"),
+                m("button.ui.button.orange.mini", {
+                    onclick: ctrl.addToday
+                },"Add to Today"),
             ])
         ]);
     }
