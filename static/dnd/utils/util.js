@@ -43,9 +43,16 @@ function elapsed(date) {
     }
 }
 
+function minToHour(num) {
+    let minutes = num % 60;
+    let hours = Math.floor(num/60);
+    return `${prefix_zero(hours)}h, ${prefix_zero(minutes)}m`;
+}
+
 
 module.exports = {
     isFinished,
     isRunning,
-    elapsed
+    elapsed,
+    minToHour
 }

@@ -34,8 +34,8 @@ function dragdrop(element, options) {
     function activate(e) {
 		e.target.classList.add("over");
 		let top = isTop(e);
-		e.target.classList.remove('top', 'bottom');
-		e.target.classList.add(top? 'top': 'bottom');
+		e.target.classList.remove('drag-top', 'drag-bottom');
+		e.target.classList.add(top? 'drag-top': 'drag-bottom');
         e.preventDefault()
     }
     function deactivate(e) { 
@@ -127,10 +127,11 @@ var widget = {
 		};
 
 		vm.nextDate = function () {
-			if (vm.offset >= 1) {
+			if (vm.offset > 1) {
 				vm.offset -= 1;
 				vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
-			} else {
+			} else if (vm.offset === 1) {
+				vm.offset -= 1;
 				vm.init();
 			}
 		};
@@ -222,8 +223,8 @@ var widget = {
 
 				m("#pomodoro-today.ui.segment.orange", [
 					m(".pomodoro-today-list_display_estimated.ui.top.large.label", [
-						m("i.icon.hourglass.end"),
-						m("span", `${ (ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday())} pomodoros left, need ${ 25 *(ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday())} minutes.`)
+						m("i.icon.wait"),
+						m("span", `${ (ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday())} pomodoros left, need ${ util.minToHour(25 *(ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday()))}.`)
 					]),
 					m("#pomodoro-today-operate", [
 						m("label.ui.button.mini.disabled", `${ctrl.offset} days ago`),
@@ -250,7 +251,7 @@ var widget = {
 								}
 							}, [
 								m(".pomodoro-today-list_display", [
-									m(".pomodoro-today-list_display_estimated.ui.top.left.attached.label", [
+									m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
 										m("i.icon.hourglass.end"),
 										m("span", `${25 * item.pomodoros().length} minutes`)
 									]),
@@ -290,6 +291,13 @@ var widget = {
 							])
 						})
 					]),
+					m(".pomodoro-util_cover.above"),
+					m(".pomodoro-today-list_summary.ui.button.orange", 
+					{ style: 'flex-shrink: 0;'},
+					[
+						m("i.icon.book"),
+						m("span", "summary")
+					])
 				]),
 				m("#pomodoro-clock.ui.segment", [
 					m(clock, {

@@ -22,9 +22,11 @@ npm run dev
 几个改进点:
 - [x] 改成倒计
 - today task 可以点击, 在另一个窗口中之间编辑
+- note 设置成 debounce 之后自动保存
 - []统计功能 (不然一天白忙活, 没个总结)
 - [] 当天未完成的功能在左边显示出来
 - [x] task 和today 的框都太大了点
 - [x] 删除操作弹框确认
+- [] 添加合件键
 
 # understanding mithril

@@ -13,6 +13,12 @@ var timer = {
         vm.task = data.task;
         vm.statusText = m.prop("running...");
         vm.data = data;
+        vm.viewPomo = (taskId, pomodoroId, e) => {
+            if (vm.eachPomo.isFinished()) {
+                console.log(vm.task._id())
+                console.log(vm.eachPomo._id())
+            }
+        }
 
         if(vm.eachPomo.hasStarted() && util.isRunning(vm.eachPomo.status(), vm.eachPomo.startTime())) {
             let interval = setInterval(() => {
@@ -30,7 +36,10 @@ var timer = {
 
     },
     view: function (ctrl) {
-        return m(".pomo-item", [
+        return m(".pomo-item", { 
+            onclick: ctrl.viewPomo,
+            class: ctrl.eachPomo.isFinished() ? "on-hover": ""
+        },[
             m(".tomato.infinite.pulse", {
                 class: ctrl.eachPomo.isRunning() ? 'animated': ''
             }, [
