@@ -80,6 +80,36 @@ describe('Utils', function() {
             prevNode: 100  // one more
         }]);
     });
-
+    it("should throw exception if no head found", function () {
+        var input = [ { _id: '5871f0874b7165b5268d1eac',
+            name: '123',
+            note: '',
+            user: '5871bd5a36968a96e281cbef',
+            __v: 0,
+            pomodoros: [],
+            isHead: false,
+            nextNode: '',
+            prevNode: '',
+            assigned: true,
+            finished: false,
+            updateTime: 'Sun Jan 08 2017 15:55:51 GMT+0800 (CST)',
+            createTime: 'Sun Jan 08 2017 15:55:51 GMT+0800 (CST)',
+            date: '2017-01-08' },
+        { _id: '5871f0914b7165b5268d1eb0',
+            name: 'b',
+            note: '',
+            user: '5871bd5a36968a96e281cbef',
+            __v: 0,
+            pomodoros: [ [Object] ],
+            isHead: false,
+            nextNode: '5871f0874b7165b5268d1eac',
+            prevNode: '',
+            assigned: true,
+            finished: false,
+            updateTime: 'Sun Jan 08 2017 15:56:01 GMT+0800 (CST)',
+            createTime: 'Sun Jan 08 2017 15:56:01 GMT+0800 (CST)',
+            date: '2017-01-08' } ]
+        expect(sortToday.bind(null, input)).to.throw("head not exist");
+     });
   });
 });

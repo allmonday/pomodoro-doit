@@ -12,6 +12,9 @@ function sortLinkedList(inputList) {
 
     var result = [];
     var firstIndex = _.findIndex(inputList, {isHead: true});
+    if (firstIndex === -1) {
+        throw(new Error("head not exist"));
+    }
     var firstItem = inputList[firstIndex];
     var hasnext = firstItem.nextNode;
 
