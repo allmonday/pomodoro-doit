@@ -1,9 +1,10 @@
 function today(time) {
     var today;
     if (time) {
-        today = Date.parse(time);
+        today = new Date(time);
+    } else {
+        today = new Date();
     }
-    today = new Date();
     var year = today.getFullYear();
     var month = prefixZero(today.getMonth() + 1);
     var date = prefixZero(today.getDate());

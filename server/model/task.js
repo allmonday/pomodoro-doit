@@ -28,8 +28,6 @@ Task.static("getToday", function (date) {
 
 Task.static("getTodayByUser", function (date, user) {
     var today = date ? date: todayString();
-    console.log(today);
-    console.log(user);
     return this.find({date: today, assigned: true, user: user });
 })
 
@@ -40,4 +38,11 @@ Task.static("getTodayByUser", function (date, user) {
 //     virtuals: true
 // })
 
-module.exports = mongoose.model('Task', Task);
+var model;
+try {
+    model = mongoose.model('Task', Task);
+} catch (e) {
+    model = mongoose.model('Task');
+}
+
+module.exports = model;

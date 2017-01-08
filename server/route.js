@@ -1,5 +1,7 @@
 var express = require("express");
-var User = require("./model/user");
+var mongoose = require("mongoose");
+var User = mongoose.model("User");
+
 var router = express.Router();
 var passport = require("passport");
 var ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
@@ -62,7 +64,6 @@ router.post("/signup", function (req, res, next) {
 }));
 
 router.get("/", function (req, res, next) {
-    console.log("called");
     User.find()
         .sort({ createdAt: "descending" })
         .exec(function (err, users) {

@@ -6,9 +6,9 @@ var express = require("express");
 var dnd = express();
 var _ = require("lodash");
 var mongoose = require("mongoose");
-var db = mongoose.connection;
-var Task = require("./model/task");
-var User = require("./model/user");
+var Task = mongoose.model("Task");
+var User = mongoose.model("User");
+
 var todayGetter = require("./utils/today");
 var sortList = require("./utils/sort-today");
 

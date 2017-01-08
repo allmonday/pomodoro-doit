@@ -39,6 +39,11 @@ userSchema.methods.checkPassword = function (guess, done) {
     })
 }
 
-var User = mongoose.model("User", userSchema);
+var user;
+try {
+    user = mongoose.model("User", userSchema);
+} catch(e) {
+    user = mongoose.model("User");
+}
 
-module.exports = User;
+module.exports = user;

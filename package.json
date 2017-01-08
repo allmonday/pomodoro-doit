@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -w",
+    "test": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && mocha -w",
     "watch": "webpack -w",
-    "proxy": "browser-sync start --port 8888 -b \"google chrome\" --startPath /page/mithril-dnd --proxy \"http://localhost:4000\" --files \"static/bundle/*.js, views/**/*.html\"",
-    "server": "nodemon ./server.js",
+    "proxy": "browser-sync start --port 8888 -b \"google chrome\" --startPath /app/pomodoro --proxy \"http://localhost:4000\" --files \"static/bundle/*.js, views/**/*.html\"",
+    "server": "export MONGOURL='mongodb://localhost:27017/pomodoro' && nodemon ./server.js",
     "dev": "npm-run-all --parallel proxy server watch"
   },
   "author": "",
@@ -23,6 +23,7 @@
     "jquery": "^3.1.1",
     "lodash": "^4.17.2",
     "markdown": "^0.5.0",
+    "minimist": "^1.2.0",
     "mithril": "^0.2.5",
     "moment": "^2.17.1",
     "mongodb": "^2.2.16",
@@ -35,12 +36,17 @@
   },
   "devDependencies": {
     "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
+    "cheerio": "^0.22.0",
     "css-loader": "^0.26.1",
     "express": "^4.14.0",
+    "mocha": "^3.2.0",
     "node-sass": "^3.13.0",
     "npm-run-all": "^3.1.2",
     "sass-loader": "^4.0.2",
+    "should": "^11.1.2",
     "style-loader": "^0.13.1",
+    "supertest": "^2.0.1",
     "webpack": "^1.13.3"
   }
 }
