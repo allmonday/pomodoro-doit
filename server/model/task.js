@@ -1,9 +1,11 @@
 "use strict";
 var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 var todayString = require("../utils/today");
 var pomodoroSchema = require("./pomodoro");
 
 var Task = mongoose.Schema({
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     date: { type: String, default: ""},
     name: { type: String, required: true},
     note: String,
@@ -22,6 +24,13 @@ var Task = mongoose.Schema({
 Task.static("getToday", function (date) {
     var today = date ? date: todayString();
     return this.find({date: today, assigned: true });
+});
+
+Task.static("getTodayByUser", function (date, user) {
+    var today = date ? date: todayString();
+    console.log(today);
+    console.log(user);
+    return this.find({date: today, assigned: true, user: user });
 })
 
 // Task.virtual("id").get(function () {

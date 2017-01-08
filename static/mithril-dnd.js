@@ -303,7 +303,8 @@ var widget = {
 						updatePomodoro: ctrl.updatePomodoro  //cb
 					})
 				]),
-				m(confirm)
+
+				m(confirm)  // confirm modal
 			])
 		]
 	}

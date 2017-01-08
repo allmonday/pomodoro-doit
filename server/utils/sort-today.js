@@ -2,6 +2,7 @@ var _ = require("lodash");
 
 function sortLinkedList(inputList) {
 
+    console.log(inputList)
     var map = inputList.reduce(function (prev, item) {
         prev[item._id] = item;
         return prev;
@@ -22,11 +23,17 @@ function sortLinkedList(inputList) {
 
 
     while(!!hasnext) {
-        var next = map[hasnext];
-        next['prevNode'] = prevNode;
-        result.push(next);
-        prevNode = next._id;
-        hasnext = map[hasnext].nextNode;
+        try {  // if nextNode not existed.. (eg: forget to remove);
+            var next = map[hasnext];
+            console.log(next);
+            next['prevNode'] = prevNode;
+            result.push(next);
+            prevNode = next._id;
+            hasnext = map[hasnext].nextNode;
+        } catch(e) {
+            hasnext = false;
+        }
+
     }
     return result;
 }

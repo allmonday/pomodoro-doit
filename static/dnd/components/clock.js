@@ -63,6 +63,9 @@ var clock = {
                     m("button.ui.button.orange.mini.right.floated", {onclick: () => ctrl.data.updateNote(ctrl.data.task()._id, ctrl.note())}, "update"),
                 ])
             ]): m(".ui.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
+            m(".ui.bottom.right.attached.label", [
+                m("a[href='/logout']", "logout")
+            ])
         ])
     }
 }
