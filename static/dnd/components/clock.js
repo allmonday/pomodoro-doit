@@ -3,17 +3,6 @@ var _ = require("lodash")
 var util = require("../utils/util");
 require("./clock.scss");
 
-function notifyMe(name) {
-  if (Notification.permission !== "granted")
-    Notification.requestPermission();
-  else {
-    var notification = new Notification('pomodoro finished', {
-      icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-      body: `pomodoro of ${name} has finished! take a break`,
-    });
-  }
-}
-
 var clock = {
     controller: function (data) {
         let vm = this;
@@ -31,7 +20,6 @@ var clock = {
                 if (elapsedTime.minutes >= 25)  {
                     vm.progress("width: 100%;");
                     vm.timeFormatted('has finished');
-                    notifyMe(vm.task().name());
                     clearInterval(interval);
                 } else {
                     vm.progress(`width: ${elapsedTime.percent}%;`);

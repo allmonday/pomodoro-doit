@@ -31,7 +31,8 @@ body {
     // child
     flex-grow: 0;
     border-right-width: 0;
-    min-width: 250px;
+    width: 250px;
+
     &_items {
       margin-top: 0;
       overflow-y: auto;
@@ -87,10 +88,16 @@ body {
       border-top-width: 1px;
     }
     &-content {
-      margin-bottom: 0.3em;
+      margin-bottom: 0.6em;
       word-wrap: break-word;
       word-break: normal;
       &_delete {
+        position: absolute;
+        top: 12px;
+        right: 3px;
+        &.ui.label > .icon {
+          margin: 0;
+        }
         float: right;
       }
     }
@@ -102,8 +109,13 @@ body {
 
 .pomodoro-today-list {
   &_operate {
-    display: flex;
-    justify-content: space-around; 
+    display: inline-block;
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    .ui.label > .icon {
+      margin: 0;
+    }
   }
   &_item {
     &.ui.segment:first-child {

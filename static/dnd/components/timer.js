@@ -26,6 +26,7 @@ var timer = {
                 if (elapsedTime.minutes >= 25)  {
                     timerObservable.complete({});
                     vm.statusText(`has finished`);
+                    util.notifyMe(vm.task.name());
                     clearInterval(interval);
                 } else {
                     vm.statusText(`running...`);

@@ -72,12 +72,12 @@ todo.task = function(date) {
             prev.push(new todo.TODO(item));
             return prev;
         }, []);
-    });
+    }) || [];
 }
 
 todo.today = function (date) {
     date = date || "";
-	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODO})
+	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODO}) || [];
 }
 
 todo.addTask = (name) => {

@@ -48,8 +48,8 @@ var widget = {
 		
 		let vm = this;
 		vm.init = () => {
-			vm.task = todo.task();
-			vm.today = todo.today();
+			vm.task = todo.task() || [];
+			vm.today = todo.today() || [];
 			vm.clock = todo.runningTask();
 		}
 		vm.init();
@@ -196,11 +196,6 @@ var widget = {
 			m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments", [
 				m("#pomodoro-task.ui.teal.segment", [
 					m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
-					todo.runningTask().hasRunning() ? m(".ui.message.yellow", {
-						style: 'flex-shrink: 0;'
-					}, [
-						m("p", "pomodoro is running, unable to drag")
-					]): m("div"),
 					m(".pomodoro-util_cover"),
 					m("#pomodoro-task_items.ui.list", [
 						(ctrl.task() || []).map(function (item) {
@@ -210,11 +205,12 @@ var widget = {
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
 							},[
 								m("p.pomodoro-task_item-content", `${item.name()}`),
-								m("button.ui.button.mini.pomodoro-task_item-content_delete", {
-									onclick: ctrl.removeTask.bind(null, item._id())
-								}, [
-									m("i.minus.square.icon"),
-									m("span", "Delete")
+								m(".ui.labels.circular", [
+									m(".ui.label.pomodoro-task_item-content_delete", {
+										onclick: ctrl.removeTask.bind(null, item._id())
+									}, [
+										m("i.remove.icon"),
+									]),
 								]),
 							]);
 						})
@@ -238,7 +234,7 @@ var widget = {
 						config: function (element, isInitialized) {
 							if (!isInitialized) { dragdrop(element) }
 						},
-						class: ctrl.today().length > 0? "not-empty": "empty" 
+						class: (ctrl.today() || []).length > 0? "not-empty": "empty" 
 					}, [
 						(ctrl.today() || []).map(function(item) {
 							return m(".pomodoro-today-list_item.ui.segment", {
@@ -250,37 +246,36 @@ var widget = {
 									if (!isInitialized) { dragdrop(element); }
 								}
 							}, [
+								m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
+									m("i.icon.hourglass.end"),
+									m("span", `${25 * item.pomodoros().length} minutes`)
+								]),
 								m(".pomodoro-today-list_display", [
-									m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
-										m("i.icon.hourglass.end"),
-										m("span", `${25 * item.pomodoros().length} minutes`)
-									]),
 									m("p.pomodoro-today-list_display_name", `${item.name()}`),
 									item.note() ?  m(".ui.pomodoro-today-list_display_note", [
 										m("div", m.trust(markdown.toHTML(item.note())))
 									]) : m("div"),
-
-									m(".pomodoro-today-list_operate", [
-										m("button.button.mini.ui.orange", {
-											disabled: item.pomodoros().length >= 5,
-											onclick: ctrl.addPomo.bind(null, item)
+								]),
+								m(".pomodoro-today-list_operate.ui.labels.circular", [
+									m(".label.ui.orange", {
+										disabled: item.pomodoros().length >= 5,
+										onclick: ctrl.addPomo.bind(null, item)
 										}, [
-											m("i.add.square.icon"),
-											m("span", 'Add')
-										]),
-
-										m("button.button.mini.ui", {
-											disabled: item.pomodoros().length <= 1,
-											onclick: ctrl.subPomo.bind(null, item._id())
-										}, [
-											m("i.minus.square.icon"),
-											m("span", 'Sub')
-										]),
-										m("button.button.mini.ui", {
-											disabled: todo.runningTask().hasRunning(),
-											onclick: ctrl.cancelTask.bind(null, item._id())
-										}, 'Cancel')
+										m("i.add.icon"),
 									]),
+
+									m(".label.ui", {
+										disabled: item.pomodoros().length <= 1,
+										onclick: ctrl.subPomo.bind(null, item._id())
+									}, [
+										m("i.minus.icon"),
+									]),
+									m(".label.ui", {
+										disabled: todo.runningTask().hasRunning(),
+										onclick: ctrl.cancelTask.bind(null, item._id())
+									}, [
+										m("i.remove.icon"),
+									])
 								]),
 								m(pomodoro, {
 									startHandler: ctrl.startHandler,
