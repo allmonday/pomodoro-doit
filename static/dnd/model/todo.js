@@ -32,6 +32,7 @@ todo.TODO = function (data) {  // class
 	this.name = m.prop(data.name || "");
     this.note = m.prop(data.note || "");
     this.assigned = m.prop(data.assigned || false);
+    this.finished = m.prop(_.every(data.pomodoros, { status: true }))
 };
 
 todo.TODAY = function (data) {  // class
