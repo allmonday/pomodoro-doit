@@ -204,7 +204,7 @@ var widget = {
 								draggable: (todo.runningTask().hasRunning() || ctrl.offset !== 0)? false: true,
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
 							},[
-								m("p.pomodoro-task_item-content", `${item.name()}`),
+								m("p.pomodoro-task_item-content", `${item.name()} assigned ${item.assigned()}`),
 								m(".ui.labels.circular", [
 									m(".ui.label.pomodoro-task_item-content_delete", {
 										onclick: ctrl.removeTask.bind(null, item._id())

@@ -1,5 +1,5 @@
 var express = require("express");
-var today = require("./utils/today");
+var today = require("./utils/today").today;
 var pomodoro = express();
 
 var SCHEDULED = 0;

@@ -1,3 +1,5 @@
+var moment = require("moment");
+
 function today(time) {
     var today;
     if (time) {
@@ -5,19 +7,20 @@ function today(time) {
     } else {
         today = new Date();
     }
-    var year = today.getFullYear();
-    var month = prefixZero(today.getMonth() + 1);
-    var date = prefixZero(today.getDate());
-    var hyphen = "-";
-    return [year, month, date].join(hyphen);
+    return moment(today).format("YYYY-MM-DD");
 }
 
-function prefixZero(number) {
-    if (number < 10) {
-        return `0${number}`;
+function yesterday(time) {
+    var today;
+    if (time) {
+        today = new Date(time);
     } else {
-        return `${number}`;
+        today = new Date();
     }
+    return moment(today).subtract(1, 'day').format("YYYY-MM-DD");
 }
 
-module.exports = today;
+module.exports = {
+    today,
+    yesterday
+}

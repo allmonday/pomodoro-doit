@@ -1,7 +1,7 @@
 "use strict";
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var todayString = require("../utils/today");
+var todayString = require("../utils/today").today;
 var pomodoroSchema = require("./pomodoro");
 
 var Task = mongoose.Schema({
