@@ -41,6 +41,7 @@ describe("APIs of user authentication", function () {
             .post("/signup")
             .type("form")
             .send({password: "123", username: "tangkikodo"})
+            .expect("Location", "/")
             .end(done)
     });
     it("test signup repeatly will fail", function (done) {
@@ -135,13 +136,11 @@ describe("APIs of task creation", function () {
             })
             .end(done);
     })
-    it("task should be empty", function (done) {
+    it("task should not be empty", function (done) {
         agent.get("/api/dnd/task")
             .expect("Content-Type", /json/)
             .expect(200)
-            .expect(function (res) {
-                assert.equal(res.body.length, 0);
-            })
+            .expect(function (res) { assert.equal(res.body.length, 0); })
             .end(done);
     })
 

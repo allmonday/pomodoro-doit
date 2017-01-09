@@ -1,6 +1,9 @@
 var m = require("mithril");
 var pomodoro = require("./pomodoro");
 var util = require("../utils/util");
+var today = require("server/utils/today").today();
+
+console.log(today);
 
 var todo = {};
 var global_runnable = false;
@@ -24,8 +27,14 @@ todo.runningTask = function () {
     return running;
 }
 
-
 todo.TODO = function (data) {  // class
+	this._id = m.prop(data._id ||"");
+	this.name = m.prop(data.name || "");
+    this.note = m.prop(data.note || "");
+    this.assigned = m.prop(data.assigned || false);
+};
+
+todo.TODAY = function (data) {  // class
     let hasOneUnrunPomo = false || global_runnable;
 	data = data || {};
 	this._id = m.prop(data._id ||"");
@@ -34,9 +43,17 @@ todo.TODO = function (data) {  // class
     this.note = m.prop(data.note || "");
     this.assigned = m.prop(data.assigned || false);
 
-    // calculated prop
+    // computed prop
 	this.prevNode = m.prop(data.prevNode || "");
 	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
+        if (data.date !== today) {   
+            // if not today, just initialize pomodoro, bypass other logics
+            // previous tasks are not runnable anymore.
+            item.runnable = false;
+            item.taskId = data._id;
+            prev.push(new pomodoro(item));
+            return prev;
+        }
 
         if (data.assigned) { running.totalPomodoroToday(running.totalPomodoroToday() + 1); }
 
@@ -66,19 +83,14 @@ todo.TODO = function (data) {  // class
 };
 
 todo.task = function(date) {
-    global_runnable = false;
-    todo.resetRunningTask();
-	return m.request({ method: "GET", url: `/api/dnd/task/`}).then((tasks) => {
-        return tasks.reduce((prev, item) => {
-            prev.push(new todo.TODO(item));
-            return prev;
-        }, []);
-    }) || [];
+    return m.request({ method: "GET", url: `/api/dnd/task/`, type: todo.TODO});
 }
 
 todo.today = function (date) {
+    global_runnable = false;
+    todo.resetRunningTask();
     date = date || "";
-	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODO}) || [];
+	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODAY})
 }
 
 todo.addTask = (name) => {
