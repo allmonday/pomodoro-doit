@@ -32,6 +32,7 @@ todo.TODO = function (data) {  // class
 	this.name = m.prop(data.name || "");
 	this.nextNode = m.prop(data.nextNode || "");
     this.note = m.prop(data.note || "");
+    this.assigned = m.prop(data.assigned || false);
 
     // calculated prop
 	this.prevNode = m.prop(data.prevNode || "");

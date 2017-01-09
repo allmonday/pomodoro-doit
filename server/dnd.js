@@ -6,18 +6,17 @@ var express = require("express");
 var dnd = express();
 var _ = require("lodash");
 var mongoose = require("mongoose");
-var db = mongoose.connection;
-var Task = require("./model/task");
-var todayGetter = require("./utils/today");
+var Task = mongoose.model("Task");
+var User = mongoose.model("User");
+var todayGetter = require("./utils/today").today;
+var yesterdayGetter = require("./utils/today").yesterday;
 var sortList = require("./utils/sort-today");
-
-db.once("open", function () {
-    console.log('open');
-})
 
 dnd.route("/task")
     .get(function (req, res) {
-        Task.find({assigned: false})
+        // Task.find({$or: [{assigned: false, user: req.user._id}, {assigned: true, date: yesterdayGetter(), user: req.user._id}]})
+        Task.find({$or: [{assigned: false, user: req.user._id}, {assigned: true, user: req.user._id}]})
+            .sort({assigned: -1})
             .then(function (data) {
                 res.send(data);
             })
@@ -41,15 +40,15 @@ dnd.route("/task")
                 pomodoros: [{}],
                 createTime: new Date(),
                 updateTime: new Date(),
+                user: req.user,
             })
             task.save()
                 .then((data) => {
-                    res.send();
+                    res.send({status: 'success'});
                 }, (err) => {
                     res.status(400).send(err); 
                 });
-
-        } else if (prevNode === null) {  // first element of today task
+        } else if (prevNode === null) {  // if today's task is empty
             var task = new Task({
                 name: req.body.name,
                 note: "",
@@ -59,10 +58,11 @@ dnd.route("/task")
                 date: todayGetter(),
                 createTime: new Date(),
                 updateTime: new Date(),
+                user: req.user,
             })
             task.save()
                 .then((data) => {
-                    res.send();
+                    res.send({status: 'success'});
                 })
         } else {  // append to today tasks
             var task = new Task({
@@ -73,12 +73,13 @@ dnd.route("/task")
                 pomodoros: [{}],
                 createTime: new Date(),
                 updateTime: new Date(),
+                user: req.user
             })
             task.save()
                 .then((data) => {
                     return Task.update({_id: prevNode}, {$set: {nextNode: data._id}})
                 }).then(() =>{
-                    res.send(); 
+                    res.send({status: 'success'});
                 })
         }
 
@@ -92,10 +93,16 @@ dnd.route("/task")
 
 dnd.route("/today")
     .get(function (req, res) {
-        Task.getToday(req.query.date)
+        Task.getTodayByUser(req.query.date, req.user)
             .then((data) => {
-                data = sortList(data);
-                res.send(data);
+                try {
+                    data = sortList(data);
+                    res.send(data);
+                } catch(e) {
+                    res.status(400).send(e);
+                }
+            }, (err) => {
+                res.status(400).send(err);
             })
     })
     .post(function(req, res) {  // logic holy sucks..

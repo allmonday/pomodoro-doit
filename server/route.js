@@ -1,13 +1,40 @@
 var express = require("express");
-var User = require("./model/user");
+var mongoose = require("mongoose");
+var User = mongoose.model("User");
+
 var router = express.Router();
 var passport = require("passport");
+var ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
 
-router.use(function (req, res, next) {
-    res.locals.currentUser = req.user;
-    res.locals.errors = req.flash("error");
-    res.locals.infos = req.flash("info");
-    next();
+router.get("/edit", ensureLoggedIn("/login"), function (req, res) {
+    res.render("edit");
+})
+
+router.post("/edit", ensureLoggedIn("/login"), function (req, res, next) {
+    req.user.displayName = req.body.displayName;
+    req.user.bio = req.body.bio;
+    req.user.save(function (err) {
+        if (err) {
+            next(err); return;
+        }
+        req.flash("info", "Profile updated");
+        res.redirect("/edit");
+    })
+})
+
+router.get("/login", function (req, res) {
+    res.render("login");
+})
+
+router.post("/login", passport.authenticate("login", {
+    successReturnToOrRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true
+}))
+
+router.get("/logout", function (req, res) {
+    req.logout();
+    res.redirect("/");
 })
 
 router.get("/signup", function (req, res) {
@@ -37,7 +64,6 @@ router.post("/signup", function (req, res, next) {
 }));
 
 router.get("/", function (req, res, next) {
-    console.log("called");
     User.find()
         .sort({ createdAt: "descending" })
         .exec(function (err, users) {

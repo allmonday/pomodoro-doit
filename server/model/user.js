@@ -1,10 +1,12 @@
 "use strict";
 var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 var bcrypt = require("bcrypt-nodejs");
 var SALT_FACTOR = 10;
 var noop = function () {};
 
 var userSchema = mongoose.Schema({
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task'}],
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     createdAt: {type: Date, default: Date.now },
@@ -37,6 +39,11 @@ userSchema.methods.checkPassword = function (guess, done) {
     })
 }
 
-var User = mongoose.model("User", userSchema);
+var user;
+try {
+    user = mongoose.model("User", userSchema);
+} catch(e) {
+    user = mongoose.model("User");
+}
 
-module.exports = User;
+module.exports = user;

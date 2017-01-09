@@ -1,22 +1,26 @@
+var moment = require("moment");
+
 function today(time) {
     var today;
     if (time) {
-        today = Date.parse(time);
-    }
-    today = new Date();
-    var year = today.getFullYear();
-    var month = prefixZero(today.getMonth() + 1);
-    var date = prefixZero(today.getDate());
-    var hyphen = "-";
-    return [year, month, date].join(hyphen);
-}
-
-function prefixZero(number) {
-    if (number < 10) {
-        return `0${number}`;
+        today = new Date(time);
     } else {
-        return `${number}`;
+        today = new Date();
     }
+    return moment(today).format("YYYY-MM-DD");
 }
 
-module.exports = today;
+function yesterday(time) {
+    var today;
+    if (time) {
+        today = new Date(time);
+    } else {
+        today = new Date();
+    }
+    return moment(today).subtract(1, 'day').format("YYYY-MM-DD");
+}
+
+module.exports = {
+    today,
+    yesterday
+}
