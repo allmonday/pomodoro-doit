@@ -18,7 +18,7 @@ function isTop(e) {
 	let top = e.target.offsetTop,
 		bottom = top + e.target.clientHeight,
 		posY = e.y,
-		average = (top+bottom) /2;
+		average = (top + bottom) /2;
 	
 	let result = posY <= average;
 	return result;
