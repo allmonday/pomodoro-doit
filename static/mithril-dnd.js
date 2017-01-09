@@ -14,6 +14,8 @@ var clock = require("./dnd/components/clock");
 var confirm = require("./dnd/components/confirm");
 var util = require("./dnd/utils/util");
 
+util.requireNotificationPermission();
+
 function isTop(e) {
 	let top = e.target.offsetTop,
 		bottom = top + e.target.clientHeight,

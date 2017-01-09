@@ -50,6 +50,10 @@ function minToHour(num) {
     return `${prefix_zero(hours)}h, ${prefix_zero(minutes)}m`;
 }
 
+function requireNotificationPermission () {
+  if (Notification.permission !== "granted") Notification.requestPermission(); 
+}
+
 function notifyMe(name) {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
@@ -70,5 +74,6 @@ module.exports = {
     isRunning,
     elapsed,
     minToHour,
-    notifyMe
+    notifyMe,
+    requireNotificationPermission
 }
