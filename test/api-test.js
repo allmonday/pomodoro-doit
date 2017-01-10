@@ -64,7 +64,7 @@ describe("APIs of user authentication", function () {
         agent.post("/login")
             .type("form")
             .send({password: "123", username: "tangkikodo"})
-            .expect("Location", "/")
+            .expect("Location", "/app/pomodoro")
             .expect(302)
             .end(done);
     })
@@ -82,7 +82,7 @@ describe("APIs of task creation", function () {
         agent.post("/login")
             .type("form")
             .send({password: "123", username: "tangkikodo"})
-            .expect("Location", "/")
+            .expect("Location", "/app/pomodoro")
             .expect(302)
             .end(done);
     })
@@ -144,4 +144,11 @@ describe("APIs of task creation", function () {
             .end(done);
     })
 
+})
+
+describe("APIs of task operation", function () {
+    var agent = supertest.agent(app);
+    it("should be able to move into today", function (done) {
+        done();
+    })
 })

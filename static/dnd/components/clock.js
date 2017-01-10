@@ -1,6 +1,10 @@
 var m = require("mithril");
 var _ = require("lodash")
 var util = require("../utils/util");
+var widget = require("../app");
+var Rx = require("rxjs");
+
+
 require("./clock.scss");
 
 var clock = {
@@ -14,21 +18,30 @@ var clock = {
         vm.progress = m.prop("");
         vm.percent = m.prop("0");
 
+        vm.noteObservable = new Rx.Subject();
+        vm.noteObservable.debounceTime(1000).subscribe((data) => {
+            widget.service.updateNote(vm.data.task()._id, vm.note())
+        });
+
+        function count() {
+            m.startComputation();
+            let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
+            if (elapsedTime.minutes >= 25)  {
+                vm.progress("width: 100%;");
+                vm.timeFormatted('has finished');
+                console.log("triggered");
+                util.notifyMe(vm.data.task().name);
+            } else {
+                vm.progress(`width: ${elapsedTime.percent}%;`);
+                vm.percent(elapsedTime.percent);
+                vm.timeFormatted(elapsedTime.reversedFormatted);
+                setTimeout(count, 1000);
+            }
+            m.endComputation();
+        }
+
         if (!_.isEmpty(vm.data.pomodoro())) {
-            let interval = setInterval(() => {
-                m.startComputation();
-                let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
-                if (elapsedTime.minutes >= 25)  {
-                    vm.progress("width: 100%;");
-                    vm.timeFormatted('has finished');
-                    clearInterval(interval);
-                } else {
-                    vm.progress(`width: ${elapsedTime.percent}%;`);
-                    vm.percent(elapsedTime.percent);
-                    vm.timeFormatted(elapsedTime.reversedFormatted);
-                }
-                m.endComputation();
-            }, 1000);
+            count();
         }
     },
     view: function (ctrl) {
@@ -43,14 +56,16 @@ var clock = {
                     m(".ui.label.huge.orange", ctrl.timeFormatted()),
                 ]),
                 m(".ui.form", {style: 'overflow: hidden;'}, [
-                    m(".field", [
-                        m("label", "valid time"),
-                        m("input[type='number'][max='25'][min='0']", {oninput: m.withAttr('value', ctrl.validTime), value: ctrl.validTime()}),
+                    m(".two.fields", [
+                        m(".field", [
+                            m("label", "valid time"),
+                            m("input[type='number'][max='25'][min='0']", {oninput: m.withAttr('value', ctrl.validTime), value: ctrl.validTime()}),
 
-                    ]),
-                    m(".field", [
-                        m("label", "interupt count"),
-                        m("input[type='number'][max='3'][min='0']", {oninput: m.withAttr('value', ctrl.interuptCount), value: ctrl.interuptCount()}),
+                        ]),
+                        m(".field", [
+                            m("label", "interupt count"),
+                            m("input[type='number'][max='3'][min='0']", {oninput: m.withAttr('value', ctrl.interuptCount), value: ctrl.interuptCount()}),
+                        ]),
                     ]),
                     m("button.ui.button.mini.orange.right.floated", {onclick: () => {
                         ctrl.data.updatePomodoro(ctrl.data.task()._id, ctrl.data.pomodoro()._id, ctrl.validTime(), ctrl.interuptCount())}
@@ -59,9 +74,21 @@ var clock = {
                 m(".ui.form", [
                     m(".field", [
                         m("label", "Notes(markdown available)"),
-                        m("textarea", {type: "text", oninput: m.withAttr('value', ctrl.note), value: ctrl.note()}),
-                    ]),
-                    m("button.ui.button.orange.mini.right.floated", {onclick: () => ctrl.data.updateNote(ctrl.data.task()._id, ctrl.note())}, "update"),
+                        m("textarea[type='text']", {
+                            oninput: m.withAttr('value', ctrl.note),
+                            value: ctrl.note(),
+                            config: function (el, init) {
+                                if (!init) {
+                                    el.addEventListener('input', function (e) {
+                                        ctrl.noteObservable.next(e);
+                                    })
+                                }
+                            }
+                        }),
+                    ])
+                    // m("button.ui.button.orange.mini.right.floated", {
+                    //     onclick: () => widget.service.updateNote(ctrl.data.task()._id, ctrl.note())
+                    // }, "update"),
                 ])
             ]): m(".pomodoro-clock_empty", [
                 m(".ui.large.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
@@ -72,9 +99,6 @@ var clock = {
 
                 ])
             ]),
-            m(".ui.bottom.right.attached.label", [
-                m("a[href='/logout']", "Logout")
-            ])
         ])
     }
 }

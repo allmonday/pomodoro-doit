@@ -12,8 +12,14 @@ body {
 
 #pomodoro-app {
   height: 100%;
+  padding-top: 55px;
+  & .hide {
+    display: none;
+  }
 }
 #pomodoro-container {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   margin: 0;
   height: 100%;
   display: flex;
@@ -44,6 +50,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 300px;
     // child
     flex-grow: 0;
     &-operate {
@@ -55,7 +62,7 @@ body {
       margin-top: 0;
       margin-bottom: 0;
       &.empty {
-        background: repeating-linear-gradient(-45deg, #eee, #eee 8px, white 2px, white 13px);
+        background: repeating-linear-gradient(-45deg, #efefef, #efefef 8px, white 2px, white 13px);
       }
       &::-webkit-scrollbar { width: 0 !important }
       min-height: 80px;
@@ -144,15 +151,13 @@ body {
           background: linear-gradient(to top, $orange, $light-orange 5%, white 40%);
       }
     }
-    &:first-child {
-      // border-top-width: 0;
-    }
     border: 1px solid #ccc;
     border-width: 0;
     border-top-width: 1px;
     padding: 10px;
   }
   &_display {
+    margin-bottom: 20px;
     &_name {
       font-size: 16px;
     }
@@ -163,6 +168,23 @@ body {
       margin-top: 1em;
       margin-bottom: 2em;
     }
+    &_estimated.ui.label {
+      margin-top: 2px;
+    }
+  }
+  &_timer-edit {
+    text-align: right;
+    margin-right: -10px;
+    margin-top: -10px;
+    .ui.label {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .ui.label > .icon {
+      margin: 0;
+    }
+
   }
 }
 
