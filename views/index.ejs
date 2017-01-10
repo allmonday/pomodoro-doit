@@ -1,6 +1,40 @@
 <% include _header %>
 
-<h1>Welcome to Pomodoro</h1>
-<a href="/app/Pomodoro">use it</a>
+
+<style>
+    body {
+        background: #efefef;
+    }
+</style>
+<div class="ui middle aligned center aligned grid" style="height: 100%;">
+  <div class="column" style="max-width: 500px">
+    <h1 class="image ui header orange">
+        <img src='/imgs/tomato.svg' class="image">
+        <div class="content">Log-in to Pomodoro-DOIT</div>
+    </h1>
+    <form class="ui large form" action="/login" method="post">
+        <div class="ui stacked segment">
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input name="username" type="text" class="form-control" placeholder="Username" required autofocus>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    <input name="password" type="password" class="form-control" placeholder="Password" required>
+                </div>
+            </div>
+            <div class="field">
+                <input type="submit" value="Log in" class="ui button fluid submit orange">
+            </div>
+        </div>
+    </form>
+    <div class="ui message">
+        New to us? <a href="/signup" class="">Sign Up</a>
+    </div>
+  </div>
+</div>
 
 <% include _footer %>
