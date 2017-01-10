@@ -69,11 +69,42 @@ function notifyMe(name) {
   }
 }
 
+function isTop(e) {
+	let top = e.target.offsetTop,
+		bottom = top + e.target.clientHeight,
+		posY = e.y,
+		average = (top + bottom) /2;
+	
+	let result = posY <= average;
+	return result;
+}
+
+function dragdrop(element, options) {
+    options = options || {}
+
+    element.addEventListener("dragover", activate)
+    element.addEventListener("dragleave", deactivate)
+    element.addEventListener("dragend", deactivate)
+
+    function activate(e) {
+		e.target.classList.add("over");
+		let top = isTop(e);
+		e.target.classList.remove('drag-top', 'drag-bottom');
+		e.target.classList.add(top? 'drag-top': 'drag-bottom');
+        e.preventDefault()
+    }
+    function deactivate(e) { 
+		e.target.classList.remove("over");
+	}
+}
+
 module.exports = {
     isFinished,
     isRunning,
     elapsed,
     minToHour,
     notifyMe,
-    requireNotificationPermission
+    requireNotificationPermission,
+    isTop,
+    dragdrop
 }

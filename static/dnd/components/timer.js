@@ -1,8 +1,8 @@
 var m = require("mithril");
 var moment = require("moment");
-var clockObserver = require("../utils/clockObserver");
 var timerObservable = require("../utils/timerObservable");
 var util = require("../utils/util");
+var widget = require("../app");
 
 require("./timer.scss");
 
@@ -19,22 +19,6 @@ var timer = {
                 console.log(vm.eachPomo._id())
             }
         }
-
-        if(vm.eachPomo.hasStarted() && util.isRunning(vm.eachPomo.status(), vm.eachPomo.startTime())) {
-            let interval = setInterval(() => {
-                let elapsedTime = util.elapsed(vm.eachPomo.startTime());
-                if (elapsedTime.minutes >= 25)  {
-                    timerObservable.complete({});
-                    vm.statusText(`has finished`);
-                    util.notifyMe(vm.task.name());
-                    clearInterval(interval);
-                } else {
-                    vm.statusText(`running...`);
-                }
-                m.redraw();
-            }, 1000);
-        }
-
     },
     view: function (ctrl) {
         return m(".pomo-item", { 
@@ -53,26 +37,27 @@ var timer = {
                 m(".ui.vertical.labeled.icon.buttons.tiny", [  // stop pomodoro
                     m("button.ui.button", {
                         onclick: (e) => {
-                            ctrl.data.resetPomodoro( ctrl.task._id(), ctrl.eachPomo._id())
+                            widget.service.resetPomodoro( ctrl.task._id(), ctrl.eachPomo._id())
                         } 
                     }, [
                         m("i.stop.icon"),
                         m("span", "Cancel")
                     ])
                 ]):
-                m("div", "Finished"):  // finished
+                m("div"):  // finished
                 m(".ui.vertical.labeled.icon.buttons.tiny", [  // start btn
                     m("button.ui.button", {
-                        disabled: !ctrl.eachPomo.runnable(),
+                        class: !ctrl.eachPomo.runnable()? "hide": "",
+                        // disabled: !ctrl.eachPomo.runnable(),
                         onclick: (e) => {
-                            ctrl.data.startHandler({
+                            widget.service.startTimer({
                                 taskId: ctrl.task,
                                 pomodoroId: ctrl.eachPomo
                             })
                         } 
                     }, [
                         m("i.play.icon"),
-                        m("span", "Start")
+                        m("span", "Go")
                     ])
                 ])
         ]);

@@ -1,4 +1,18 @@
 <% include _header %>
-    <div class="" id="pomodoro-app"></div>
+    <div class="" style="height: 100%;">
+        <div class="ui fixed inverted menu">
+            <div class="header item">
+                <img src='/imgs/tomato.svg' class="image">
+                POMODORO DOIT!
+            </div>
+            <div class="item">
+                welcome! <%= currentUser.username %>
+            </div>
+            <div class="item right">
+                <a href="/logout">Log out</a>
+            </div>
+        </div>
+        <div class="" id="pomodoro-app"></div>
+    </div>
     <script src="/bundle/mithril-dnd.js"></script>
 <% include _footer %>
