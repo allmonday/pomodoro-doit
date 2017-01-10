@@ -16,6 +16,7 @@ var clock = {
 
         if (!_.isEmpty(vm.data.pomodoro())) {
             let interval = setInterval(() => {
+                m.startComputation();
                 let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
                 if (elapsedTime.minutes >= 25)  {
                     vm.progress("width: 100%;");
@@ -26,7 +27,7 @@ var clock = {
                     vm.percent(elapsedTime.percent);
                     vm.timeFormatted(elapsedTime.reversedFormatted);
                 }
-                m.redraw();
+                m.endComputation();
             }, 1000);
         }
     },
