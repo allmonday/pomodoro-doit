@@ -27,7 +27,7 @@ todo.runningTask = function () {
     return running;
 }
 
-todo.TODO = function (data) {  // class
+todo.TODO = function (data) {  // class for tasks
 	this._id = m.prop(data._id ||"");
 	this.name = m.prop(data.name || "");
     this.note = m.prop(data.note || "");
@@ -35,7 +35,7 @@ todo.TODO = function (data) {  // class
     this.finished = m.prop(_.every(data.pomodoros, { status: true }))
 };
 
-todo.TODAY = function (data) {  // class
+todo.TODAY = function (data) {  // class for today tasks
     let hasOneUnrunPomo = false || global_runnable;
 	data = data || {};
 	this._id = m.prop(data._id ||"");
@@ -47,7 +47,7 @@ todo.TODAY = function (data) {  // class
     // computed prop
 	this.prevNode = m.prop(data.prevNode || "");
 	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
-        if (data.date !== today) {   
+        if (data.date !== today) {
             // if not today, just initialize pomodoro, bypass other logics
             // previous tasks are not runnable anymore.
             item.runnable = false;
@@ -84,14 +84,14 @@ todo.TODAY = function (data) {  // class
 };
 
 todo.task = function(date) {
-    return m.request({ method: "GET", url: `/api/dnd/task/`, type: todo.TODO});
+    return m.request({ method: "GET", url: `/api/dnd/task/`, type: todo.TODO, initialValue: []});
 }
 
 todo.today = function (date) {
     global_runnable = false;
     todo.resetRunningTask();
     date = date || "";
-	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODAY})
+	return m.request({ method: "GET", url: `/api/dnd/today?date=${date}`, type: todo.TODAY, initialValue: []})
 }
 
 todo.addTask = (name) => {

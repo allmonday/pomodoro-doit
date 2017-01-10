@@ -50,8 +50,8 @@ var widget = {
 		
 		let vm = this;
 		vm.init = () => {
-			vm.task = todo.task() || [];
-			vm.today = todo.today() || [];
+			vm.task = todo.task();
+			vm.today = todo.today();
 			vm.clock = todo.runningTask();
 		}
 		vm.init();
@@ -206,8 +206,9 @@ var widget = {
 					m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
 					m(".pomodoro-util_cover"),
 					m("#pomodoro-task_items.ui.list", [
-						(ctrl.task() || []).filter((item) => { return !item.finished();}).map(function (item) {
+						ctrl.task().filter((item) => { return !item.finished();}).map(function (item) {
 							return m(".pomodoro-task_item.ui.segment", {
+								key: item._id(),
 								class: `${!(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'teal': ''} ${ item.assigned()? 'assigned': ''}`,
 								draggable: (todo.runningTask().hasRunning() || ctrl.offset !== 0)? false: true,
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
@@ -242,10 +243,11 @@ var widget = {
 						config: function (element, isInitialized) {
 							if (!isInitialized) { dragdrop(element) }
 						},
-						class: (ctrl.today() || []).length > 0? "not-empty": "empty" 
+						class: ctrl.today().length > 0? "not-empty": "empty" 
 					}, [
-						(ctrl.today() || []).map(function(item) {
+						ctrl.today().map(function(item) {
 							return m(".pomodoro-today-list_item.ui.segment", {
+								key: item._id(),
 								class: !(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'orange': '', 
 								draggable: (todo.runningTask().hasRunning())? false : true,  // freeze if task is running
 								ondrop: ctrl.onchange.bind(null, item),
@@ -279,7 +281,7 @@ var widget = {
 										m("i.minus.icon"),
 									]),
 									m(".label.ui", {
-										disabled: todo.runningTask().hasRunning(),
+										// class : todo.runningTask().hasRunning() ? "hide": "",
 										onclick: ctrl.cancelTask.bind(null, item._id())
 									}, [
 										m("i.remove.icon"),

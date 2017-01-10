@@ -42,6 +42,7 @@ var model;
 try {
     model = mongoose.model('Task', Task);
 } catch (e) {
+    console.log("tasks oops");
     model = mongoose.model('Task');
 }
 

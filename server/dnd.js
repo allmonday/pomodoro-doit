@@ -8,7 +8,7 @@ var _ = require("lodash");
 var mongoose = require("mongoose");
 var Task = mongoose.model("Task");
 var User = mongoose.model("User");
-var todayString = require("./utils/today").today();
+var todayString = require("./utils/today").today;
 var yesterdayGetter = require("./utils/today").yesterday;
 var sortList = require("./utils/sort-today");
 // var log = console.log;
@@ -57,7 +57,7 @@ dnd.route("/task")
                 assigned: true,
                 isHead: true,
                 pomodoros: [{}],
-                date: todayString,
+                date: todayString(),
                 createTime: new Date(),
                 updateTime: new Date(),
                 user: req.user,
@@ -70,7 +70,7 @@ dnd.route("/task")
             var task = new Task({
                 name: req.body.name,
                 note: "",
-                date: todayString,
+                date: todayString(),
                 assigned: true,
                 pomodoros: [{}],
                 createTime: new Date(),
@@ -115,11 +115,11 @@ dnd.route("/today")
         if (!isinter) {  // move from unassigned
 
             if (!targetid) {  // insert at head
-                Task.find({date: todayString, isHead: true})
+                Task.find({date: todayString(), isHead: true})
                     .then((items) => { 
                         // assume today is empty
                         let varable = {
-                            date: todayString, 
+                            date: todayString(), 
                             assigned: true,
                             isHead: true,
                         }
@@ -148,7 +148,7 @@ dnd.route("/today")
                     .then((nextNode) => {
                         return Task.update({_id: req.body.sourceid}, 
                                     {$set: { 
-                                        date: todayString, 
+                                        date: todayString(), 
                                         assigned: true,
                                         isHead: !targetid,
                                         nextNode: nextNode
@@ -170,7 +170,7 @@ dnd.route("/today")
                 Task.findById(sourceid) // pick source out
                     .then((sourceData) => {
                         source = sourceData;
-                        if (source.isHead && !source.nextNode && source.date !== todayString) {  // only one element, no change
+                        if (source.isHead && !source.nextNode && source.date !== todayString()) {  // only one element, no change
                             log("lonley head")
                             return q.when();  // go to next step, clean itself
                         }
@@ -200,9 +200,9 @@ dnd.route("/today")
                         
                     })
                     .then(() => {   // clean yesterday item.
-                        if (source.date !== todayString) { // from yesterday
+                        if (source.date !== todayString()) { // from yesterday
                             log("from yesterday")
-                            return Task.update({ _id: sourceid}, {$set: { date: todayString, isHead: false }}); // if drag yester task into today, date should be overwriten
+                            return Task.update({ _id: sourceid}, {$set: { date: todayString(), isHead: false }}); // if drag yester task into today, date should be overwriten
                         } else {
                             log("ignore");
                             return q.when();
@@ -210,7 +210,7 @@ dnd.route("/today")
                     })
                     .then(()=>{
                         if (!targetid) { // is head? (targetid === null)
-                            Task.findOne({date: todayString, isHead: true})
+                            Task.findOne({date: todayString(), isHead: true})
                                 .then((first) => {
                                     if (first) {
                                         return q.all([

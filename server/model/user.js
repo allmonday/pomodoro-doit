@@ -6,12 +6,12 @@ var SALT_FACTOR = 10;
 var noop = function () {};
 
 var userSchema = mongoose.Schema({
-    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task'}],
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     createdAt: {type: Date, default: Date.now },
     displayName: String,
-    bio: String
+    bio: String,
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task'}],
 })
 
 userSchema.methods.name = function () {
@@ -41,8 +41,10 @@ userSchema.methods.checkPassword = function (guess, done) {
 
 var user;
 try {
+    console.log("user model created");
     user = mongoose.model("User", userSchema);
 } catch(e) {
+    console.log("user oops");
     user = mongoose.model("User");
 }
 
