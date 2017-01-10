@@ -62,9 +62,17 @@ var clock = {
                     ]),
                     m("button.ui.button.orange.mini.right.floated", {onclick: () => ctrl.data.updateNote(ctrl.data.task()._id, ctrl.note())}, "update"),
                 ])
-            ]): m(".ui.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
+            ]): m(".pomodoro-clock_empty", [
+                m(".ui.large.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
+                m(".pomodoro-clock-banner", [
+                    m("img[src='/imgs/tomato.svg'].pomodoro-clock-icon"),
+                    m("h2.pomodoro-clock-title", "Pomodoro-DOIT!"),
+                    m(".ui.message.compact", "Todolist-like Pomodoro clock!")
+
+                ])
+            ]),
             m(".ui.bottom.right.attached.label", [
-                m("a[href='/logout']", "logout")
+                m("a[href='/logout']", "Logout")
             ])
         ])
     }

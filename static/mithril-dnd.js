@@ -1,7 +1,7 @@
 var m = require("mithril");
 var _ = require("lodash");
 var moment = require("moment");
-var markdown = require( "markdown" ).markdown;
+var markdown = require("markdown").markdown;
 
 require("./mithril-dnd.scss");
 
