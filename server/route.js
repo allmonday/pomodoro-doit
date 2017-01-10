@@ -23,11 +23,11 @@ router.post("/edit", ensureLoggedIn("/login"), function (req, res, next) {
 })
 
 router.get("/login", function (req, res) {
-    res.render("login");
+    res.render("index");
 })
 
 router.post("/login", passport.authenticate("login", {
-    successReturnToOrRedirect: "/",
+    successReturnToOrRedirect: "/app/pomodoro",
     failureRedirect: "/login",
     failureFlash: true
 }))

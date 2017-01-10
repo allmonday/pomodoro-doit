@@ -1,7 +1,7 @@
 var m = require("mithril");
 var _ = require("lodash");
 var moment = require("moment");
-var markdown = require( "markdown" ).markdown;
+var markdown = require("markdown").markdown;
 
 require("./mithril-dnd.scss");
 
@@ -14,11 +14,13 @@ var clock = require("./dnd/components/clock");
 var confirm = require("./dnd/components/confirm");
 var util = require("./dnd/utils/util");
 
+util.requireNotificationPermission();
+
 function isTop(e) {
 	let top = e.target.offsetTop,
 		bottom = top + e.target.clientHeight,
 		posY = e.y,
-		average = (top+bottom) /2;
+		average = (top + bottom) /2;
 	
 	let result = posY <= average;
 	return result;
@@ -54,8 +56,14 @@ var widget = {
 		}
 		vm.init();
 		vm.dragstart = (item, e) => {
+			let info;
+			if (item.assigned()) {
+				info = `inter-${item._id()}`;
+			} else {
+				info = item._id();
+			}
 			let dt = e.dataTransfer;
-			dt.setData("Text", item._id());
+			dt.setData("Text", info);
 		}
 		vm.interdragstart = (item, e) => {
 			let dt = e.dataTransfer;
@@ -198,13 +206,13 @@ var widget = {
 					m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
 					m(".pomodoro-util_cover"),
 					m("#pomodoro-task_items.ui.list", [
-						(ctrl.task() || []).map(function (item) {
+						(ctrl.task() || []).filter((item) => { return !item.finished();}).map(function (item) {
 							return m(".pomodoro-task_item.ui.segment", {
-								class: !(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'teal': '', 
+								class: `${!(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'teal': ''} ${ item.assigned()? 'assigned': ''}`,
 								draggable: (todo.runningTask().hasRunning() || ctrl.offset !== 0)? false: true,
 								ondragstart: ctrl.dragstart.bind(ctrl, item)
 							},[
-								m("p.pomodoro-task_item-content", `${item.name()} assigned ${item.assigned()}`),
+								m("p.pomodoro-task_item-content", `${item.assigned()? '( yesterday )': ''} ${item.name()}`),
 								m(".ui.labels.circular", [
 									m(".ui.label.pomodoro-task_item-content_delete", {
 										onclick: ctrl.removeTask.bind(null, item._id())

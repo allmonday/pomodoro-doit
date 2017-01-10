@@ -1,13 +1,39 @@
 <% include _header %>
 
-<h1>Sign up</h1>
 
-<form action="/signup" method="post">
-  <input name="username" type="text" class="form-control"
-     placeholder="Username" required autofocus>
-  <input name="password" type="password" class="form-control"
-     placeholder="Password" required>
-  <input type="submit" value="Sign up" class="btn btn-primary btn-block">
-</form>
+<style>
+    body {
+        background: #efefef;
+    }
+</style>
+<div class="ui middle aligned center aligned grid" style="height: 100%;">
+  <div class="column" style="max-width: 500px">
+    <h1 class="image ui header teal">
+        <div class="content">Sign-up to Pomodoro-DOIT</div>
+    </h1>
+    <form class="ui large form" action="/signup" method="post">
+        <div class="ui stacked segment">
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input name="username" type="text" class="form-control" placeholder="Username" required autofocus>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    <input name="password" type="password" class="form-control" placeholder="Password" required>
+                </div>
+            </div>
+            <div class="field">
+                <input type="submit" value="Sign up" class="ui button fluid submit teal">
+            </div>
+        </div>
+    </form>
+    <div class="ui message">
+        Already user? <a href="/" class="">Log in</a>
+    </div>
+  </div>
+</div>
 
 <% include _footer %>
