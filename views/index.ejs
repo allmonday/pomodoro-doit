@@ -34,6 +34,11 @@
     <div class="ui message">
         New to us? <a href="/signup" class="">Sign Up</a>
     </div>
+    <% messages.forEach(function (msg) { %>
+        <div class="ui message">
+            <%= msg %>
+        </div>
+    <% }) %>
   </div>
 </div>
 
