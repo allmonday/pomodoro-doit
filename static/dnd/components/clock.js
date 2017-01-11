@@ -29,8 +29,8 @@ var clock = {
             if (elapsedTime.minutes >= 25)  {
                 vm.progress("width: 100%;");
                 vm.timeFormatted('has finished');
-                console.log("triggered");
                 util.notifyMe(vm.data.task().name);
+                widget.service.init();
             } else {
                 vm.progress(`width: ${elapsedTime.percent}%;`);
                 vm.percent(elapsedTime.percent);
