@@ -50,8 +50,16 @@ app.use(passport.session());
 
 app.use(function (req, res, next) {
     res.locals.currentUser = req.user;
-    res.locals.errors = req.session.flash.error; // only fix, dont know why req.flash not works
-    res.locals.infos = req.session.flash.info;
+    try {
+        res.locals.errors = req.session.flash.error; // only fix, dont know why req.flash not works
+    } catch (e) {
+        console.error(e);
+    }
+    try {
+        res.locals.infos = req.session.flash.info;
+    } catch (e) {
+        console.error(e);
+    }
     // res.locals.errors = req.flash("error");
     // res.locals.infos = req.flash("info");
     next();
