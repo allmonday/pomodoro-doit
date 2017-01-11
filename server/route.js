@@ -38,12 +38,20 @@ router.get("/logout", function (req, res) {
 })
 
 router.get("/signup", function (req, res) {
-    res.render("signup");
+    var messages = req.flash("error");
+    res.render("signup", {
+        messages: messages
+    });
 });
 
 router.post("/signup", function (req, res, next) {
+    var PASSWORD_REG = /^(\w){6,20}$/;
     var username = req.body.username;
     var password = req.body.password;
+    if (!PASSWORD_REG.test(password)) {
+        req.flash("error", "Password invalid")
+        return res.redirect("/signup");
+    }
 
     User.findOne({ username: username }, function (err, user) {
         if (err) { return next(err); }

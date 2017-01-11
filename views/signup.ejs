@@ -31,8 +31,13 @@
         </div>
     </form>
     <div class="ui message">
-        Already user? <a href="/" class="">Log in</a>
+        Already user? &nbsp;<a href="/" class="">Log in</a>
     </div>
+    <% messages.forEach(function (msg) { %>
+        <div class="ui red message">
+            <%= msg %>
+        </div>
+    <% }) %>
   </div>
 </div>
 

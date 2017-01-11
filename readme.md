@@ -22,6 +22,7 @@ npm run dev
 
 几个改进点:
 
+- [ ] login and register 使用jquery validation 优化一下.
 - [ ] ~按钮改小一点~
 - [x] + - 放在 pomodoros 的上面
 - [x] + - 逻辑 
