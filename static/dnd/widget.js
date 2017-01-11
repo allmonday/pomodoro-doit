@@ -6,11 +6,15 @@ var markdown = require("markdown").markdown;
 require("./widget.scss");
 
 var todo = require("./model/todo");
+
+// components
 var widget = require("./app");
 var addItem = require("./components/add");
 var pomodoro = require("./components/pomodoro");
 var clock = require("./components/clock");
 var confirm = require("./components/confirm");
+var note = require("./components/note");
+// utils
 var util = require("./utils/util");
 util.requireNotificationPermission();
 
@@ -138,9 +142,6 @@ widget.controller = function update() {
         alert("You did a great JOB!");
     }
 
-
-
-
     vm.addTodayTask = function (name) {
         if (_.isEmpty(vm.today())) {
             todo.addTodayTask(name, null).then(update.bind(vm));
@@ -183,6 +184,12 @@ widget.controller = function update() {
             targetid = null
         }
         todo.move(sourceid, targetid, isInter).then(update.bind(vm));
+    };
+
+    vm.setNote = function setNote(item) {
+        vm.clock.task().note = item.note();
+        vm.clock.task()._id = item._id();
+        vm.clock.task().name = item.name();
     }
 };
 
@@ -239,8 +246,9 @@ widget.view = function (ctrl) {
                 }, [
                     ctrl.today().map(function(item) {
                         return m(".pomodoro-today-list_item.ui.segment", {
+                            onclick: ctrl.setNote.bind(null, item),
                             key: item._id(),
-                            class: !(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'orange': '', 
+                            class: `${!(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'orange': ''} ${item.isRunning()? 'running': ''}`, 
                             draggable: (todo.runningTask().hasRunning())? false : true,  // freeze if task is running
                             ondrop: ctrl.onchange.bind(null, item),
                             ondragstart: ctrl.interdragstart.bind(ctrl, item),
@@ -303,12 +311,19 @@ widget.view = function (ctrl) {
                     key: JSON.stringify(ctrl.clock.pomodoro),
                     task: ctrl.clock.task,
                     pomodoro: ctrl.clock.pomodoro,
-                    updateNote: ctrl.updateNote,  //cb 
                     updatePomodoro: ctrl.updatePomodoro  //cb
-            })
-        ]),
-        m(confirm)  // confirm modal
-    ])
-};
+                }),
+                ctrl.clock.task()._id ?
+                m("#pomodoro-note", [
+                    m(note, {
+                        key: `${ctrl.clock.task()._id}`,
+                        task: ctrl.clock.task,
+                    })
+                ]) : m("div",""),
+
+            ]),
+            m(confirm)  // confirm modal
+        ])
+    };
 
 module.exports = widget;

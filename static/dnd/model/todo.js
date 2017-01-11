@@ -46,10 +46,13 @@ todo.TODAY = function (data) {  // class for today tasks
 
     // computed prop
 	this.prevNode = m.prop(data.prevNode || "");
+    let that = this;
+    that.isRunning = m.prop(false);
 	this.pomodoros = m.prop((data.pomodoros || []).reduce((prev, item) => {
+
+        // if not today, just initialize pomodoro, bypass other logics
+        // previous tasks are not runnable anymore.
         if (data.date !== today) {
-            // if not today, just initialize pomodoro, bypass other logics
-            // previous tasks are not runnable anymore.
             item.runnable = false;
             item.taskId = data._id;
             prev.push(new pomodoro(item));
@@ -71,6 +74,7 @@ todo.TODAY = function (data) {  // class for today tasks
                 // set clock!
                 hasOneUnrunPomo = true; 
                 global_runnable = true;
+                that.isRunning(true);
             } else {
                 // is finished
                 running.completedPomodoroToday(running.completedPomodoroToday() + 1);
