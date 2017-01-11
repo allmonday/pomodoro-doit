@@ -28,7 +28,7 @@ router.get("/login", function (req, res) {
 
 router.post("/login", passport.authenticate("login", {
     successReturnToOrRedirect: "/app/pomodoro",
-    failureRedirect: "/login",
+    failureRedirect: "/",
     failureFlash: true
 }))
 
@@ -64,12 +64,11 @@ router.post("/signup", function (req, res, next) {
 }));
 
 router.get("/", function (req, res, next) {
-    User.find()
-        .sort({ createdAt: "descending" })
-        .exec(function (err, users) {
-            if (err) { return next(err); }
-            res.render("index", { users: users });
-        });
+    var messages = req.flash("error");
+    console.log(messages)
+    res.render("index", {
+        messages: messages
+    });
 });
 
 router.get("/users/:username", function  (req, res, next) {
