@@ -53,12 +53,12 @@ app.use(function (req, res, next) {
     try {
         res.locals.errors = req.session.flash.error; // only fix, dont know why req.flash not works
     } catch (e) {
-        console.error(e);
+        // console.error(e);
     }
     try {
         res.locals.infos = req.session.flash.info;
     } catch (e) {
-        console.error(e);
+        // console.error(e);
     }
     // res.locals.errors = req.flash("error");
     // res.locals.infos = req.flash("info");
@@ -70,14 +70,13 @@ app.use("/api/pomodoro/", pomodoro);
 app.use("/api/contact/", contact);
 app.use("/api/dnd/", dnd);
 
-
 app.get("/app/pomodoro", ensureLoggedIn("/login") ,function (req, res) {
     res.render('mithril-dnd');
 })
 
-app.get("/app/:pageName", function (req, res) {
-    res.render(req.params.pageName);
-});
+// app.get("/app/:pageName", function (req, res) {
+//     res.render(req.params.pageName);
+// });
 
 if(!module.parent) {
     var server = app.listen(4000, function () {
