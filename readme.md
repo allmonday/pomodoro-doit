@@ -22,12 +22,10 @@ npm run dev
 
 几个改进点:
 
-- [ ] start 按钮放在task 上, task 执行时修改状态颜色
+- [x] start 按钮放在task 上, task 执行时修改状态颜色
 - [ ] 添加 cache buster.
-- [ ] 内容可编辑
 - [ ] login and register 使用jquery validation 优化一下.
-- [ ] ~按钮改小一点~
-- [ ] today task 可以点击, 在另一个窗口中之间编辑 // 需要代码重构
+- [x] today task 可以点击, 在另一个窗口中之间编辑 // 需要代码重构
 - [ ] 添加周为单位的查看
 - [ ] timer 上限改为10
 - [ ] 优雅的弹窗实现

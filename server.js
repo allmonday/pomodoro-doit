@@ -1,5 +1,6 @@
 // pomodoro server~
 
+var manifest = require("./webpack-assets.json");
 var express = require("express");
 var mongoose = require("mongoose");
 // register models
@@ -22,6 +23,8 @@ setUpPassport();
 
 var ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
 const MongoStore = require("connect-mongo")(session);
+
+app.locals.manifest = manifest;
 
 app.set("views", "./views");
 app.set("view engine", "ejs");
@@ -70,7 +73,7 @@ app.use("/api/pomodoro/", pomodoro);
 app.use("/api/contact/", contact);
 app.use("/api/dnd/", dnd);
 
-app.get("/app/pomodoro", ensureLoggedIn("/login") ,function (req, res) {
+app.get("/app/pomodoro", ensureLoggedIn("/") ,function (req, res) {
     res.render('mithril-dnd');
 })
 

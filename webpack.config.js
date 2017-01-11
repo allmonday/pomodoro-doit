@@ -1,4 +1,8 @@
 var path = require("path");
+var AssetsPlugin = require('assets-webpack-plugin')
+var assetsPluginInstance = new AssetsPlugin({
+
+})
 
 var config = {
     entry: { 
@@ -6,10 +10,10 @@ var config = {
         // rxdemo: "./static/rx-demo.js",
         // contact: "./static/component.js",
         // dnd: "./static/dnd.js",
-        'mithril-dnd': "./static/mithril-dnd"
+        'pomodoro': "./static/pomodoro"
     },
     output:{
-        filename: "./static/bundle/[name].js"
+        filename: "./static/bundle/[name].[hash].js"
     },
     external: {
         "mithril": "m"
@@ -31,7 +35,10 @@ var config = {
             },
             {test: /\.scss$/, loaders: ["style", "css", "sass"]}
         ]
-    }
+    },
+    plugins: [
+        assetsPluginInstance
+    ]
 }
 
 module.exports = config;
