@@ -34,7 +34,7 @@ var timer = {
             ]),
 
             ctrl.eachPomo.hasStarted()? util.isRunning(ctrl.eachPomo.status(), ctrl.eachPomo.startTime()) ? 
-                m(".ui.vertical.labeled.icon.buttons.tiny", [  // stop pomodoro
+                m(".ui.vertical.labeled.icon.buttons.tiny.pomo-item_start", [  // stop pomodoro
                     m("button.ui.button", {
                         onclick: (e) => {
                             widget.service.resetPomodoro( ctrl.task._id(), ctrl.eachPomo._id())
@@ -45,7 +45,7 @@ var timer = {
                     ])
                 ]):
                 m("div"):  // finished
-                m(".ui.vertical.labeled.icon.buttons.tiny", [  // start btn
+                m(".ui.vertical.labeled.icon.buttons.tiny.pomo-item_start", [  // start btn
                     m("button.ui.button", {
                         class: !ctrl.eachPomo.runnable()? "hide": "",
                         // disabled: !ctrl.eachPomo.runnable(),

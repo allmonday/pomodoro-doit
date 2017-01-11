@@ -219,9 +219,15 @@ widget.view = function (ctrl) {
                 ]),
                 m("#pomodoro-today-operate", [
                     m("label.ui.button.mini.disabled", `${ctrl.offset} days ago`),
-                    m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
-                    m("button.ui.button.mini.orange", { onclick: ctrl.backToday }, "Today"),
-                    m("button.ui.button.mini", { onclick: ctrl.nextDate }, ">"),
+                    m("#pomodoro-today-operate_group", [
+                        m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
+                        m("button.ui.button.mini.orange", { onclick: ctrl.backToday }, "Today"),
+                        m("button.ui.button.mini", { 
+                            onclick: ctrl.nextDate,
+                            disabled: ctrl.offset === 0
+
+                        }, ">"),
+                    ])
                 ]),
                 m(".pomodoro-util_cover"),
                 m("#pomodoro-today-list.ui.list", {

@@ -1,10 +1,16 @@
 .pomo {
     margin-top: 5px;
-
+    display: flex;
+    position: relative;
 }
 .pomo-item {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    &_start.ui.buttons {
+        position: absolute!important;
+        left: 0;
+        top: -37px;
+    }
 }

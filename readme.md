@@ -22,21 +22,31 @@ npm run dev
 
 几个改进点:
 
+- [ ] start 按钮放在task 上, task 执行时修改状态颜色
 - [ ] 添加 cache buster.
+- [ ] 内容可编辑
 - [ ] login and register 使用jquery validation 优化一下.
 - [ ] ~按钮改小一点~
+- [ ] today task 可以点击, 在另一个窗口中之间编辑 // 需要代码重构
+- [ ] 添加周为单位的查看
+- [ ] timer 上限改为10
+- [ ] 优雅的弹窗实现
+- [ ] 统计功能 (不然一天白忙活, 没个总结)
+- [ ] 添加优先级按钮 (low normal high)
 - [x] + - 放在 pomodoros 的上面
 - [x] + - 逻辑 
-- [ ] 内容可编辑
 - [x] 当天未完成的功能在左边显示出来 (显示昨天的未完成tasks)
-- [] today task 可以点击, 在另一个窗口中之间编辑 // 需要代码重构
 - [x] note 设置成 debounce 之后自动保存
-- [] 统计功能 (不然一天白忙活, 没个总结)
 - [x] notifaction 似乎有bug
-- [ ] 添加优先级按钮 (low normal high)
 - [x] 改成倒计间
 - [x] task 和today 的框都太大了点
 - [x] 删除操作弹框确认
 - [x] 添加快捷键
 
 # understanding mithril
+
+# long term todo 
+
+- [ ] react 重构
+- [ ] typescript
+- [ ] use scala as backend
