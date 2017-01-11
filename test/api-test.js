@@ -56,7 +56,7 @@ describe("APIs of user authentication", function () {
         agent.post("/login")
             .type("form")
             .send({password: "23", username: "tangkikodo"})
-            .expect("Location", "/login")
+            .expect("Location", "/")
             .expect(302)
             .end(done);
     })

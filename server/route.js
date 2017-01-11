@@ -65,7 +65,6 @@ router.post("/signup", function (req, res, next) {
 
 router.get("/", function (req, res, next) {
     var messages = req.flash("error");
-    console.log(messages)
     res.render("index", {
         messages: messages
     });
