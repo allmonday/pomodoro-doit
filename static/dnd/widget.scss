@@ -45,12 +45,11 @@ body {
     }
   }
   &-today {
-    // width: 300px;
     // parent 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 300px;
+    width: 400px;
     // child
     flex-grow: 0;
     &-operate {
