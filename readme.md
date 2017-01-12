@@ -22,6 +22,7 @@ npm run dev
 
 几个改进点:
 
+- [ ] 检查 nextNode 不存在的原因
 - [x] start 按钮放在task 上, task 执行时修改状态颜色
 - [ ] 添加 cache buster.
 - [ ] login and register 使用jquery validation 优化一下.
