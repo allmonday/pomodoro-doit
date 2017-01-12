@@ -13,16 +13,9 @@ var timer = {
         vm.task = data.task;
         vm.statusText = m.prop("running...");
         vm.data = data;
-        vm.viewPomo = (taskId, pomodoroId, e) => {
-            if (vm.eachPomo.isFinished()) {
-                console.log(vm.task._id())
-                console.log(vm.eachPomo._id())
-            }
-        }
     },
     view: function (ctrl) {
         return m(".pomo-item", { 
-            onclick: ctrl.viewPomo,
             class: ctrl.eachPomo.isFinished() ? "on-hover": ""
         },[
             m(".tomato.infinite.pulse", {
@@ -34,19 +27,18 @@ var timer = {
             ]),
 
             ctrl.eachPomo.hasStarted()? util.isRunning(ctrl.eachPomo.status(), ctrl.eachPomo.startTime()) ? 
-                m(".ui.vertical.labeled.icon.buttons.tiny.pomo-item_start", [  // stop pomodoro
-                    m("button.ui.button", {
+                m(".pomo-item_start", [  // stop pomodoro
+                    m("button.tiny.icon.circular.ui.button", {
                         onclick: (e) => {
                             widget.service.resetPomodoro( ctrl.task._id(), ctrl.eachPomo._id())
                         } 
                     }, [
                         m("i.stop.icon"),
-                        m("span", "Cancel")
                     ])
                 ]):
                 m("div"):  // finished
-                m(".ui.vertical.labeled.icon.buttons.tiny.pomo-item_start", [  // start btn
-                    m("button.ui.button", {
+                m(".pomo-item_start", [  // start btn
+                    m("button.icon.tiny.circular.ui.button", {
                         class: !ctrl.eachPomo.runnable()? "hide": "",
                         // disabled: !ctrl.eachPomo.runnable(),
                         onclick: (e) => {
@@ -57,7 +49,6 @@ var timer = {
                         } 
                     }, [
                         m("i.play.icon"),
-                        m("span", "Go")
                     ])
                 ])
         ]);

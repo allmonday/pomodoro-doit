@@ -111,5 +111,22 @@ describe('Utils', function() {
             date: '2017-01-08' } ]
         expect(sortToday.bind(null, input)).to.throw("head not exist");
      });
+     it("should ignore nextNode if it not exist", function () {
+        var input = [ { _id: '5871f0874b7165b5268d1eac',
+            name: '123',
+            note: '',
+            user: '5871bd5a36968a96e281cbef',
+            __v: 0,
+            pomodoros: [],
+            isHead: true,
+            nextNode: '5871f0914b7165b5268d1eb0',
+            prevNode: '',
+            assigned: true,
+            finished: false,
+            updateTime: 'Sun Jan 08 2017 15:55:51 GMT+0800 (CST)',
+            createTime: 'Sun Jan 08 2017 15:55:51 GMT+0800 (CST)',
+            date: '2017-01-08' }];
+        expect(sortToday(input)).to.eql(input);
+     })
   });
 });

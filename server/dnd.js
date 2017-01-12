@@ -17,7 +17,6 @@ var log = function () {};
 dnd.route("/task")
     .get(function (req, res) {
         Task.find({$or: [{assigned: false, user: req.user._id}, {assigned: true, date: yesterdayGetter(), user: req.user._id}]})
-        // Task.find({assigned: false, user: req.user._id})
             .sort({assigned: -1})
             .then(function (data) {
                 res.send(data);

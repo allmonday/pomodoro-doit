@@ -25,15 +25,21 @@ function sortLinkedList(inputList) {
 
     while(!!hasnext) {
         var next = map[hasnext];
-        next['prevNode'] = prevNode;
-        hasnext = map[hasnext].nextNode;  
+        if (next) {  // check next exist
 
-        if (!map[hasnext]) {  // check next node exist, otherwise set nextNode null
-            next['nextNode'] = null;
-            hasnext = false
+            next['prevNode'] = prevNode;
+            hasnext = map[hasnext].nextNode;  
+
+            if (!map[hasnext]) {  // check next node exist, otherwise set nextNode null
+                next['nextNode'] = null;
+                hasnext = false
+            }
+            result.push(next);
+            prevNode = next._id;
+
+        } else {  // just break the while. end it
+            hasnext = false;
         }
-        result.push(next);
-        prevNode = next._id;
     }
     return result;
 }

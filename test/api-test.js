@@ -27,7 +27,7 @@ describe("Pages", function () {
         request.get("/app/pomodoro")
             .expect(302)
             .expect("Content-Type", /text\/plain/)
-            .expect("Location", "/login")
+            .expect("Location", "/")
             .end(done);
     });
 })
@@ -36,11 +36,20 @@ describe("APIs of user authentication", function () {
     dropDb();
     var agent = supertest.agent(app);
 
-    it("test signup", function (done) {  // dont understand..
+    it("test signup, password less than 6", function (done) {  // dont understand..
         agent
             .post("/signup")
             .type("form")
             .send({password: "123", username: "tangkikodo"})
+            .expect("Location", "/signup")
+            .end(done)
+    });
+
+    it("test signup", function (done) {  // dont understand..
+        agent
+            .post("/signup")
+            .type("form")
+            .send({password: "123456", username: "tangkikodo"})
             .expect("Location", "/")
             .end(done)
     });
@@ -63,7 +72,7 @@ describe("APIs of user authentication", function () {
     it("should be able to login", function (done) {
         agent.post("/login")
             .type("form")
-            .send({password: "123", username: "tangkikodo"})
+            .send({password: "123456", username: "tangkikodo"})
             .expect("Location", "/app/pomodoro")
             .expect(302)
             .end(done);
@@ -81,7 +90,7 @@ describe("APIs of task creation", function () {
     it("success to login", function (done) {
         agent.post("/login")
             .type("form")
-            .send({password: "123", username: "tangkikodo"})
+            .send({password: "123456", username: "tangkikodo"})
             .expect("Location", "/app/pomodoro")
             .expect(302)
             .end(done);

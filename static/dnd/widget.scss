@@ -73,6 +73,12 @@ body {
     }
   }
   &-clock {
+    // parent
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    
+    // child
     overflow-y: auto;
     flex-grow: 1;
   }
@@ -137,6 +143,9 @@ body {
     }
   }
   &_item {
+    &.running {
+      border: 2px solid #f26202;
+    }
     &.ui.segment:first-child {
       margin-top: 15px;
     }
