@@ -24,6 +24,7 @@ npm run dev
 
 - [ ] 检查 nextNode 不存在的原因
 - [x] start 按钮放在task 上, task 执行时修改状态颜色
+- [ ] 内部拖拽似乎有问题
 - [ ] 添加 cache buster.
 - [ ] login and register 使用jquery validation 优化一下.
 - [x] today task 可以点击, 在另一个窗口中之间编辑 // 需要代码重构

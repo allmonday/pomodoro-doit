@@ -1,6 +1,6 @@
 var m = require("mithril");
-var _ = require("lodash");
-var moment = require("moment");
+// var _ = require("lodash");
+// var moment = require("moment");
 var markdown = require("markdown").markdown;
 
 require("./widget.scss");

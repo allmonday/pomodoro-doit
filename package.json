@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && mocha -w",
+    "test": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && npm run build && mocha -w",
+    "build": "webpack",
     "publish": "webpack -p",
     "watch": "webpack -w",
     "proxy": "browser-sync start --port 8888 -b \"google chrome\" --startPath /app/pomodoro --proxy \"http://localhost:4000\" --files \"static/bundle/*.js, views/**/*.html\"",
@@ -31,9 +32,7 @@
     "mongoose": "^4.7.2",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
-    "q": "^1.4.1",
-    "rx": "^4.1.0",
-    "rxjs": "^5.0.0-rc.5"
+    "q": "^1.4.1"
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.5.0",

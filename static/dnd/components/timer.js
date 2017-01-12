@@ -1,6 +1,5 @@
 var m = require("mithril");
-var moment = require("moment");
-var timerObservable = require("../utils/timerObservable");
+// var moment = require("moment");
 var util = require("../utils/util");
 var widget = require("../app");
 

@@ -1,5 +1,5 @@
 var m = require("mithril");
-var moment = require("moment");
+// var moment = require("moment");
 var timer = require("./timer");
 
 var pomo = {

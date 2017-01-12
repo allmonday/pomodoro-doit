@@ -39,10 +39,10 @@ var AddItem = {
             m("#pomodoro-add_buttons", [
                 m("button.ui.button.teal.mini", {
                     onclick: ctrl.add
-                },"Add to Task"),
+                },"Do it Later"),
                 m("button.ui.button.orange.mini", {
                     onclick: ctrl.addToday
-                },"Add to Today"),
+                },"Do it Today"),
             ])
         ]);
     }
