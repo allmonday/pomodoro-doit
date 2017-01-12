@@ -1,4 +1,4 @@
-var moment = require("moment");
+// var moment = require("moment");
 
 function isFinished(date, range) {
     range = range || 25;

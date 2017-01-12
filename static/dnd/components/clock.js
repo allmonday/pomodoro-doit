@@ -1,8 +1,7 @@
 var m = require("mithril");
-var _ = require("lodash")
 var util = require("../utils/util");
 var widget = require("../app");
-
+// var _ = require("lodash");
 
 require("./clock.scss");
 

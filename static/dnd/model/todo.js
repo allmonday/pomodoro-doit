@@ -1,7 +1,7 @@
 var m = require("mithril");
 var pomodoro = require("./pomodoro");
 var util = require("../utils/util");
-var today = require("server/utils/today").today();
+var today = require("../utils/today").today();
 
 console.log(today);
 

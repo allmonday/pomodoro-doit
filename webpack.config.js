@@ -6,6 +6,7 @@ var assetsPluginInstance = new AssetsPlugin({
 
 var config = {
     entry: { 
+        /* other projs */
         // pomodoro: "./static/pomodoro/main.js",
         // rxdemo: "./static/rx-demo.js",
         // contact: "./static/component.js",
@@ -16,7 +17,12 @@ var config = {
         filename: "./static/bundle/[name].[hash].js"
     },
     external: {
-        "mithril": "m"
+        "moment": "moment",
+        "lodash": {
+            commonjs: "lodash",
+            amd: "lodash",
+            root: "_"
+        }
     },
     resolve: {
         root: [
