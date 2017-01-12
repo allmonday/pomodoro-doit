@@ -27,7 +27,7 @@ describe("Pages", function () {
         request.get("/app/pomodoro")
             .expect(302)
             .expect("Content-Type", /text\/plain/)
-            .expect("Location", "/login")
+            .expect("Location", "/")
             .end(done);
     });
 })
