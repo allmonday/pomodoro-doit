@@ -16,6 +16,11 @@ var config = {
     },
     external: {
         "moment": "moment",
+        "toastr": {
+            commonjs: "toastr",
+            amd: "toastr",
+            root: "toastr",
+        },
         "lodash": {
             commonjs: "lodash",
             amd: "lodash",

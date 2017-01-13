@@ -15,7 +15,9 @@ var ensureAuthenticated = require("./utils/ensureAuthenticated");
 // var log = console.log;
 var log = function () {};
 
+// all api/dnd is login-required
 dnd.all('/*',ensureAuthenticated);
+
 dnd.route("/task")
     .get(function (req, res) {
         Task.find({$or: [{assigned: false, user: req.user._id}, {assigned: true, date: yesterdayGetter(), user: req.user._id}]})

@@ -108,7 +108,10 @@ todo.updateNote = (taskId, note) => {
 }
 
 todo.removeTask = (taskId) => {
-    return m.request({method: 'delete', url: "/api/dnd/task", data: {_id: taskId}});
+    return m.request({method: 'delete', url: "/api/dnd/task", data: {_id: taskId}})
+        .then(() => {
+            toastr.success("deleted");
+        });
 }
 
 todo.addTodayTask = (name, prevNode) => {
@@ -124,7 +127,7 @@ todo.move = (sourceid, targetid, isInter) => {
 }
 
 todo.cancelTask = (id) => {
-	return m.request({method: "delete", url: "/api/dnd/today", data: {id: id}});
+    return m.request({method: "delete", url: "/api/dnd/today", data: {id: id}})
 }
 
 todo.addPomo = function (id) {
