@@ -37,7 +37,7 @@ var timer = {
                 ]):
                 m("div"):  // finished
                 m(".pomo-item_start", [  // start btn
-                    m("button.icon.tiny.circular.ui.button", {
+                    m("button.icon.tiny.orange.circular.ui.button", {
                         class: !ctrl.eachPomo.runnable()? "hide": "",
                         // disabled: !ctrl.eachPomo.runnable(),
                         onclick: (e) => {

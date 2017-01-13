@@ -46,7 +46,7 @@ function elapsed(date) {
 function minToHour(num) {
     let minutes = num % 60;
     let hours = Math.floor(num/60);
-    return `${prefix_zero(hours)}h, ${prefix_zero(minutes)}m`;
+    return `${prefix_zero(hours)}hours and ${prefix_zero(minutes)}minutes`;
 }
 
 function requireNotificationPermission () {
@@ -59,7 +59,7 @@ function notifyMe(name) {
   else {
     var notification = new Notification('Times UP!', {
       requireInteraction: true,
-      icon: '/imgs/tomato.svg',
+      icon: '/imgs/tomato.png',
       body: `Take a break~`,
     });
     notification.onclick = function () {

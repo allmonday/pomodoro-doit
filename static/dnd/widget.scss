@@ -1,3 +1,5 @@
+@import "./components/variable";
+
 $orange: rgba(242,113,28, 0.53);
 $light-orange: rgba(242,113,28, 0.23);
 
@@ -29,6 +31,7 @@ body {
 
 #pomodoro {
   &-task {
+    border-top-color: $green-hover;
     // parent
     display: flex;
     flex-direction: column;
@@ -53,7 +56,7 @@ body {
     // child
     flex-grow: 0;
     &-operate {
-      margin-top: 15px;
+      margin-top: 10px;
       padding-bottom: 13px;
       &_group {
         float: right;
@@ -89,6 +92,9 @@ body {
 
 .pomodoro-task {
   &_item {
+    &.teal.ui.segment {
+      border-top-color: $green-hover;
+    }
     cursor: pointer;
     &.ui.segment:first-child {
       margin-top: 20px;
@@ -145,17 +151,22 @@ body {
     .ui.label > .icon {
       margin: 0;
     }
+    &_close {
+      background: #bdbdbd!important;
+    }
   }
   &_item {
     cursor: pointer;
     .pomodoro-today-list_display_estimated.ui.label {
       border-top-left-radius: 0;
+      font-weight: normal;
+      padding: 0.5em 1em;
     }
     &.ui.segment {
       padding-bottom: 0;
     }
     &.running {
-      border: 2px solid #f26202;
+      // border: 1px solid #f26202;
     }
     &.ui.segment:first-child {
       margin-top: 15px;
@@ -182,7 +193,7 @@ body {
   &_display {
     margin-bottom: 20px;
     &_name {
-      font-size: 16px;
+      // font-size: 16px;
     }
     &_img {
       height: 36px;
@@ -191,8 +202,12 @@ body {
       margin-top: 1em;
       margin-bottom: 2em;
     }
-    &_estimated.ui.label {
-      margin-top: 2px;
+    &_estimated_total.ui.message {
+      text-align: center;
+      margin-bottom:0;
+      padding-top: 0.85em;
+      padding-bottom: 0.85em;
+      font-weight: bold;
     }
   }
   &_timer-edit {
