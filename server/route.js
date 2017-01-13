@@ -72,7 +72,7 @@ router.post("/signup", function (req, res, next) {
 }));
 
 router.get("/", function (req, res, next) {
-    var messages = req.flash("error");
+    var messages = req.flash("error") || [];
     res.render("index", {
         messages: messages
     });
