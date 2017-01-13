@@ -57,6 +57,7 @@ todo.TODAY = function (data) {  // class for today tasks
             prev.push(new pomodoro(item));
             return prev;
         }
+        
         running.totalPomodoroToday(running.totalPomodoroToday() + 1);
 
         let runnable = false;
