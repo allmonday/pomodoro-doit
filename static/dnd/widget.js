@@ -187,10 +187,13 @@ widget.controller = function update() {
         todo.move(sourceid, targetid, isInter).then(update.bind(vm));
     };
 
-    vm.setNote = function setNote(item) {
+    vm.setNote = function setNote(item) {  // refactor?
         vm.clock.task().note = item.note();
         vm.clock.task()._id = item._id();
         vm.clock.task().name = item.name();
+        setTimeout(function () {
+            $("#pomodoro-note-main_edit").focus();
+        }, 100);
     }
 };
 

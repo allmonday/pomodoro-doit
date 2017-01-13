@@ -23,13 +23,17 @@ npm run dev
 几个改进点:
 
 - [ ] 添加 icon
+- [ ] 上https
+- [ ] nginx 优化访问
+- [ ] 添加 icon
 - [ ] 添加限制条件
 - [ ] 检查 nextNode 不存在的原因
 - [ ] 添加周为单位的查看
-- [ ] timer 上限改为10
+- [ ] timer 上限改为10 (待议)
 - [ ] 优雅的弹窗实现
 - [ ] 统计功能 (不然一天白忙活, 没个总结)
-- [ ] 添加优先级按钮 (low normal high)
+- [ ] 添加优先级按钮 (low normal high, 还是挺重要的
+- [ ] mongo 添加账号
 - [ ] login and register 使用jquery validation 优化一下.
 - [x] start 按钮放在task 上, task 执行时修改状态颜色
 - [x] 内部拖拽似乎有问题
@@ -49,6 +53,7 @@ npm run dev
 
 # long term todo 
 
+- [ ] server 端换个go 试试
 - [ ] react 重构
 - [ ] typescript
 - [ ] use scala as backend

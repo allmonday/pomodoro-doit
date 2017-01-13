@@ -58,9 +58,10 @@ function notifyMe(name) {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
-    var notification = new Notification('pomodoro finished', {
-      icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-      body: `pomodoro of ${name} has finished! take a break`,
+    var notification = new Notification('Times UP!', {
+      requireInteraction: true,
+      icon: '/imgs/tomato.svg',
+      body: `Take a break~`,
     });
     notification.onclick = function () {
         window.focus(); 

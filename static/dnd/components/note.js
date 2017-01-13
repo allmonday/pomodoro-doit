@@ -21,7 +21,7 @@ var note = {
             m(".ui.form", [
                 m(".field", [
                     m("label", `Notes of ${ctrl.data.task().name } ( markdown supported )`),
-                    m("textarea[type='text']", {
+                    m("textarea[type='text'][rows='15']#pomodoro-note-main_edit", {
                         oninput: m.withAttr('value', ctrl.note),
                         value: ctrl.note(),
                         onkeypress: function (e) {

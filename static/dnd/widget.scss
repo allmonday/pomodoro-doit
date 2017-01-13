@@ -81,6 +81,9 @@ body {
     overflow-y: auto;
     flex-grow: 1;
   }
+  &-note {
+    flex-grow: 1;
+  }
 }
 
 .pomodoro-task {
