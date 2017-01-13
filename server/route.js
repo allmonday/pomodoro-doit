@@ -5,6 +5,7 @@ var User = mongoose.model("User");
 var router = express.Router();
 var passport = require("passport");
 var ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
+var authenRedirect = require("./utils/authenRedirect");
 
 router.get("/edit", ensureLoggedIn("/login"), function (req, res) {
     res.render("edit");
@@ -71,7 +72,7 @@ router.post("/signup", function (req, res, next) {
     failureFlash: true
 }));
 
-router.get("/", function (req, res, next) {
+router.get("/", authenRedirect, function (req, res, next) {
     var messages = req.flash("error") || [];
     res.render("index", {
         messages: messages
