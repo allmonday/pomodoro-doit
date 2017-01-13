@@ -1,6 +1,6 @@
 var m = require("mithril");
 // var _ = require("lodash");
-// var moment = require("moment");
+var moment = require("moment");
 var markdown = require("markdown").markdown;
 
 require("./widget.scss");
@@ -43,6 +43,7 @@ widget.controller = function update() {
         let dt = e.dataTransfer;
         dt.setData("Text", info);
     }
+    vm.showNote = m.prop(false);
 
     vm.interdragstart = (item, e) => {
         let dt = e.dataTransfer;
@@ -131,7 +132,7 @@ widget.controller = function update() {
     // update notes
     var updateNote = function(taskId, note) {
         todo.updateNote(taskId, note)
-            .then(this.init);
+            .then(this.init).then(this.showNote(true));
     }
     vm.updateNote = updateNote.bind(vm);
     widget.service.updateNote = updateNote.bind(vm);
@@ -222,11 +223,21 @@ widget.view = function (ctrl) {
             m("#pomodoro-today.ui.segment.orange", [
                 m(".pomodoro-today-list_display_estimated.ui.top.large.label", [
                     m("i.icon.wait"),
-                    m("span", `${ (ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday())} pomodoros left, need ${ util.minToHour(25 *(ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday()))}.`)
+                    m("span", `Progress: ${ctrl.clock.completedPomodoroToday()}/${ctrl.clock.totalPomodoroToday()}, need ${ util.minToHour(25 *(ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday()))}.`)
                 ]),
                 m("#pomodoro-today-operate", [
                     m("label.ui.button.mini.disabled", `${ctrl.offset} days ago`),
                     m("#pomodoro-today-operate_group", [
+                        m("button.ui.tiny.icon.button", {
+                            class: `${ctrl.showNote()? '' : 'orange'}`,
+                            onclick: () => {
+                                ctrl.showNote(!ctrl.showNote());
+                            }
+                        },[
+                            m("i.icon", {
+                                class: `${ctrl.showNote()? 'list' : 'edit'}`,
+                            })
+                        ]),
                         m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
                         m("button.ui.button.mini.orange", { onclick: ctrl.backToday }, "Today"),
                         m("button.ui.button.mini", { 
@@ -262,7 +273,7 @@ widget.view = function (ctrl) {
                             ]),
                             m(".pomodoro-today-list_display", [
                                 m("p.pomodoro-today-list_display_name", `${item.name()}`),
-                                item.note() ?  m(".ui.pomodoro-today-list_display_note", [
+                                item.note() && ctrl.showNote() ?  m(".ui.pomodoro-today-list_display_note", [
                                     m("div", m.trust(markdown.toHTML(item.note())))
                                 ]) : m("div"),
                             ]),
@@ -298,13 +309,13 @@ widget.view = function (ctrl) {
                     })
                 ]),
                 m(".pomodoro-util_cover.above"),
-                m(".pomodoro-today-list_summary.ui.button.orange", {
-                    style: 'flex-shrink: 0;', 
-                    onclick: widget.service.summary 
-                }, [
-                    m("i.icon.book"),
-                    m("span", "summary")
-                ])
+                // m(".pomodoro-today-list_summary.ui.button.orange", {
+                //     style: 'flex-shrink: 0;', 
+                //     onclick: widget.service.summary 
+                // }, [
+                //     m("i.icon.book"),
+                //     m("span", "summary")
+                // ])
             ]),
             m("#pomodoro-clock.ui.segment", [
                 m(clock, {

@@ -3,9 +3,8 @@ var pomodoro = require("./pomodoro");
 var util = require("../utils/util");
 var today = require("../utils/today").today();
 
-console.log(today);
-
 var todo = {};
+
 var global_runnable = false;
 var running = {
     task: m.prop({}),
@@ -58,8 +57,7 @@ todo.TODAY = function (data) {  // class for today tasks
             prev.push(new pomodoro(item));
             return prev;
         }
-
-        if (data.assigned) { running.totalPomodoroToday(running.totalPomodoroToday() + 1); }
+        running.totalPomodoroToday(running.totalPomodoroToday() + 1);
 
         let runnable = false;
         if (!hasOneUnrunPomo && data.assigned) { 
@@ -75,14 +73,17 @@ todo.TODAY = function (data) {  // class for today tasks
                 hasOneUnrunPomo = true; 
                 global_runnable = true;
                 that.isRunning(true);
-            } else {
-                // is finished
-                running.completedPomodoroToday(running.completedPomodoroToday() + 1);
             }
         } 
+
         item.runnable = runnable;
         item.taskId = data._id;
-        prev.push(new pomodoro(item));
+        let pomoInstance = new pomodoro(item);
+        prev.push(pomoInstance);
+
+        if (pomoInstance.isFinished()) {
+            running.completedPomodoroToday(running.completedPomodoroToday() + 1);
+        }
         return prev;
 	}, []));
 };

@@ -25,12 +25,18 @@ var AddItem = {
 
     view: function (ctrl) {
         return m("#pomodoro-add.ui.form", [
-            m("input[type='text'][autocomplete='off'][placeholder='enter task']#pomodoro-add-item_input", {
+            m("input[type='text'][autocomplete='off'][placeholder='enter->todo, ctrl+enter->today']#pomodoro-add-item_input", {
                 oninput: m.withAttr("value", ctrl.name),  // sync content
                 config: (el, init) => {  // enter to add item
                     if (!init) {
                         el.addEventListener("keypress", function (e) {
-                            if (e.keyCode === 13) { ctrl.add(); }
+                            if (e.keyCode === 13) {
+                                if (e.ctrlKey) {
+                                    ctrl.addToday();
+                                } else {
+                                    ctrl.add(); 
+                                }
+                            }
                         })
                     }
                 },

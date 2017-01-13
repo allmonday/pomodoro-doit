@@ -1,8 +1,6 @@
 var path = require("path");
 var AssetsPlugin = require('assets-webpack-plugin')
-var assetsPluginInstance = new AssetsPlugin({
-
-})
+var assetsPluginInstance = new AssetsPlugin({})
 
 var config = {
     entry: { 
@@ -14,7 +12,7 @@ var config = {
         'pomodoro': "./static/pomodoro"
     },
     output:{
-        filename: "./static/bundle/[name].[hash].js"
+        filename: process.env.ENV === 'prod' ? "./static/bundle/[name].[hash].js": "./static/bundle/[name].js"
     },
     external: {
         "moment": "moment",

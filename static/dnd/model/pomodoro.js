@@ -17,11 +17,23 @@ var pomodoro = function (data) {
 pomodoro.prototype.isFinished = function() {
 	return this.status && util.isFinished(this.startTime());
 }
+
 pomodoro.prototype.hasStarted = function () {
 	return !!this.startTime();
 }
+
 pomodoro.prototype.isRunning = function () {
 	return this.hasStarted() && !this.isFinished();
+}
+
+pomodoro.prototype.currentStatus = function () {
+	if (!this.hasStarted()) {
+		return "prepare";
+	} else if (this.isRunning()) {
+		return "running";
+	} else {
+		return "finished"
+	}
 }
 
 module.exports = pomodoro;
