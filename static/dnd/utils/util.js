@@ -70,12 +70,12 @@ function notifyMe(name) {
 }
 
 function isTop(e) {
-	let top = e.target.offsetTop,
-		bottom = top + e.target.clientHeight,
-		posY = e.y,
-		average = (top + bottom) /2;
-	
-	let result = posY <= average;
+    let cursorY = e.offsetY,  // offsetY to object
+        clientHeight = e.target.clientHeight,  // container height
+        half = clientHeight / 2;
+
+	let result = cursorY <= half;
+    console.log(result);
 	return result;
 }
 

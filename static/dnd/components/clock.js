@@ -14,6 +14,19 @@ var clock = {
         vm.timeFormatted = m.prop("...");
         vm.progress = m.prop("");
         vm.percent = m.prop("0");
+        vm.getPct = getPct;
+
+        function getPct(val) {
+            var r = 90;
+            var c = Math.PI*(r*2);
+        
+            if (val < 0) { val = 0;}
+            if (val > 100) { val = 100;}
+            
+            var pct = (val/100)*c;
+            return pct;
+        }
+
         function count() {
             m.startComputation();
             let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
@@ -39,12 +52,23 @@ var clock = {
         return m(".pomodoro-clock", [
             !_.isEmpty(ctrl.data.pomodoro()) ? m(".pomodoro-clock_view", [
                 m(".pomodoro-clock_view_progress", [
-                    m(".pomodoro-clock_progress.ui.progress.orange",[
-                        m(".bar", {style: ctrl.progress()}, [
-                            m(".progress", `${Math.floor(ctrl.percent())}%`),
+                    // m(".pomodoro-clock_progress.ui.progress.orange",[
+                    //     m(".bar", {style: ctrl.progress()}, [
+                    //         m(".progress", `${Math.floor(ctrl.percent())}%`),
+                    //     ])
+                    // ]),
+                    // m(".ui.label.huge.orange", ctrl.timeFormatted()),
+                    m("#pomodoro-pct", {
+                        'data-pct': ctrl.timeFormatted() 
+                    }, [
+                        m("svg[width='200'][height='200'][viewPort='0 0 100 100'].pomodoro-clock-circle", [
+                            m("circle[r='90'][cx='100'][cy='100'][fill='transparent'][stroke-dasharray='565.48'][stroke-dashoffset='0']", {
+                            }),
+                            m(`circle[id="bar"][r="90"][cx="100"][cy="100"][fill="transparent"][stroke-dasharray="565.48"][stroke-dashoffset="0"][transform=rotate(270, 100, 100)]`,{
+                                style: `stroke-dashoffset: ${ctrl.getPct(ctrl.percent())}px;`
+                            })
                         ])
                     ]),
-                    m(".ui.label.huge.orange", ctrl.timeFormatted()),
                 ]),
                 m(".ui.form", {style: 'overflow: hidden;'}, [
                     m(".two.fields", [
@@ -63,7 +87,7 @@ var clock = {
                     }, "update"),
                 ])
             ]): m(".pomodoro-clock_empty", [
-                m(".ui.large.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
+                // m(".ui.large.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
                 m(".pomodoro-clock-banner", [
                     m("img[src='/imgs/tomato.svg'].pomodoro-clock-icon"),
                     m("h2.pomodoro-clock-title", "Pomodoro-DOIT!"),
