@@ -9,6 +9,7 @@ var Task = mongoose.Schema({
     date: { type: String, default: ""},
     name: { type: String, required: true},
     note: String,
+    fixedTop: { type: Boolean, default: false},   // keep on top
     createTime: { type: Date, default: Date.now },
     updateTime: { type: Date, default: Date.now },
     finished: {type: Boolean, default: false }, 

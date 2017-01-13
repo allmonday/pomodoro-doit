@@ -284,14 +284,17 @@ widget.view = function (ctrl) {
                                     m("div", m.trust(markdown.toHTML(item.note())))
                                 ]) : m("div"),
                             ]),
+
+                            item.isToday() ?
                             m(".pomodoro-today-list_operate.ui.labels.circular", [
                                 m(".label.ui.pomodoro-today-list_operate_close", {
-                                    // class : todo.runningTask().hasRunning() ? "hide": "",
                                     onclick: ctrl.cancelTask.bind(null, item._id())
                                 }, [
                                     m("i.remove.icon"),
                                 ])
-                            ]),
+                            ]): m("div"),
+
+                            item.isToday()?
                             m(".pomodoro-today-list_timer-edit.ui.labels.circular", [
                                 m(".label.ui", {
                                     class: item.pomodoros().length >= 5 ? "disabled" :"",
@@ -306,7 +309,8 @@ widget.view = function (ctrl) {
                                 }, [
                                     m("i.minus.icon"),
                                 ])
-                            ]),
+                            ]): m("div"),
+
                             m(pomodoro, {
                                 resetPomodoro: ctrl.resetPomodoro,
                                 item: item,
