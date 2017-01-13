@@ -11,9 +11,11 @@ var User = mongoose.model("User");
 var todayString = require("./utils/today").today;
 var yesterdayGetter = require("./utils/today").yesterday;
 var sortList = require("./utils/sort-today");
+var ensureAuthenticated = require("./utils/ensureAuthenticated");
 // var log = console.log;
 var log = function () {};
 
+dnd.all('/*',ensureAuthenticated);
 dnd.route("/task")
     .get(function (req, res) {
         Task.find({$or: [{assigned: false, user: req.user._id}, {assigned: true, date: yesterdayGetter(), user: req.user._id}]})
