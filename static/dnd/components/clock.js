@@ -70,22 +70,22 @@ var clock = {
                         ])
                     ]),
                 ]),
-                m(".ui.form", {style: 'overflow: hidden;'}, [
-                    m(".two.fields", [
-                        m(".field", [
-                            m("label", "valid time"),
-                            m("input[type='number'][max='25'][min='0']", {oninput: m.withAttr('value', ctrl.validTime), value: ctrl.validTime()}),
+                // m(".ui.form", {style: 'overflow: hidden;'}, [
+                //     m(".two.fields", [
+                //         m(".field", [
+                //             m("label", "valid time"),
+                //             m("input[type='number'][max='25'][min='0']", {oninput: m.withAttr('value', ctrl.validTime), value: ctrl.validTime()}),
 
-                        ]),
-                        m(".field", [
-                            m("label", "interupt count"),
-                            m("input[type='number'][max='3'][min='0']", {oninput: m.withAttr('value', ctrl.interuptCount), value: ctrl.interuptCount()}),
-                        ]),
-                    ]),
-                    m("button.ui.button.mini.orange.right.floated", {onclick: () => {
-                        ctrl.data.updatePomodoro(ctrl.data.task()._id, ctrl.data.pomodoro()._id, ctrl.validTime(), ctrl.interuptCount())}
-                    }, "update"),
-                ])
+                //         ]),
+                //         m(".field", [
+                //             m("label", "interupt count"),
+                //             m("input[type='number'][max='3'][min='0']", {oninput: m.withAttr('value', ctrl.interuptCount), value: ctrl.interuptCount()}),
+                //         ]),
+                //     ]),
+                //     m("button.ui.button.mini.orange.right.floated", {onclick: () => {
+                //         ctrl.data.updatePomodoro(ctrl.data.task()._id, ctrl.data.pomodoro()._id, ctrl.validTime(), ctrl.interuptCount())}
+                //     }, "update"),
+                // ])
             ]): m(".pomodoro-clock_empty", [
                 // m(".ui.large.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
                 m(".pomodoro-clock-banner", [
