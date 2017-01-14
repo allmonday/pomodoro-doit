@@ -12,7 +12,6 @@
     "proxy": "browser-sync start --reload-delay 1000 --port 8888 -b \"google chrome\" --startPath /app/pomodoro --proxy \"http://localhost:4000\" --files \"static/bundle/*.js, views/**/*.html\"",
 
     "server": "export MONGOURL='mongodb://localhost:27017/pomodoro' && nodemon ./server.js",
-    "prod-server": "export MONGOURL='mongodb://localhost:27017/pomodoro' && export ENV='prod' && nodemon ./server.js",
     "dev": "npm-run-all --parallel server proxy watch"
   },
   "author": "",

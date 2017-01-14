@@ -1,12 +1,7 @@
 var m = require("mithril");
-// var _ = require("lodash");
-var moment = require("moment");
-var markdown = require("markdown").markdown;
-
 require("./widget.scss");
-
+// model
 var todo = require("./model/todo");
-
 // components
 var widget = require("./app");
 var addItem = require("./components/add");
@@ -15,9 +10,13 @@ var clock = require("./components/clock");
 var confirm = require("./components/confirm");
 var note = require("./components/note");
 var summary = require("./components/summary");
-
+var taskComponent = require("./components/task");
+var todayComponent = require("./components/today");
 // utils
 var util = require("./utils/util");
+var moment = require("moment");
+
+// init
 util.requireNotificationPermission();
 
 
@@ -35,7 +34,35 @@ widget.controller = function update() {
     vm.init = init.bind(vm);
     vm.init();
 
-    vm.dragstart = (item, e) => {
+    // flags
+    vm.showNote = m.prop(false);
+    vm.offset = m.prop(0);   // date offset, yesterday == -1
+
+    vm.prevDate = function () {
+        vm.offset(vm.offset() + 1) ;
+        vm.today = todo.today(moment().subtract(vm.offset(), 'days').format("YYYY-MM-DD"));
+    };
+
+    vm.backToday = function () {
+        if (vm.offset() === 0) {
+            return;
+        }
+        vm.offset(0);
+        vm.init();
+    };
+
+    vm.nextDate = function () {
+        if (vm.offset() > 1) {
+            vm.offset(vm.offset() - 1);
+            vm.today = todo.today(moment().subtract(vm.offset(), 'days').format("YYYY-MM-DD"));
+        } else if (vm.offset() === 1) {
+            vm.offset(vm.offset() - 1);
+            vm.init();
+        }
+    };
+
+
+    vm.dragstart = widget.service.dragstart = function dragstart(item, e) {
         let info;
         if (item.assigned()) {
             info = `inter-${item._id()}`;
@@ -45,66 +72,48 @@ widget.controller = function update() {
         let dt = e.dataTransfer;
         dt.setData("Text", info);
     }
-    vm.showNote = m.prop(false);
 
-    vm.interdragstart = (item, e) => {
+    vm.interdragstart = widget.service.interdragstart = function interdragstart(item, e) {
         let dt = e.dataTransfer;
         dt.setData("Text", `inter-${item._id()}`);
     }
 
-    vm.addPomo = (item) => {
-        todo.addPomo(item._id()).then(update.bind(vm));
-    }
-    vm.subPomo = (id) => {
-        todo.subPomo(id).then(update.bind(vm));
-    }
+    widget.service.addPomo = vm.addPomo = function(item) {
+        todo.addPomo(item._id()).then(this.init);
+    }.bind(vm);
+
+    widget.service.subPomo = vm.subPomo = function(id) {
+        todo.subPomo(id).then(this.init);
+    }.bind(vm);
+
     vm.addTask = (name) => {
         todo.addTask(name).then(update.bind(vm));
     }
-    vm.removeTask = (taskId) => {
+
+    var removeTask = function(taskId) {
+        let that = this;
         $("#confirm-modal.ui.basic.modal")
             .modal({ 
                 closable: false,
                 onDeny: function () {
                 },
                 onApprove: function () {
-                    todo.removeTask(taskId).then(update.bind(vm));
+                    todo.removeTask(taskId).then(that.init);
                 }
             })
             .modal("show");
     }
+    vm.removeTask = removeTask.bind(vm);
+    widget.service.removeTask = removeTask.bind(vm);
 
-    vm.cancelTask = (name) => {
-        todo.cancelTask(name).then(update.bind(vm));
+    var cancelTask = function(name) {
+        todo.cancelTask(name).then(this.init);
     }
+    vm.cancelTask = widget.service.cancelTask = cancelTask.bind(vm);
+
     vm.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
         todo.updatePomodoro(taskId, pomodoroId, validTime, interuptCount).then(update.bind(vm));
     }
-
-    vm.offset = 0;
-
-    vm.prevDate = function () {
-        vm.offset += 1;
-        vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
-    };
-
-    vm.backToday = function () {
-        if (vm.offset === 0) {
-            return;
-        }
-        vm.offset = 0;
-        vm.init();
-    };
-
-    vm.nextDate = function () {
-        if (vm.offset > 1) {
-            vm.offset -= 1;
-            vm.today = todo.today(moment().subtract(vm.offset, 'days').format("YYYY-MM-DD"));
-        } else if (vm.offset === 1) {
-            vm.offset -= 1;
-            vm.init();
-        }
-    };
 
     // start timer
     var startTimer = function (obj) {
@@ -115,7 +124,7 @@ widget.controller = function update() {
     widget.service.startTimer = startTimer.bind(vm);
 
     // reset timer (cancel it)
-    var resetPomodoro = function (taskId, pomodoroId) {
+    vm.resetPomodoro = widget.service.resetPomodoro = function (taskId, pomodoroId) {
         $(".ui.basic.modal")
             .modal({ 
                 closable: false,
@@ -127,9 +136,8 @@ widget.controller = function update() {
                 }.bind(this)  // ...well..
             })
             .modal("show");
-    }
-    vm.resetPomodoro = resetPomodoro.bind(vm);
-    widget.service.resetPomodoro = resetPomodoro.bind(vm);
+    }.bind(vm);
+
 
     // update notes
     var updateNote = function(taskId, note) {
@@ -155,7 +163,8 @@ widget.controller = function update() {
         }
     };
 
-    vm.onchange = function moveTask(item, e) {
+    vm.onchange = widget.service.onchange = function moveTask(item, e) {
+        console.log(item);
         let prev = util.isTop(e);
         e.target.classList.remove("over");
         e.stopPropagation();  // ul also has it
@@ -187,139 +196,90 @@ widget.controller = function update() {
         } else {
             targetid = null
         }
-        todo.move(sourceid, targetid, isInter).then(update.bind(vm));
-    };
+        todo.move(sourceid, targetid, isInter).then(this.init);
+    }.bind(vm);
 
-    vm.setNote = function setNote(item) {  // refactor?
-        vm.clock.task().note = item.note();
-        vm.clock.task()._id = item._id();
-        vm.clock.task().name = item.name();
+    vm.setNote = widget.service.setNote = function setNote(item) {  // refactor?
+        this.clock.task().note = item.note();
+        this.clock.task()._id = item._id();
+        this.clock.task().name = item.name();
         setTimeout(function () {
             $("#pomodoro-note-main_edit").focus();
         }, 100);
-    }
+    }.bind(vm);
 };
 
-widget.view = function (ctrl) {
+widget.view = function (vm) {
     return m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments", [
+
+            /* pomodoro task */
             m("#pomodoro-task.ui.teal.segment", [
-                m(addItem, {addHandler: ctrl.addTask, addTodayHandler: ctrl.addTodayTask }),
+                m(addItem, {addHandler: vm.addTask, addTodayHandler: vm.addTodayTask }),
                 m(".pomodoro-util_cover"),
                 m("#pomodoro-task_items.ui.list", [
-                    ctrl.task().filter((item) => { return !item.finished();}).map(function (item) {
-                        return m(".pomodoro-task_item.ui.segment", {
-                            key: item._id(),
-                            class: `${!(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'teal': ''} ${ item.assigned()? 'assigned': ''}`,
-                            draggable: (todo.runningTask().hasRunning() || ctrl.offset !== 0)? false: true,
-                            ondragstart: ctrl.dragstart.bind(ctrl, item)
-                        },[
-                            m("p.pomodoro-task_item-content", `${item.assigned()? '( yesterday )': ''} ${item.name()}`),
-                            m(".ui.labels.circular", [
-                                m(".ui.label.pomodoro-task_item-content_delete", {
-                                    onclick: ctrl.removeTask.bind(null, item._id())
-                                }, [
-                                    m("i.remove.icon"),
-                                ]),
-                            ]),
-                        ]);
+                    vm.task()
+                        .filter((task) => { return !task.finished();})
+                        .map(function (task) {
+                            return m(taskComponent, {
+                                task: task, 
+                                offset: vm.offset,
+                                key: `${task._id()}${vm.offset()}`
+                            })
                     })
                 ]),
             ]),
 
+            /* pomodoro today */
             m("#pomodoro-today.ui.segment.orange", [
-                m(".pomodoro-today-list_display_estimated_total.ui.mini.message.orange", {
-                    style: 'flex-shrink: 0;'
-                },[
-                    m("span", `${ util.minToHour(25 *(ctrl.clock.totalPomodoroToday() - ctrl.clock.completedPomodoroToday()))} estimated, progress: ${ctrl.clock.completedPomodoroToday()}/${ctrl.clock.totalPomodoroToday()}.`),
+                m(".pomodoro-today-list_display_estimated_total.ui.mini.message.orange", { style: 'flex-shrink: 0;' },[
+                    m("span", `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} estimated, progress: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`),
                 ]),
+
                 m("#pomodoro-today-operate", [
-                    m("label.ui.button.mini.disabled", `${ctrl.offset} days ago`),
+                    m("label.ui.button.mini.disabled", `${vm.offset()} days ago`),
                     m("#pomodoro-today-operate_group", [
-                        m("button.ui.button.mini", { onclick: ctrl.prevDate }, "<"),
-                        m("button.ui.button.mini.orange", { onclick: ctrl.backToday }, "Today"),
+                        m("button.ui.button.mini", { onclick: vm.prevDate }, "<"),
+                        m("button.ui.button.mini.orange", { onclick: vm.backToday }, "Today"),
                         m("button.ui.button.mini", { 
-                            onclick: ctrl.nextDate,
-                            disabled: ctrl.offset === 0
+                            onclick: vm.nextDate,
+                            disabled: vm.offset() === 0
 
                         }, ">"),
                         m("button.ui.tiny.icon.button", {
-                            class: `${ctrl.showNote()? '' : 'orange'}`,
+                            class: `${vm.showNote()? '' : 'orange'}`,
                             onclick: () => {
-                                ctrl.showNote(!ctrl.showNote());
+                                vm.showNote(!vm.showNote());
                             }
                         },[
                             m("i.icon", {
-                                class: `${ctrl.showNote()? 'list' : 'edit'}`,
+                                class: `${vm.showNote()? 'list' : 'edit'}`,
                             })
                         ]),
                     ])
                 ]),
+
                 m(".pomodoro-util_cover"),
-                m("#pomodoro-today-list.ui.list", {
-                    ondrop: ctrl.onchange.bind(null, null),
-                    config: function (element, isInitialized) {
-                        if (!isInitialized) { util.dragdrop(element) }
-                    },
-                    class: ctrl.today().length > 0? "not-empty": "empty" 
+
+                /* today list */
+                m("#pomodoro-today-list.ui.list", {  
+                    ondrop: vm.onchange.bind(null, null),
+                    config: function (element, isInitialized) { if (!isInitialized) { util.dragdrop(element) } },
+                    class: vm.today().length > 0? "not-empty": "empty"   // to display background for empty
                 }, [
-                    ctrl.today().map(function(item) {
-                        return m(".pomodoro-today-list_item.ui.segment", {
-                            onclick: ctrl.setNote.bind(null, item),
-                            key: item._id(),
-                            class: `${!(todo.runningTask().hasRunning() || ctrl.offset !== 0)? 'orange': ''} ${item.isRunning()? 'running': ''}`, 
-                            draggable: (todo.runningTask().hasRunning())? false : true,  // freeze if task is running
-                            ondrop: ctrl.onchange.bind(null, item),
-                            ondragstart: ctrl.interdragstart.bind(ctrl, item),
-                            config: function (element, isInitialized) {
-                                if (!isInitialized) { util.dragdrop(element); }
-                            }
-                        }, [
-                            m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
-                                m("i.icon.hourglass.end"),
-                                m("span", `${25 * item.pomodoros().length} minutes`)
-                            ]),
-                            m(".pomodoro-today-list_display", [
-                                m("p.pomodoro-today-list_display_name", `${item.name()}`),
-                                item.note() && ctrl.showNote() ?  m(".ui.pomodoro-today-list_display_note", [
-                                    m("div", m.trust(markdown.toHTML(item.note())))
-                                ]) : m("div"),
-                            ]),
-
-                            item.isToday() ?
-                            m(".pomodoro-today-list_operate.ui.labels.circular", [
-                                m(".label.ui.pomodoro-today-list_operate_close", {
-                                    onclick: ctrl.cancelTask.bind(null, item._id())
-                                }, [
-                                    m("i.remove.icon"),
-                                ])
-                            ]): m("div"),
-
-                            item.isToday()?
-                            m(".pomodoro-today-list_timer-edit.ui.labels.circular", [
-                                m(".label.ui", {
-                                    class: item.pomodoros().length >= 5 ? "disabled" :"",
-                                    onclick: item.pomodoros().length >= 5 ? () => {}: ctrl.addPomo.bind(null, item)
-                                    }, [
-                                    m("i.add.icon"),
-                                ]),
-
-                                m(".label.ui", {
-                                    class: item.pomodoros().length <= 1 ? "disabled" :"",
-                                    onclick: item.pomodoros().length <= 1 ? ()=> {}: ctrl.subPomo.bind(null, item._id())
-                                }, [
-                                    m("i.minus.icon"),
-                                ])
-                            ]): m("div"),
-
-                            m(pomodoro, {
-                                resetPomodoro: ctrl.resetPomodoro,
-                                item: item,
-                                key: JSON.stringify(item)
-                            })
-                        ])
+                    vm.today().map(function(today) {
+                        return m(todayComponent, {
+                            // key: `${[today._id(), vm.offset(), vm.showNote()].join('')}`,
+                            key: JSON.stringify(today),
+                            today: today,
+                            showNote: vm.showNote,
+                            offset: vm.offset,
+                        });
                     })
                 ]),
+
                 m(".pomodoro-util_cover.above"),
+
+                /* today summary */
                 m(".pomodoro-today-list_summary.ui.button.orange", {
                     style: 'flex-shrink: 0;', 
                     onclick: widget.service.summary 
@@ -328,24 +288,28 @@ widget.view = function (ctrl) {
                     m("span", "summary")
                 ])
             ]),
+
+            /* clock */
             m("#pomodoro-clock.ui.segment", [
                 m(clock, {
-                    key: JSON.stringify(ctrl.clock.pomodoro),
-                    task: ctrl.clock.task,
-                    pomodoro: ctrl.clock.pomodoro,
-                    updatePomodoro: ctrl.updatePomodoro  //cb
+                    key: JSON.stringify(vm.clock.pomodoro),
+                    task: vm.clock.task,
+                    pomodoro: vm.clock.pomodoro,
+                    updatePomodoro: vm.updatePomodoro  //cb
                 }),
-                ctrl.clock.task()._id ?
+                vm.clock.task()._id ?
                 m("#pomodoro-note", [
                     m(note, {
-                        key: `${ctrl.clock.task()._id}`,
-                        task: ctrl.clock.task,
+                        key: `${vm.clock.task()._id}`,
+                        task: vm.clock.task,
                     })
                 ]) : m("div",""),
 
             ]),
-            m(confirm),  // confirm modal
-            m(summary, { today: ctrl.today }),  // summary modal
+
+            /* modals */
+            m(confirm),
+            m(summary, { today: vm.today }),
         ])
     };
 
