@@ -31,8 +31,10 @@ todo.TODO = function (data) {  // class for tasks
 	this.name = m.prop(data.name || "");
     this.note = m.prop(data.note || "");
     this.assigned = m.prop(data.assigned || false);
-    this.finished = m.prop(_.every(data.pomodoros, { status: true }));
     this.fixedTop = m.prop(data.fixedTop || false);
+
+    //computed prop
+    this.finished = m.prop(_.every(data.pomodoros, { status: true }));
 };
 
 todo.TODAY = function (data) {  // class for today tasks
@@ -46,6 +48,7 @@ todo.TODAY = function (data) {  // class for today tasks
     this.isToday = m.prop(data.date === today);
 
     // computed prop
+    this.finished = m.prop(_.every(data.pomodoros, { status: true }));
 	this.prevNode = m.prop(data.prevNode || "");
     let that = this;
     that.isRunning = m.prop(false);

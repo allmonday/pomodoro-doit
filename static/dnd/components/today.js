@@ -35,7 +35,7 @@ var today = {
                 ]) : m("div"),
             ]),
 
-            vm.today.isToday() ?
+            vm.today.isToday() && !vm.today.finished() ?
             m(".pomodoro-today-list_operate.ui.labels.circular", [
                 m(".label.ui.pomodoro-today-list_operate_close", {
                     onclick: () => widget.service.cancelTask(vm.today._id())
