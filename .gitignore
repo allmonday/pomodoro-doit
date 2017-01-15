@@ -2,3 +2,4 @@ node_modules
 static/bundle
 .idea
 webpack-assets.json
+coverage
