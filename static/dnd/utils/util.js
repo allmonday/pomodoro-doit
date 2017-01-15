@@ -1,3 +1,4 @@
+"use strict";
 // var moment = require("moment");
 function isFinished(date, range) {
     range = range || 25;
@@ -98,13 +99,24 @@ function dragdrop(element, options) {
 	}
 }
 
+function calTomorrowTimeout() {
+    let tomorrow = moment().add(1, 'day');
+    let year = tomorrow.year();
+    let month = tomorrow.month();
+    let date = tomorrow.date();
+    let tomorrowMoment = moment({year: year, month: month, date: date});
+    return tomorrowMoment.diff(moment());
+}
+
 module.exports = {
     isFinished,
     isRunning,
     elapsed,
+    prefix_zero,
     minToHour,
     notifyMe,
     requireNotificationPermission,
     isTop,
-    dragdrop
+    dragdrop,
+    calTomorrowTimeout
 }

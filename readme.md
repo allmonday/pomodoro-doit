@@ -3,7 +3,8 @@
 ## start
 
 ```shell
-cnpm install nodemon
+cnpm install -g nodemon
+cnpm install -g istanbul
 npm run dev
 ```
 
@@ -22,6 +23,7 @@ npm run dev
 
 几个改进点:
 
+- [ ] 过零点强制刷新.
 - [ ] 添加 icon
 - [ ] 上https
 - [ ] nginx 优化访问

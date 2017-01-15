@@ -19,8 +19,13 @@ var moment = require("moment");
 // init
 util.requireNotificationPermission();
 
+// reload page if tomorrow come.
+setTimeout(function () {
+    window.location.reload();
+}, util.calTomorrowTimeout());
 
 widget.controller = function update() {
+
     let vm = this;
 
     var init = function() {  // initialization function
@@ -90,7 +95,7 @@ widget.controller = function update() {
         todo.addTask(name).then(update.bind(vm));
     }
 
-    var removeTask = function(taskId) {
+    vm.removeTask = widget.service.removeTask = function removeTask(taskId) {
         let that = this;
         $("#confirm-modal.ui.basic.modal")
             .modal({ 
@@ -102,9 +107,7 @@ widget.controller = function update() {
                 }
             })
             .modal("show");
-    }
-    vm.removeTask = removeTask.bind(vm);
-    widget.service.removeTask = removeTask.bind(vm);
+    }.bind(vm);
 
     var cancelTask = function(name) {
         todo.cancelTask(name).then(this.init);
@@ -116,12 +119,10 @@ widget.controller = function update() {
     }
 
     // start timer
-    var startTimer = function (obj) {
+    vm.startTimer = widget.service.startTimer = function startTimer(obj) {
         todo.startClock(obj.taskId._id(), obj.pomodoroId._id())
             .then(this.init); 
-    }
-    vm.startTimer = startTimer.bind(vm);
-    widget.service.startTimer = startTimer.bind(vm);
+    }.bind(vm);
 
     // reset timer (cancel it)
     vm.resetPomodoro = widget.service.resetPomodoro = function (taskId, pomodoroId) {
@@ -140,12 +141,10 @@ widget.controller = function update() {
 
 
     // update notes
-    var updateNote = function(taskId, note) {
+    vm.updateNote = widget.service.updateNote = function updateNot(taskId, note) {
         todo.updateNote(taskId, note)
             .then(this.init).then(this.showNote(true));
-    }
-    vm.updateNote = updateNote.bind(vm);
-    widget.service.updateNote = updateNote.bind(vm);
+    }.bind(vm);
     
     // summary
     widget.service.summary = () => {

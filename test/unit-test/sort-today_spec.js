@@ -1,4 +1,4 @@
-var sortToday = require("../server/utils/sort-today");
+var sortToday = require("../../server/utils/sort-today");
 var chai = require("chai");
 var expect = chai.expect;
 

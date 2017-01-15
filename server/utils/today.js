@@ -2,6 +2,7 @@ var moment = require("moment");
 
 function today(time) {
     var today;
+    /* istanbul ignore else  */
     if (time) {
         today = new Date(time);
     } else {
@@ -12,6 +13,7 @@ function today(time) {
 
 function yesterday(time) {
     var today;
+    /* istanbul ignore else  */
     if (time) {
         today = new Date(time);
     } else {
