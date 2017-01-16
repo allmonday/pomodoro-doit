@@ -42,7 +42,20 @@ var config = {
                     presets: ['es2015']
                 }
             },
-            {test: /\.scss$/, loaders: ["style", "css", "sass"]}
+            {
+                test: /\.scss$/, 
+                loaders: [
+                    "style-loader", 
+                    "css-loader?importLoaders=1",
+                    "postcss-loader",
+                    "sass"
+                ]
+            }
+        ]
+    },
+    postcss: function () {
+        return [
+            require('autoprefixer')
         ]
     },
     plugins: [

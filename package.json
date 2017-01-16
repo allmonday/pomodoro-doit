@@ -13,11 +13,11 @@
     "server": "export MONGOURL='mongodb://localhost:27017/pomodoro' && nodemon ./server.js",
     "dev": "npm-run-all --parallel server proxy watch",
     "pm2": "export MONGOURL='mongodb://localhost:27017/pomodoro' && pm2 start ./server.js"
-
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "autoprefixer": "^6.6.1",
     "bcrypt-nodejs": "0.0.3",
     "connect-ensure-login": "^0.1.1",
     "connect-flash": "^0.1.1",
@@ -51,6 +51,7 @@
     "mocha": "^3.2.0",
     "node-sass": "^3.13.0",
     "npm-run-all": "^3.1.2",
+    "postcss-loader": "^1.2.2",
     "sass-loader": "^4.0.2",
     "should": "^11.1.2",
     "style-loader": "^0.13.1",
