@@ -6,13 +6,14 @@
         background: #efefef;
     }
 </style>
+
 <div class="ui middle aligned center aligned grid" style="height: 100%;">
   <div class="column" style="max-width: 500px">
     <h1 class="image ui header orange">
         <img src='/imgs/tomato.svg' class="image">
         <div class="content">Log-in to Pomodoro-DOIT</div>
     </h1>
-    <form class="ui large form" action="/login" method="post">
+    <form id="login-form" class="ui large form" action="/login" method="post">
         <div class="ui stacked segment">
             <div class="field">
                 <div class="ui left icon input">
@@ -20,12 +21,14 @@
                     <input name="username" type="text" class="form-control" placeholder="Username" required autofocus>
                 </div>
             </div>
+            <div class="ui error message"></div>
             <div class="field">
                 <div class="ui left icon input">
                     <i class="lock icon"></i>
                     <input name="password" type="password" class="form-control" placeholder="Password" required>
                 </div>
             </div>
+            <div class="ui error message"></div>
             <div class="field">
                 <input type="submit" value="Log in" class="ui button fluid submit orange">
             </div>
@@ -34,12 +37,51 @@
     <div class="ui message">
         New to us? <a href="/signup" class="">Sign Up</a>
     </div>
+
     <% messages.forEach(function (msg) { %>
         <div class="ui orange message">
             <%= msg %>
         </div>
     <% }) %>
+
   </div>
 </div>
+
+<script>
+    $(function () {
+        $.validator.addMethod("pw", function (value, element) {
+            var pw = /^(\w){6,20}$/;
+            return this.optional(element) || pw.test(value);
+        }, 'password invalid, 6-20, with number and alpahbets')
+        var $loginForm = $('#login-form')
+
+        $loginForm.validate({
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().parent('.field').next(".message"));
+            },
+            highlight: function(element, errClass) {
+                $(element).parent().parent().addClass(errClass);
+                $loginForm.addClass(errClass);
+            },
+            unhighlight: function(element, errClass) {
+                $(element).parent().parent().removeClass(errClass);
+                $loginForm.removeClass(errClass);
+            },
+            rules: {
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true,
+                    pw: true
+                }
+            },
+            submitHandler: function(form) {
+                // do other things for a valid form
+                form.submit();
+            }
+        });
+    })
+</script>
 
 <% include _footer %>

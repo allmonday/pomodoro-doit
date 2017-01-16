@@ -1,4 +1,4 @@
-var app = require("../server");
+var app = require("../../server");
 var assert = require("assert");
 var supertest = require("supertest");
 var request = supertest(app);
@@ -96,20 +96,20 @@ describe("APIs of task creation", function () {
             .end(done);
     })
     it("fail to create an empty task", function (done) {
-        agent.post("/api/dnd/task")
+        agent.post("/api/pomodoro/task")
             .send({name: ""})
             .expect(400)
             .end(done);
 
     })
     it("create an task", function (done) {
-        agent.post("/api/dnd/task")
+        agent.post("/api/pomodoro/task")
             .send({name: "kikodo rocks"})
             .expect(200)
             .end(done);
     })
     it("should be able to get task list", function (done) {
-        agent.get("/api/dnd/task")
+        agent.get("/api/pomodoro/task")
             .expect("Content-Type", /json/)
             .expect(200)
             .expect(function (res) {
@@ -120,7 +120,7 @@ describe("APIs of task creation", function () {
             .end(done);
     })
     it("today should be empty", function (done) {
-        agent.get("/api/dnd/today")
+        agent.get("/api/pomodoro/today")
             .expect("Content-Type", /json/)
             .expect(200)
             .expect(function (res) {
@@ -129,14 +129,14 @@ describe("APIs of task creation", function () {
             .end(done);
     })
     it("add the task to today", function (done) {
-        agent.post("/api/dnd/today")
+        agent.post("/api/pomodoro/today")
             .send({ sourceid: taskId, targetid: null, isinter: false})
             .expect(200)
             .end(done);
     })
 
     it("today should has one item", function (done) {
-        agent.get("/api/dnd/today")
+        agent.get("/api/pomodoro/today")
             .expect("Content-Type", /json/)
             .expect(200)
             .expect(function (res) {
@@ -146,7 +146,7 @@ describe("APIs of task creation", function () {
             .end(done);
     })
     it("task should not be empty", function (done) {
-        agent.get("/api/dnd/task")
+        agent.get("/api/pomodoro/task")
             .expect("Content-Type", /json/)
             .expect(200)
             .expect(function (res) { assert.equal(res.body.length, 0); })

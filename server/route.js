@@ -7,6 +7,10 @@ var passport = require("passport");
 var ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
 var authenRedirect = require("./utils/authenRedirect");
 
+router.get("/user/profile", ensureLoggedIn("/"), function (req, res) {
+    res.render("profile");
+})
+
 router.get("/edit", ensureLoggedIn("/login"), function (req, res) {
     res.render("edit");
 })

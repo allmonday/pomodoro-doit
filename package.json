@@ -4,16 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && npm run build && mocha -w",
+    "test": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && npm run build && mocha -w --recursive --reporter dot",
+    "cover": "istanbul cover ./node_modules/.bin/_mocha -- test/unit-test/*.js -R spec && open coverage/lcov-report/index.html",
     "build": "webpack",
     "publish": "export ENV='prod' && webpack -p",
-
     "watch": "webpack -w",
     "proxy": "browser-sync start --reload-delay 1000 --port 8888 -b \"google chrome\" --startPath /app/pomodoro --proxy \"http://localhost:4000\" --files \"static/bundle/*.js, views/**/*.html\"",
-
     "server": "export MONGOURL='mongodb://localhost:27017/pomodoro' && nodemon ./server.js",
-    "prod-server": "export MONGOURL='mongodb://localhost:27017/pomodoro' && export ENV='prod' && nodemon ./server.js",
-    "dev": "npm-run-all --parallel server proxy watch"
+    "dev": "npm-run-all --parallel server proxy watch",
+    "pm2": "export MONGOURL='mongodb://localhost:27017/pomodoro' && pm2 start ./server.js"
+
   },
   "author": "",
   "license": "ISC",
@@ -24,6 +24,7 @@
     "connect-mongo": "^1.3.2",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.5",
+    "eventproxy": "^0.3.5",
     "express-session": "^1.14.2",
     "jquery": "^3.1.1",
     "lodash": "^4.17.2",

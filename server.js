@@ -10,7 +10,6 @@ var app = express();
 var bodyParser = require("body-parser");
 var pomodoro = require("./server/pomodoro");
 var contact = require("./server/contact");
-var dnd = require("./server/dnd");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var passport = require("passport")
@@ -71,7 +70,6 @@ app.use(function (req, res, next) {
 app.use(routers);
 app.use("/api/pomodoro/", pomodoro);
 app.use("/api/contact/", contact);
-app.use("/api/dnd/", dnd);
 
 app.get("/app/pomodoro", ensureLoggedIn("/") ,function (req, res) {
     res.render('mithril-dnd');

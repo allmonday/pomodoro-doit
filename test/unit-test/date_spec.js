@@ -1,5 +1,6 @@
-var today = require("../server/utils/today").today;
-var yesterday = require("../server/utils/today").yesterday;
+var server = "../../server/"
+var today = require(server + "utils/today").today;
+var yesterday = require(server + "utils/today").yesterday;
 var chai = require("chai");
 var expect = chai.expect;
 

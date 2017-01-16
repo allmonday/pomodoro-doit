@@ -3,7 +3,8 @@
 ## start
 
 ```shell
-cnpm install nodemon
+cnpm install -g nodemon
+cnpm install -g istanbul
 npm run dev
 ```
 
@@ -22,6 +23,7 @@ npm run dev
 
 几个改进点:
 
+- [ ] 过零点强制刷新.
 - [ ] 添加 icon
 - [ ] 上https
 - [ ] nginx 优化访问
@@ -32,7 +34,7 @@ npm run dev
 - [ ] timer 上限改为10 (待议)
 - [ ] 优雅的弹窗实现
 - [ ] 统计功能 (不然一天白忙活, 没个总结)
-- [ ] 添加优先级按钮 (low normal high, 还是挺重要的
+- [ ] 添加优先级按钮 (low normal high, 还是挺重要的/ 改为添加置顶功能
 - [ ] mongo 添加账号
 - [ ] login and register 使用jquery validation 优化一下.
 - [x] start 按钮放在task 上, task 执行时修改状态颜色

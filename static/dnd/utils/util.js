@@ -1,3 +1,4 @@
+"use strict";
 // var moment = require("moment");
 function isFinished(date, range) {
     range = range || 25;
@@ -46,7 +47,7 @@ function elapsed(date) {
 function minToHour(num) {
     let minutes = num % 60;
     let hours = Math.floor(num/60);
-    return `${prefix_zero(hours)}h, ${prefix_zero(minutes)}m`;
+    return `${prefix_zero(hours)}hours and ${prefix_zero(minutes)}minutes`;
 }
 
 function requireNotificationPermission () {
@@ -59,7 +60,7 @@ function notifyMe(name) {
   else {
     var notification = new Notification('Times UP!', {
       requireInteraction: true,
-      icon: '/imgs/tomato.svg',
+      icon: '/imgs/tomato.png',
       body: `Take a break~`,
     });
     notification.onclick = function () {
@@ -98,13 +99,24 @@ function dragdrop(element, options) {
 	}
 }
 
+function calTomorrowTimeout() {
+    let tomorrow = moment().add(1, 'day');
+    let year = tomorrow.year();
+    let month = tomorrow.month();
+    let date = tomorrow.date();
+    let tomorrowMoment = moment({year: year, month: month, date: date});
+    return tomorrowMoment.diff(moment());
+}
+
 module.exports = {
     isFinished,
     isRunning,
     elapsed,
+    prefix_zero,
     minToHour,
     notifyMe,
     requireNotificationPermission,
     isTop,
-    dragdrop
+    dragdrop,
+    calTomorrowTimeout
 }
