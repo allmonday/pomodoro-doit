@@ -23,20 +23,22 @@ npm run dev
 
 几个改进点:
 
-- [ ] 过零点强制刷新.
-- [ ] 添加 icon
+- [ ] 数据显示调研, 使用svg(d3?) 或者其他
+    - calender: http://bl.ocks.org/mbostock/4063318
 - [ ] 上https
 - [ ] nginx 优化访问
-- [ ] 添加 icon
 - [ ] 添加限制条件
 - [ ] 检查 nextNode 不存在的原因
-- [ ] 添加周为单位的查看
+- [ ] 添加周为单位的统计查看
 - [ ] timer 上限改为10 (待议)
 - [ ] 优雅的弹窗实现
 - [ ] 统计功能 (不然一天白忙活, 没个总结)
 - [ ] 添加优先级按钮 (low normal high, 还是挺重要的/ 改为添加置顶功能
 - [ ] mongo 添加账号
-- [ ] login and register 使用jquery validation 优化一下.
+- [x] 过零点强制刷新.
+- [x] 添加 icon
+- [x] 使用pm2 管理node 进程
+- [x] login and register 使用jquery validation 优化一下.
 - [x] start 按钮放在task 上, task 执行时修改状态颜色
 - [x] 内部拖拽似乎有问题
 - [x] 添加 cache buster.
@@ -59,3 +61,14 @@ npm run dev
 - [ ] react 重构
 - [ ] typescript
 - [ ] use scala as backend
+
+# pomotodo 收费功能清单, 研究下可用性
+
+- 重复任务提醒
+- 时钟长度设置
+- 补充番茄
+- 子任务 (?)
+- 周报功能 (邮件? 手动?)
+- 打断记录
+- 自定义音效 (到时提示和背景音效)
+- icon 的base64 img 实时变化挺好的

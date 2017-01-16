@@ -36,11 +36,11 @@ function elapsed(date) {
     let reversed_minutes = Math.floor(rev_seconds / 60);
 
     return {
-        formatted: `${prefix_zero(minutes)} : ${prefix_zero(left_seconds)}`,
+        formatted: `${prefix_zero(minutes)}:${prefix_zero(left_seconds)}`,
         minutes: minutes,
         seconds: left_seconds,
         percent: percent,
-        reversedFormatted: `${prefix_zero(reversed_minutes)} : ${prefix_zero(reversed_seconds)}`
+        reversedFormatted: `${prefix_zero(reversed_minutes)}:${prefix_zero(reversed_seconds)}`
     }
 }
 
