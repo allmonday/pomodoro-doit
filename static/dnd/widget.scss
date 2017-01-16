@@ -63,6 +63,7 @@ body {
       }
     }
     &-list {
+      transform: translateZ(0);
       flex-grow: 1;
       margin-top: 0;
       margin-bottom: 0;
@@ -75,6 +76,7 @@ body {
     }
   }
   &-clock {
+    transform: translateZ(0);
     // parent
     display: flex;
     flex-flow: column;

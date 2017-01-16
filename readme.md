@@ -23,6 +23,7 @@ npm run dev
 
 几个改进点:
 
+- [x] scroll 有点卡, 找找原因,  transform: translateZ(0);
 - [ ] 添加浮层的休息倒计时显示
 - [ ] 数据显示调研, 使用svg(d3?) 或者其他
     - calender: http://bl.ocks.org/mbostock/4063318
