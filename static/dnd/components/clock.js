@@ -47,7 +47,7 @@ var clock = {
                 vm.progress(`width: ${elapsedTime.percent}%;`);
                 vm.percent(elapsedTime.percent);
                 vm.timeFormatted(elapsedTime.reversedFormatted);
-                document.title = `${vm.timeFormatted()} ${vm.data.task().name}`
+                document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
                 setTimeout(count, 1000);
             }
             m.endComputation();
