@@ -3,6 +3,10 @@ var pomodoro = require("./pomodoro");
 var util = require("../utils/util");
 var today = require("../utils/today").today();
 
+function refresh () {
+    util.socket.emit("refresh", $("#user-name").text());
+}
+
 var todo = {};
 
 var has_running_task = false;
@@ -120,23 +124,27 @@ todo.today = function (date) {
 
 todo.addTask = (name) => {
     return m.request({ method: "post", url: "/api/pomodoro/task", data: {name: name}})
-        .then(null, (err) => util.logError(err));
+        .then(refresh , (err) => util.logError(err));
 }
 
 todo.updateNote = (taskId, note) => {
-    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, note: note}});
+    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, note: note}})
+        .then(refresh);
 }
 
 todo.updateName = (taskId, name) => {
-    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, name: name}});
+    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, name: name}})
+        .then(refresh);
 }
 
 todo.updatePinTask = (taskId, pinVal) => {
-    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, fixedtop: pinVal}});
+    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, fixedtop: pinVal}})
+        .then(refresh);
 }
 
 todo.removeTask = (taskId) => {
     return m.request({method: 'delete', url: "/api/pomodoro/task", data: {_id: taskId}})
+        .then(refresh)
         .then(() => {
             toastr.success("deleted");
         });
@@ -144,40 +152,46 @@ todo.removeTask = (taskId) => {
 
 todo.addTodayTask = (name, prevNode) => {
     return m.request({ method: 'post', url: "/api/pomodoro/task", data: { name: name, prevNode: prevNode}})
-        .then(null, (err) => util.logError(err));
+        .then(refresh, (err) => util.logError(err));
 }
 
 todo.move = (sourceid, targetid, isInter) => {
 	return m.request({ method: "post", url: "/api/pomodoro/today", data: {
-		sourceid: sourceid,
-		targetid: targetid,
-		isinter: isInter
-	}})
-        .then(null, (err) => util.logError(err));
+            sourceid: sourceid,
+            targetid: targetid,
+            isinter: isInter
+        }})
+        .then(refresh, (err) => util.logError(err));
 }
 
 todo.cancelTask = (id) => {
     return m.request({method: "delete", url: "/api/pomodoro/today", data: {id: id}})
+        .then(refresh);
 }
 
 todo.addPomo = function (id) {
-	return m.request({method: "post", url: "/api/pomodoro/today/pomodoro", data: {id: id}});
+	return m.request({method: "post", url: "/api/pomodoro/today/pomodoro", data: {id: id}})
+        .then(refresh);
 }
 
 todo.subPomo = (id) => {
-	return m.request({method: "delete", url: "/api/pomodoro/today/pomodoro", data: {id: id}});
+	return m.request({method: "delete", url: "/api/pomodoro/today/pomodoro", data: {id: id}})
+        .then(refresh);
 }
 
 todo.startClock = (taskId, pomodoroId) => {
-	return m.request({ method: 'post', url: "/api/pomodoro/today/pomodoro/state", data: {taskId: taskId, pomodoroId: pomodoroId }});
+	return m.request({ method: 'post', url: "/api/pomodoro/today/pomodoro/state", data: {taskId: taskId, pomodoroId: pomodoroId }})
+        .then(refresh);
 }
 
 todo.resetPomodoro = (taskId, pomodoroId) => {
-	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro/state", data: {taskId: taskId, pomodoroId: pomodoroId}});
+	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro/state", data: {taskId: taskId, pomodoroId: pomodoroId}})
+        .then(refresh);
 }
 
 todo.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
-	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro", data: {taskId: taskId, pomodoroId: pomodoroId, validTime: validTime, interuptCount: interuptCount }});
+	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro", data: {taskId: taskId, pomodoroId: pomodoroId, validTime: validTime, interuptCount: interuptCount }})
+        .then(refresh);
 }
 
 module.exports = todo;

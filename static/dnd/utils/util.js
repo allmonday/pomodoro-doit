@@ -121,6 +121,8 @@ function logError(errResponse) {
 }
 var title = "Pomodoro do it!!";
 
+var socket = io.connect();
+
 module.exports = {
     isFinished,
     isRunning,
@@ -134,5 +136,6 @@ module.exports = {
     calTomorrowTimeout,
     log,
     logError,
-    title
+    title,
+    socket
 }

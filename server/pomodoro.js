@@ -48,7 +48,9 @@ dnd.route("/task")
         }
 
         Task.update({_id: taskId}, {$set: updateObj })
-            .then(() => res.send());
+            .then(() => { 
+                res.send();
+            });
     })
     .post(function (req, res) {
         Task.count({assigned: false, user: req.user._id}).then((count) => {
@@ -89,10 +91,8 @@ dnd.route("/task")
                         updateTime: new Date(),
                         user: req.user,
                     })
-                    task.save()
-                        .then((data) => {
-                            res.send({status: 'success'});
-                        })
+                    task.save().then((data) => { res.send({status: 'success'}); })
+
                 } else {  // append to today tasks
                     var task = new Task({
                         name: req.body.name,

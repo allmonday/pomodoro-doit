@@ -6,8 +6,9 @@
                 POMODORO DOIT!
             </div>
             <div class="ui simple item">
-                welcome! <%= currentUser.username %>
+                welcome! <span id="user-name"><%= currentUser.username %></span>
             </div>
+
             <!--
             <div class="ui simple dropdown item">
                 welcome! <%= currentUser.username %>
@@ -17,6 +18,7 @@
                 </div>
             </div>
             -->
+
             <div class="item right">
                 <a href="/logout">Log out</a>
             </div>

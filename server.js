@@ -7,6 +7,9 @@ var mongoose = require("mongoose");
 require("./server/utils/connect");
 require("./server/model/register");
 var app = express();
+var server = require("http").Server(app);
+var io = require("socket.io")(server);
+
 var bodyParser = require("body-parser");
 var pomodoro = require("./server/pomodoro");
 var contact = require("./server/contact");
@@ -67,6 +70,11 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.use(function (req, res, next) {
+    res.io = io;
+    next();
+});
+
 app.use(routers);
 app.use("/api/pomodoro/", pomodoro);
 app.use("/api/contact/", contact);
@@ -75,14 +83,21 @@ app.get("/app/pomodoro", ensureLoggedIn("/") ,function (req, res) {
     res.render('mithril-dnd');
 })
 
-// app.get("/app/:pageName", function (req, res) {
-//     res.render(req.params.pageName);
-// });
+io.on("connection", function (socket) {
+    socket.on("refresh", function (roomName) {
+        // console.log('refresh ' + roomName)
+        socket.broadcast.to(roomName).emit("refresh-broadcast");
+    })
+
+    socket.on("join", function (roomName) {
+        socket.join(roomName);
+    })
+})
 
 if(!module.parent) {
-    var server = app.listen(4000, function () {
-        var host = server.address().address; 
-        var port = server.address().port;
+    var _server = server.listen(4000, function () {
+        var host = _server.address().address; 
+        var port = _server.address().port;
         console.log('Example app listening at http://%s:%s', host, port);
     });
 }

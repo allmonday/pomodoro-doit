@@ -37,6 +37,12 @@ widget.controller = function update() {
     }
     widget.service.init = init.bind(vm);
 
+    util.socket.on("refresh-broadcast", function () {
+        console.log('refresh');
+        vm.init(); 
+    })
+    util.socket.emit("join", $("#user-name").text());
+
     // initialization
     vm.init = init.bind(vm);
     vm.init();
@@ -67,7 +73,6 @@ widget.controller = function update() {
             vm.init();
         }
     };
-
 
     vm.dragstart = widget.service.dragstart = function dragstart(item, e) {
         let info;
@@ -241,7 +246,7 @@ widget.view = function (vm) {
                             return m(taskComponent, {
                                 task: task, 
                                 offset: vm.offset,
-                                key: `${task._id()}${task.fixedTop()}`
+                                key: `${task._id()}${task.fixedTop()}${task.name()}`
                             })
                     })
                 ]),
