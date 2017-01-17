@@ -165,6 +165,7 @@ body {
       border-top-left-radius: 0;
       font-weight: normal;
       padding: 0.5em 1em;
+      background-color: rgba(242, 113, 28, 0.87)!important;
     }
     &.ui.segment {
       padding-bottom: 0;
@@ -195,7 +196,7 @@ body {
     padding: 10px;
   }
   &_display {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     &_name {
       // font-size: 16px;
     }
@@ -212,6 +213,23 @@ body {
       padding-top: 0.85em;
       padding-bottom: 0.85em;
       font-weight: bold;
+      position: relative;
+      z-index: 2;
+      span {
+        position: relative;
+        z-index: 2;
+      }
+      .progress {
+        content: '';
+        z-index: 1;
+        border-radius: 3px;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background: $light-orange;
+      }
     }
   }
   &_timer-edit {

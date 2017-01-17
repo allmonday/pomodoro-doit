@@ -30,6 +30,7 @@ widget.controller = function update() {
 
     var init = function() {  // initialization function
         util.log("init widget");
+        document.title = util.title;
         this.task = todo.task();
         this.today = todo.today();
         this.clock = todo.runningTask();
@@ -238,7 +239,13 @@ widget.view = function (vm) {
             /* pomodoro today */
             m("#pomodoro-today.ui.segment.orange", [
                 m(".pomodoro-today-list_display_estimated_total.ui.mini.message.orange", { style: 'flex-shrink: 0;' },[
-                    m("span", `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} estimated, progress: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`),
+                    vm.offset() === 0 ?
+                        m("span", `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED, PROGRESS: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`):
+                        m("span", moment().subtract(vm.offset(), 'day').format("YYYY-MM-DD")),
+
+                    m(".progress", { 
+                        style : `width: ${Math.floor(100 * vm.clock.completedPomodoroToday()/vm.clock.totalPomodoroToday())}%;`
+                    })
                 ]),
 
                 m("#pomodoro-today-operate", [
@@ -270,7 +277,8 @@ widget.view = function (vm) {
                 m("#pomodoro-today-list.ui.list.empty", {  
                     ondrop: vm.onchange.bind(null, null),
                     config: function (element, isInitialized) { if (!isInitialized) { util.dragdrop(element) } },
-                    // class: vm.today().length > 0? "not-empty": "empty"   // to display background for empty
+                    class: vm.showNote()? '': 'fold'
+
                 }, [
                     vm.today().map(function(today) {
                         return m(todayComponent, {
@@ -314,7 +322,7 @@ widget.view = function (vm) {
 
             /* modals */
             m(confirm),
-            m(summary, { today: vm.today }),
+            m(summary, { key: JSON.stringify(vm.today), today: vm.today }),
         ])
     };
 

@@ -48,7 +48,7 @@ function elapsed(date) {
 function minToHour(num) {
     let minutes = num % 60;
     let hours = Math.floor(num/60);
-    return `${prefix_zero(hours)}hours and ${prefix_zero(minutes)}minutes`;
+    return `${prefix_zero(hours)} HOURS, ${prefix_zero(minutes)} MINUTES`;
 }
 
 function requireNotificationPermission () {
@@ -116,6 +116,11 @@ function calTomorrowTimeout() {
 
 var log = console.log.bind(console);
 
+function logError(errResponse) {
+    toastr.error(errResponse.error);
+}
+var title = "Pomodoro do it!!";
+
 module.exports = {
     isFinished,
     isRunning,
@@ -127,5 +132,7 @@ module.exports = {
     isTop,
     dragdrop,
     calTomorrowTimeout,
-    log
+    log,
+    logError,
+    title
 }

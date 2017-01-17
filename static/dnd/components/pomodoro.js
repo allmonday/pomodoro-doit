@@ -22,7 +22,7 @@ var pomo = {
                     class: pomodoro.isFinished() ? "on-hover": ""
                 },[
                     m(".tomato.infinite.pulse", {
-                        class: pomodoro.isRunning() ? 'animated': ''
+                        class: pomodoro.isRunning() ? 'animated enlarge': ''
                     }, [
                         pomodoro.isFinished() ? 
                             m("img[src='/imgs/tomato-complete.svg'].pomodoro-today-list_display_img"):
@@ -30,7 +30,7 @@ var pomo = {
                     ]),
 
                     choose(pomodoro.currentStatus(), {
-                        prepare: 
+                        'prepare': 
                             m(".pomo-item_start", [  // start btn
                                 m("button.icon.tiny.orange.circular.ui.button", {
                                     class: !pomodoro.runnable()? "hide": "",
@@ -43,7 +43,7 @@ var pomo = {
                                 }, [ m("i.play.icon"), ])
                             ]),
 
-                        running: 
+                        'running': 
                             m(".pomo-item_start", [  // stop pomodoro
                                 m("button.tiny.icon.circular.ui.button", {
                                     onclick: (e) => {
@@ -52,7 +52,7 @@ var pomo = {
                                 }, [ m("i.stop.icon"), ])
                             ]),
 
-                        finished: m("div"),
+                        'finished': m("div"),
                     }),
                 ]);
             })

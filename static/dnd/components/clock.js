@@ -7,7 +7,6 @@ require("./clock.scss");
 
 var clock = {
     controller: function (data) {
-        let title = "Pomodoro do it!!";
 
         let vm = this;
         vm.data = data;
@@ -37,7 +36,7 @@ var clock = {
                 vm.progress("width: 100%;");
                 vm.timeFormatted('has finished');
 
-                document.title = title;
+                document.title = util.title;
                 $("#notice-voice")[0].play();
                 util.notifyMe(vm.data.task().name);
                 widget.service.init();

@@ -119,7 +119,8 @@ todo.today = function (date) {
 }
 
 todo.addTask = (name) => {
-	return m.request({ method: "post", url: "/api/pomodoro/task", data: {name: name}});
+    return m.request({ method: "post", url: "/api/pomodoro/task", data: {name: name}})
+        .then(null, (err) => util.logError(err));
 }
 
 todo.updateNote = (taskId, note) => {
@@ -134,7 +135,8 @@ todo.removeTask = (taskId) => {
 }
 
 todo.addTodayTask = (name, prevNode) => {
-    return m.request({ method: 'post', url: "/api/pomodoro/task", data: { name: name, prevNode: prevNode}});
+    return m.request({ method: 'post', url: "/api/pomodoro/task", data: { name: name, prevNode: prevNode}})
+        .then(null, (err) => util.logError(err));
 }
 
 todo.move = (sourceid, targetid, isInter) => {
@@ -143,6 +145,7 @@ todo.move = (sourceid, targetid, isInter) => {
 		targetid: targetid,
 		isinter: isInter
 	}})
+        .then(null, (err) => util.logError(err));
 }
 
 todo.cancelTask = (id) => {
@@ -157,16 +160,16 @@ todo.subPomo = (id) => {
 	return m.request({method: "delete", url: "/api/pomodoro/today/pomodoro", data: {id: id}});
 }
 
-todo.startClock = (taskId, pomoId) => {
-	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro/start", data: {task: taskId, pomo: pomoId }});
-}
-
-todo.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
-	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro", data: {taskId: taskId, pomodoroId: pomodoroId, validTime: validTime, interuptCount: interuptCount }});
+todo.startClock = (taskId, pomodoroId) => {
+	return m.request({ method: 'post', url: "/api/pomodoro/today/pomodoro/state", data: {taskId: taskId, pomodoroId: pomodoroId }});
 }
 
 todo.resetPomodoro = (taskId, pomodoroId) => {
 	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro/state", data: {taskId: taskId, pomodoroId: pomodoroId}});
+}
+
+todo.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
+	return m.request({ method: 'put', url: "/api/pomodoro/today/pomodoro", data: {taskId: taskId, pomodoroId: pomodoroId, validTime: validTime, interuptCount: interuptCount }});
 }
 
 module.exports = todo;

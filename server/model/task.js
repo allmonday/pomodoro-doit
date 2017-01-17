@@ -30,7 +30,13 @@ Task.static("getToday", function (date) {
 Task.static("getTodayByUser", function (date, user) {
     var today = date ? date: todayString();
     return this.find({date: today, assigned: true, user: user });
+});
+
+Task.static("getTodayTotal", function (date, user) {
+    var today = date ? date: todayString();
+    return this.count({date: today, assigned: true, user: user });
 })
+
 
 // Task.virtual("id").get(function () {
 //     return this._id;

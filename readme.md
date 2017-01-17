@@ -23,16 +23,16 @@ npm run dev
 
 几个改进点:
 
-- [ ] safari JSON.stringify 有问题, 需要重写一个signature 生成来描述变化..
+- [ ] safari JSON.stringify 有问题, 需要重写一个signature 生成来描述变化 (本地有问题..线上倒是好的,, 奇怪)
 - [ ] 添加浮层的休息倒计时显示
 - [ ] 数据显示调研, 使用svg(d3?) 或者其他
     - calender: http://bl.ocks.org/mbostock/4063318
 - [ ] 上https
 - [ ] nginx 优化访问
-- [ ] 添加限制条件
+- [x] 添加限制条件
 - [ ] 检查 nextNode 不存在的原因
 - [ ] 添加周为单位的统计查看
-- [ ] timer 上限改为10 (待议)
+- [ ] timer 上限改为10 (待议, 可配置吧)
 - [ ] 优雅的弹窗实现
 - [ ] 统计功能 (不然一天白忙活, 没个总结)
 - [ ] 添加优先级按钮 (low normal high, 还是挺重要的/ 改为添加置顶功能

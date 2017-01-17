@@ -15,7 +15,6 @@ var today = {
     },
     view: function (vm) {
         return m(".pomodoro-today-list_item.ui.segment", {
-            // onclick: vm.setNote.bind(null, item),
             class: `${vm.offset() === 0 ? 'orange': ''}`, 
             onclick: () => widget.service.setNote(vm.today),
             draggable: vm.offset() === 0,  // freeze if task is running
@@ -25,10 +24,12 @@ var today = {
                 if (!isInitialized) { util.dragdrop(element); }
             }
         }, [
-            m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
-                m("i.icon.hourglass.end"),
-                m("span", `${25 * vm.today.pomodoros().length} minutes`)
-            ]),
+            vm.showNote()?
+                m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
+                    m("i.icon.hourglass.end"),
+                    m("span", `${25 * vm.today.pomodoros().length} minutes`)
+                ]):
+                m("div"),
             m(".pomodoro-today-list_display", [
                 m("p.pomodoro-today-list_display_name", `${vm.today.name()}`),
                 vm.today.note() && vm.showNote() ?  m(".ui.pomodoro-today-list_display_note", [

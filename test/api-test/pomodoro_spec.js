@@ -3,6 +3,7 @@ var assert = require("assert");
 var supertest = require("supertest");
 var request = supertest(app);
 var mongodb = require("mongodb");
+var agent = supertest.agent(app);
 
 function dropDb (cb) {
     var MongoClient = mongodb.MongoClient;
@@ -34,7 +35,6 @@ describe("Pages", function () {
 
 describe("APIs of user authentication", function () {
     dropDb();
-    var agent = supertest.agent(app);
 
     it("test signup, password less than 6", function (done) {  // dont understand..
         agent
@@ -84,9 +84,9 @@ describe("APIs of user authentication", function () {
     })
 })
 
-describe("APIs of task creation", function () {
-    var agent = supertest.agent(app);
+describe("APIs of task creation and pomodoro add & sub ", function () {
     var taskId;
+    var pomodoroId;
     it("success to login", function (done) {
         agent.post("/login")
             .type("form")
@@ -135,13 +135,14 @@ describe("APIs of task creation", function () {
             .end(done);
     })
 
-    it("today should has one item", function (done) {
+    it("today should has one item, with one pomodoro timer", function (done) {
         agent.get("/api/pomodoro/today")
             .expect("Content-Type", /json/)
             .expect(200)
             .expect(function (res) {
                 assert.equal(res.body.length, 1);
                 assert.equal(res.body[0]._id, taskId);
+                assert.equal(res.body[0].pomodoros.length, 1);
             })
             .end(done);
     })
@@ -153,11 +154,103 @@ describe("APIs of task creation", function () {
             .end(done);
     })
 
-})
+    it("add pomodoro for today task", function (done) {
+        agent.post("/api/pomodoro/today/pomodoro")   
+            .send({ id: taskId})
+            .expect(200)
+            .end(done);
+    })
+    it("should have two pomodoro for the task", function (done) {
+        agent.get("/api/pomodoro/today")
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body[0].pomodoros.length, 2);
+            })
+            .end(done);
+    })
+    it("sub pomodoro for today task", function (done) {
+        agent.delete("/api/pomodoro/today/pomodoro")   
+            .send({ id: taskId})
+            .expect(200)
+            .end(done);
+    })
+    it("should have one pomodoro for the task", function (done) {
+        agent.get("/api/pomodoro/today")
+            .expect(200)
+            .expect(function (res) {
+                pomodoroId = res.body[0].pomodoros[0]._id;
+                assert.equal(res.body[0].pomodoros.length, 1);
+            })
+            .end(done);
+    })
+    it("start the first pomodoro timer", function (done) {
+        agent.post("/api/pomodoro/today/pomodoro/state")
+            .send({taskId: taskId, pomodoroId: pomodoroId})
+            .expect(200)
+            .end(done);
+    })
+    it("should have one pomodoro is running", function (done) {
+        agent.get("/api/pomodoro/today")
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body[0].pomodoros[0].status, true);
+            })
+            .end(done);
+    })
+    it("cancel the pomodoro timer", function (done) {
+        agent.put("/api/pomodoro/today/pomodoro/state")
+            .send({taskId: taskId, pomodoroId: pomodoroId})
+            .expect(200)
+            .end(done);
 
-describe("APIs of task operation", function () {
-    var agent = supertest.agent(app);
-    it("should be able to move into today", function (done) {
-        done(); 
+    })
+    it("first pomodoro is not running ", function (done) {
+        agent.get("/api/pomodoro/today")
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body[0].pomodoros[0].status, false);
+                assert.equal(res.body[0].pomodoros[0].startTime, null);
+            })
+            .end(done);
     })
 })
+
+describe("APIs access control: not logged in", function () {
+
+    describe("not logged in", function () {
+        it("first logged out", function (done) {
+            agent.get("/logout")
+                .expect(302)
+                .expect("Location", "/")
+                .end(done);
+        });
+        it("can invoke api", function (done) {
+            agent.get("/api/pomodoro/task")
+                .expect(400)
+                .expect(function (res) {
+                    assert.equal(res.body.error, 'need logged in');
+                })
+                .end(done)
+        });
+    });
+
+    describe("logged in", function () {
+
+        it("login", function (done) {
+            agent.post("/login")
+                .type("form")
+                .send({password: "123456", username: "tangkikodo"})
+                .expect("Location", "/app/pomodoro")
+                .expect(302)
+                .end(done);
+        })
+
+        it("can invoke api", function (done) {
+            agent.get("/api/pomodoro/task")
+                .expect(200)
+                .end(done)
+        });
+    })
+})
+
+
