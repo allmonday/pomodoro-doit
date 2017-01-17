@@ -70,7 +70,7 @@ body {
       margin-top: 0;
       margin-bottom: 0;
       &.empty {
-        background: repeating-linear-gradient(-45deg, #efefef, #efefef 8px, white 2px, white 13px);
+        background: repeating-linear-gradient(-45deg, #fafafa, #fafafa 8px, white 2px, white 13px);
       }
       &::-webkit-scrollbar { width: 0 !important }
       min-height: 80px;

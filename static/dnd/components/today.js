@@ -7,6 +7,7 @@ var util = require("../utils/util");
 
 var today = {
     controller: function (data) {
+        util.log('init today');
         let vm = this;
         vm.offset = data.offset;
         vm.today = data.today
@@ -15,9 +16,9 @@ var today = {
     view: function (vm) {
         return m(".pomodoro-today-list_item.ui.segment", {
             // onclick: vm.setNote.bind(null, item),
-            class: `${!(todo.runningTask().hasRunning() || vm.offset() !== 0)? 'orange': ''} ${vm.today.isRunning()? 'running': ''}`, 
+            class: `${vm.offset() === 0 ? 'orange': ''}`, 
             onclick: () => widget.service.setNote(vm.today),
-            draggable: (todo.runningTask().hasRunning())? false : true,  // freeze if task is running
+            draggable: vm.offset() === 0,  // freeze if task is running
             ondrop: (e) => widget.service.onchange(vm.today, e),
             ondragstart: (e) => widget.service.interdragstart(vm.today, e),
             config: function (element, isInitialized) {

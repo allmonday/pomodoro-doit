@@ -115,9 +115,9 @@ dnd.route("/today")
             targetid = req.body.targetid,
             isinter = req.body.isinter;
 
-        if (!isinter) {  // move from unassigned
-
-            if (!targetid) {  // insert at head
+        /* from todo -> today */
+        if (!isinter) { 
+            if (!targetid) {  // try to insert at head
                 Task.find({date: todayString(), isHead: true})
                     .then((items) => { 
                         // assume today is empty
@@ -127,7 +127,7 @@ dnd.route("/today")
                             isHead: true,
                         }
 
-                        if (items.length === 0) { // today is empty
+                        if (items.length === 0) { // today is empty, insert at head;
                             return Task.update({_id: sourceid}, { $set: varable });
 
                         } else { // today already has other head.
@@ -165,7 +165,9 @@ dnd.route("/today")
                     .then(() => { res.send() });
             }
 
-        } else {  // move from internal
+
+        } else {  
+            /* move from internal */
             if (sourceid === targetid) {  // no change
                 return res.send();
             } else {
@@ -320,8 +322,12 @@ dnd.route("/today/pomodoro")
         let id = req.body.id;
         Task.findById(id)
             .then((task) => {
-                task.pomodoros.push({})
-                return task.save()
+                if (task.pomodoros.length < 5) {
+                    task.pomodoros.push({})
+                    return task.save()
+                } else {
+                    return q.when();
+                }
             })
             .then(() => {
                 res.send();

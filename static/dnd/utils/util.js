@@ -52,10 +52,16 @@ function minToHour(num) {
 }
 
 function requireNotificationPermission () {
+  if(typeof window.Notification === 'undefined') {
+      return;
+  }
   if (Notification.permission !== "granted") Notification.requestPermission(); 
 }
 
 function notifyMe(name) {
+  if(typeof window.Notification === 'undefined') {
+      return;
+  }
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
@@ -77,7 +83,6 @@ function isTop(e) {
         half = clientHeight / 2;
 
 	let result = cursorY <= half;
-    console.log(result);
 	return result;
 }
 
@@ -109,6 +114,8 @@ function calTomorrowTimeout() {
     return tomorrowMoment.diff(moment());
 }
 
+var log = console.log.bind(console);
+
 module.exports = {
     isFinished,
     isRunning,
@@ -119,5 +126,6 @@ module.exports = {
     requireNotificationPermission,
     isTop,
     dragdrop,
-    calTomorrowTimeout
+    calTomorrowTimeout,
+    log
 }

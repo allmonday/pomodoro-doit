@@ -10,8 +10,8 @@ var task = {
     },
     view: function (vm) {
         return m(".pomodoro-task_item.ui.segment", {
-            class: `${!(todo.runningTask().hasRunning() || vm.offset() !== 0)? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''}`,
-            draggable: (todo.runningTask().hasRunning() || vm.offset() !== 0)? false: true,
+            class: `${vm.offset() ===0? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''}`,
+            draggable: vm.offset() === 0,
             ondragstart: widget.service.dragstart.bind(vm, vm.task)
         },[
             m("p.pomodoro-task_item-content", `${vm.task.assigned()? '( yesterday )': ''} ${vm.task.name()}`),

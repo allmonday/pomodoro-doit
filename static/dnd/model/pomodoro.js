@@ -8,9 +8,9 @@ var pomodoro = function (data) {
 	this.startTime = m.prop(data.startTime || "");
     this.interuptCount = m.prop(data.interuptCount || 0);
     this.validTime = m.prop(data.validTime || 0);
-	this.runnable = m.prop(data.runnable || false);
 
 	// calculated prop
+	this.runnable = m.prop(data.runnable || false);
 	this.taskId = m.prop(data.taskId || "");
 }
 

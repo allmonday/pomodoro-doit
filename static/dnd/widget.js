@@ -29,6 +29,7 @@ widget.controller = function update() {
     let vm = this;
 
     var init = function() {  // initialization function
+        util.log("init widget");
         this.task = todo.task();
         this.today = todo.today();
         this.clock = todo.runningTask();
@@ -121,11 +122,12 @@ widget.controller = function update() {
     // start timer
     vm.startTimer = widget.service.startTimer = function startTimer(obj) {
         todo.startClock(obj.taskId._id(), obj.pomodoroId._id())
-            .then(this.init); 
+            .then(this.init).then(m.endComputation); 
     }.bind(vm);
 
     // reset timer (cancel it)
-    vm.resetPomodoro = widget.service.resetPomodoro = function (taskId, pomodoroId) {
+    widget.service.resetPomodoro = vm.resetPomodoro = function (taskId, pomodoroId) {
+        var that = this;
         $(".ui.basic.modal")
             .modal({ 
                 closable: false,
@@ -133,8 +135,8 @@ widget.controller = function update() {
                 },
                 onApprove: function () {
                     todo.resetPomodoro(taskId, pomodoroId)
-                        .then(this.init);
-                }.bind(this)  // ...well..
+                        .then(that.init).then(m.endComputation);
+                }  // ...well..
             })
             .modal("show");
     }.bind(vm);
@@ -163,10 +165,10 @@ widget.controller = function update() {
     };
 
     vm.onchange = widget.service.onchange = function moveTask(item, e) {
-        console.log(item);
         let prev = util.isTop(e);
         e.target.classList.remove("over");
         e.stopPropagation();  // ul also has it
+        e.preventDefault();
 
         let interTest = /^inter\-([0-9a-fA-F]){24}$/;
         let sourceid = e.dataTransfer.getData("Text");
@@ -177,11 +179,12 @@ widget.controller = function update() {
             isInter = true
         }
 
-        // source id already in target group? ignore it
+        // source id already in target group? ignore it (it should not happen)
         let duplicateCheck = _.findIndex(vm.today(), item => {
             return item._id() === sourceid;
         });
         if (!isInter && duplicateCheck !== -1) {
+            util.log("how you get there?");
             return;
         }
 
@@ -193,7 +196,11 @@ widget.controller = function update() {
                 targetid = item._id();
             }
         } else {
-            targetid = null
+            if (vm.today().length > 0) {
+                targetid = _.last(vm.today())._id();
+            } else {
+                targetid = null
+            }
         }
         todo.move(sourceid, targetid, isInter).then(this.init);
     }.bind(vm);
@@ -260,15 +267,14 @@ widget.view = function (vm) {
                 m(".pomodoro-util_cover"),
 
                 /* today list */
-                m("#pomodoro-today-list.ui.list", {  
+                m("#pomodoro-today-list.ui.list.empty", {  
                     ondrop: vm.onchange.bind(null, null),
                     config: function (element, isInitialized) { if (!isInitialized) { util.dragdrop(element) } },
-                    class: vm.today().length > 0? "not-empty": "empty"   // to display background for empty
+                    // class: vm.today().length > 0? "not-empty": "empty"   // to display background for empty
                 }, [
                     vm.today().map(function(today) {
                         return m(todayComponent, {
-                            // key: `${[today._id(), vm.offset(), vm.showNote()].join('')}`,
-                            key: JSON.stringify(today),
+                            key: `${JSON.stringify(today)}`,
                             today: today,
                             showNote: vm.showNote,
                             offset: vm.offset,
