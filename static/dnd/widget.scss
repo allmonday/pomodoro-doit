@@ -1,5 +1,9 @@
 @import "./components/variable";
 
+@mixin hover-box-shadow {
+  box-shadow: 1px 3px 2px 0px rgba(34,36,38,.15)
+}
+
 $orange: rgba(242,113,28, 0.53);
 $light-orange: rgba(242,113,28, 0.23);
 
@@ -39,7 +43,7 @@ body {
     // child
     flex-grow: 0;
     border-right-width: 0;
-    width: 250px;
+    width: 300px;
 
     &_items {
       &::-webkit-scrollbar { width: 0 !important }
@@ -96,6 +100,12 @@ body {
 
 .pomodoro-task {
   &_item {
+    &:hover {
+      @include hover-box-shadow;
+      i.pomodoro-task_item-content-pin.icon {
+        display: initial;
+      }
+    }
     &.teal.ui.segment {
       border-top-color: $green-hover;
     }
@@ -125,6 +135,28 @@ body {
       margin-bottom: 0.6em;
       word-wrap: break-word;
       word-break: normal;
+
+      &-pin.icon.pin {
+        position: absolute;
+        top: 15px;
+        right: 40px;
+        color: #aaa;
+        &.fixed {
+          display: initial;
+          color: #888;
+          transform: rotate(0deg);
+        }
+        display: none;
+        transform: rotate(45deg);
+      }
+      &-edit {
+        width: 190px;
+        padding: 5px;
+        &:focus {
+          outline: 1px solid #ececec;
+        }
+        border: 0;
+      }
       &_delete {
         position: absolute;
         top: 12px;
@@ -160,6 +192,9 @@ body {
     }
   }
   &_item {
+    &:hover {
+      @include hover-box-shadow;
+    }
     cursor: pointer;
     .pomodoro-today-list_display_estimated.ui.label {
       border-top-left-radius: 0;

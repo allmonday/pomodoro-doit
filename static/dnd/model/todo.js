@@ -127,6 +127,14 @@ todo.updateNote = (taskId, note) => {
     return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, note: note}});
 }
 
+todo.updateName = (taskId, name) => {
+    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, name: name}});
+}
+
+todo.updatePinTask = (taskId, pinVal) => {
+    return m.request({ method: 'put', url: "/api/pomodoro/task", data: {_id: taskId, fixedtop: pinVal}});
+}
+
 todo.removeTask = (taskId) => {
     return m.request({method: 'delete', url: "/api/pomodoro/task", data: {_id: taskId}})
         .then(() => {

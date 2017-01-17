@@ -24,7 +24,7 @@ dnd.route("/task")
                     {assigned: false, user: req.user._id},   // unassigned task
                     {assigned: true, date: yesterdayGetter(), user: req.user._id}   // 
                 ]})
-            .sort({assigned: -1})
+            .sort({assigned: -1, fixedTop: -1})
             .then(function (data) {
                 res.send(data);
             })
@@ -32,8 +32,23 @@ dnd.route("/task")
     .put(function (req, res) {
         var taskId = req.body._id;
         var note = req.body.note;
+        var name = req.body.name;
+        var fixedTop = req.body.fixedtop;
 
-        Task.update({_id: taskId}, {$set: {note: note}}).then(() => res.send());
+        var updateObj = {};
+
+        if (note) {
+            updateObj.note = note;
+        }
+        if (name) {
+            updateObj.name = name;
+        }
+        if (typeof fixedTop === 'boolean') {
+            updateObj.fixedTop = fixedTop;
+        }
+
+        Task.update({_id: taskId}, {$set: updateObj })
+            .then(() => res.send());
     })
     .post(function (req, res) {
         Task.count({assigned: false, user: req.user._id}).then((count) => {
@@ -97,7 +112,7 @@ dnd.route("/task")
                         })
                 }
 
-  }
+            }
         })
     })
     .delete(function (req, res) {

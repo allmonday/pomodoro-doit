@@ -148,6 +148,17 @@ widget.controller = function update() {
         todo.updateNote(taskId, note)
             .then(this.init).then(this.showNote(true));
     }.bind(vm);
+
+    vm.updatePinTask = widget.service.updatePinTask = function updatePinTask(taskId, pinVal) {
+        todo.updatePinTask(taskId, pinVal)
+            .then(this.init);
+    }.bind(vm);
+
+    // update name
+    vm.updateName = widget.service.updateName = function updateNot(taskId, name) {
+        todo.updateName(taskId, name)
+            .then(this.init);
+    }.bind(vm);
     
     // summary
     widget.service.summary = () => {
@@ -230,7 +241,7 @@ widget.view = function (vm) {
                             return m(taskComponent, {
                                 task: task, 
                                 offset: vm.offset,
-                                key: `${task._id()}${vm.offset()}`
+                                key: `${task._id()}${task.fixedTop()}`
                             })
                     })
                 ]),

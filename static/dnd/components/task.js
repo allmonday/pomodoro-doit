@@ -7,14 +7,57 @@ var task = {
         let vm = this;
         vm.task = data.task;
         vm.offset = data.offset;
+        vm.sending = m.prop(false);
+        vm.pin = (e) => {
+            vm.sending(true);
+            setTimeout(() => {
+                vm.task.fixedTop(!vm.task.fixedTop());
+                widget.service.updatePinTask(vm.task._id(), vm.task.fixedTop());
+                vm.sending(false);
+            }, 400);
+        }
+        
+        vm.save = (e) => {
+            $(e.target).blur();
+            vm.sending(true);
+            setTimeout(() => {
+                widget.service.updateName(vm.task._id(), vm.task.name())
+                vm.sending(false);
+            }, 400);
+        }
     },
     view: function (vm) {
         return m(".pomodoro-task_item.ui.segment", {
-            class: `${vm.offset() ===0? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''}`,
+            class: `${vm.offset() ===0? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''} ${vm.sending()? 'loading': ''}`,
             draggable: vm.offset() === 0,
             ondragstart: widget.service.dragstart.bind(vm, vm.task)
         },[
-            m("p.pomodoro-task_item-content", `${vm.task.assigned()? '( yesterday )': ''} ${vm.task.name()}`),
+            // m("p.pomodoro-task_item-content", {
+            // }, `${vm.task.assigned()? '( yesterday )': ''} ${vm.task.name()}`),
+
+            /* editable content */
+            m(".pomodoro-task_item-content", {
+                draggable: false
+            }, [
+                m("span", `${vm.task.assigned()? '( yesterday )': ''}`),
+                m("input.pomodoro-task_item-content-edit", {
+                    oninput: m.withAttr('value', vm.task.name), 
+                    value: vm.task.name(),
+                    onkeypress: (e) => {
+                        if (e.keyCode === 13) {
+                            vm.save(e);
+                        }
+                    }
+                })
+            ]),
+
+            /* pin */
+            m("i.pomodoro-task_item-content-pin.pin.icon", {
+                class: vm.task.fixedTop()? 'fixed': '',
+                onclick: vm.pin
+            }),
+
+            /* remove */
             m(".ui.labels.circular", [
                 m(".ui.label.pomodoro-task_item-content_delete", {
                     onclick: () => { widget.service.removeTask(vm.task._id()) }
