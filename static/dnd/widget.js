@@ -246,7 +246,7 @@ widget.view = function (vm) {
                             return m(taskComponent, {
                                 task: task, 
                                 offset: vm.offset,
-                                key: `${task._id()}${task.fixedTop()}${task.name()}`
+                                key: `${task._id()}${task.fixedTop()}`
                             })
                     })
                 ]),

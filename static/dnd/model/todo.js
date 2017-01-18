@@ -10,7 +10,6 @@ function refresh () {
 var todo = {};
 
 var has_running_task = false;
-var global_has_one_runnable = false;  // for today, flag one runnable pomo is found.
 
 var running = {
     task: m.prop({}),
@@ -45,6 +44,7 @@ todo.TODO = function (data) {  // class for tasks
 
 todo.TODAY = function (data) {  // class for today tasks
 
+    var global_has_one_runnable = false;  // for today, flag one runnable pomo is found.
 	data = data || {};
 	this._id = m.prop(data._id ||"");
 	this.name = m.prop(data.name || "");
@@ -81,14 +81,13 @@ todo.TODAY = function (data) {  // class for today tasks
             }
 
         } else {  // find the first prepare pomodoro
-            pomoInstance.runnable(true);
 
-            // if (!global_has_one_runnable) {  // if already found, ignore
-            //     if (pomoInstance.currentStatus() === 'prepare') {
-            //         global_has_one_runnable = true;
-            //         pomoInstance.runnable(true);
-            //     }
-            // } 
+            if (!global_has_one_runnable) {  // if already found, ignore
+                if (pomoInstance.currentStatus() === 'prepare') {
+                    global_has_one_runnable = true;
+                    pomoInstance.runnable(true);
+                }
+            } 
         }
 
         prev.push(pomoInstance);
@@ -108,7 +107,6 @@ todo.task = function(date) {
 todo.today = function (date) {
     // init
     has_running_task = false;
-    global_has_one_runnable = false;
     todo.resetRunningTask();
     date = date || "";
 
