@@ -128,7 +128,7 @@ widget.controller = function update() {
     // start timer
     vm.startTimer = widget.service.startTimer = function startTimer(obj) {
         todo.startClock(obj.taskId._id(), obj.pomodoroId._id())
-            .then(this.init).then(m.endComputation); 
+            .then(this.init); // .then(m.endComputation); 
     }.bind(vm);
 
     // reset timer (cancel it)
@@ -141,7 +141,7 @@ widget.controller = function update() {
                 },
                 onApprove: function () {
                     todo.resetPomodoro(taskId, pomodoroId)
-                        .then(that.init).then(m.endComputation);
+                        .then(that.init); //.then(m.endComputation);
                 }  // ...well..
             })
             .modal("show");

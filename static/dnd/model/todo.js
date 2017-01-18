@@ -81,13 +81,14 @@ todo.TODAY = function (data) {  // class for today tasks
             }
 
         } else {  // find the first prepare pomodoro
+            pomoInstance.runnable(true);
 
-            if (!global_has_one_runnable) {  // if already found, ignore
-                if (pomoInstance.currentStatus() === 'prepare') {
-                    global_has_one_runnable = true;
-                    pomoInstance.runnable(true);
-                }
-            } 
+            // if (!global_has_one_runnable) {  // if already found, ignore
+            //     if (pomoInstance.currentStatus() === 'prepare') {
+            //         global_has_one_runnable = true;
+            //         pomoInstance.runnable(true);
+            //     }
+            // } 
         }
 
         prev.push(pomoInstance);
