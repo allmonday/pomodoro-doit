@@ -48,14 +48,20 @@ function elapsed(date) {
 function minToHour(num) {
     let minutes = num % 60;
     let hours = Math.floor(num/60);
-    return `${prefix_zero(hours)}hours and ${prefix_zero(minutes)}minutes`;
+    return `${prefix_zero(hours)} HOURS, ${prefix_zero(minutes)} MINUTES`;
 }
 
 function requireNotificationPermission () {
+  if(typeof window.Notification === 'undefined') {
+      return;
+  }
   if (Notification.permission !== "granted") Notification.requestPermission(); 
 }
 
 function notifyMe(name) {
+  if(typeof window.Notification === 'undefined') {
+      return;
+  }
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
@@ -77,7 +83,6 @@ function isTop(e) {
         half = clientHeight / 2;
 
 	let result = cursorY <= half;
-    console.log(result);
 	return result;
 }
 
@@ -109,6 +114,15 @@ function calTomorrowTimeout() {
     return tomorrowMoment.diff(moment());
 }
 
+var log = console.log.bind(console);
+
+function logError(errResponse) {
+    toastr.error(errResponse.error);
+}
+var title = "Pomodoro do it!!";
+
+var socket = io.connect();
+
 module.exports = {
     isFinished,
     isRunning,
@@ -119,5 +133,9 @@ module.exports = {
     requireNotificationPermission,
     isTop,
     dragdrop,
-    calTomorrowTimeout
+    calTomorrowTimeout,
+    log,
+    logError,
+    title,
+    socket
 }

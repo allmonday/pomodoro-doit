@@ -1,5 +1,9 @@
 @import "./components/variable";
 
+@mixin hover-box-shadow {
+  box-shadow: 1px 3px 2px 0px rgba(34,36,38,.15)
+}
+
 $orange: rgba(242,113,28, 0.53);
 $light-orange: rgba(242,113,28, 0.23);
 
@@ -39,7 +43,7 @@ body {
     // child
     flex-grow: 0;
     border-right-width: 0;
-    width: 250px;
+    width: 300px;
 
     &_items {
       &::-webkit-scrollbar { width: 0 !important }
@@ -70,7 +74,7 @@ body {
       margin-top: 0;
       margin-bottom: 0;
       &.empty {
-        background: repeating-linear-gradient(-45deg, #efefef, #efefef 8px, white 2px, white 13px);
+        background: repeating-linear-gradient(-45deg, #fafafa, #fafafa 8px, white 2px, white 13px);
       }
       &::-webkit-scrollbar { width: 0 !important }
       min-height: 80px;
@@ -96,6 +100,12 @@ body {
 
 .pomodoro-task {
   &_item {
+    &:hover {
+      @include hover-box-shadow;
+      i.pomodoro-task_item-content-pin.icon {
+        display: initial;
+      }
+    }
     &.teal.ui.segment {
       border-top-color: $green-hover;
     }
@@ -125,6 +135,28 @@ body {
       margin-bottom: 0.6em;
       word-wrap: break-word;
       word-break: normal;
+
+      &-pin.icon.pin {
+        position: absolute;
+        top: 15px;
+        right: 40px;
+        color: #aaa;
+        &.fixed {
+          display: initial;
+          color: #888;
+          transform: rotate(0deg);
+        }
+        display: none;
+        transform: rotate(45deg);
+      }
+      &-edit {
+        width: 190px;
+        padding: 5px;
+        &:focus {
+          outline: 1px solid #ececec;
+        }
+        border: 0;
+      }
       &_delete {
         position: absolute;
         top: 12px;
@@ -160,11 +192,15 @@ body {
     }
   }
   &_item {
+    &:hover {
+      @include hover-box-shadow;
+    }
     cursor: pointer;
     .pomodoro-today-list_display_estimated.ui.label {
       border-top-left-radius: 0;
       font-weight: normal;
       padding: 0.5em 1em;
+      background-color: rgba(242, 113, 28, 0.87)!important;
     }
     &.ui.segment {
       padding-bottom: 0;
@@ -195,7 +231,7 @@ body {
     padding: 10px;
   }
   &_display {
-    margin-bottom: 20px;
+    // margin-bottom: 20px;
     &_name {
       // font-size: 16px;
     }
@@ -212,6 +248,23 @@ body {
       padding-top: 0.85em;
       padding-bottom: 0.85em;
       font-weight: bold;
+      position: relative;
+      z-index: 2;
+      span {
+        position: relative;
+        z-index: 2;
+      }
+      .progress {
+        content: '';
+        z-index: 1;
+        border-radius: 3px;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background: $light-orange;
+      }
     }
   }
   &_timer-edit {
