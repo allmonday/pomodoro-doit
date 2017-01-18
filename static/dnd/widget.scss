@@ -1,7 +1,7 @@
 @import "./components/variable";
 
 @mixin hover-box-shadow {
-  box-shadow: 1px 3px 2px 0px rgba(34,36,38,.15)
+  box-shadow: 1px 3px 6px 0px rgba(34,36,38,.25)
 }
 
 $orange: rgba(242,113,28, 0.53);
@@ -263,6 +263,7 @@ body {
         z-index: 2;
       }
       .progress {
+        transition: width 1s;
         content: '';
         z-index: 1;
         border-radius: 3px;

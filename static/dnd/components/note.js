@@ -17,24 +17,31 @@ var note = {
         }
     },
     view: function (ctrl) {
-        return m(".pomodoro-note-main", [
-            m(".ui.form", [
-                m(".field", [
-                    m("label", `Notes of ${ctrl.data.task().name } ( markdown supported )`),
-                    m("textarea[type='text'][rows='15']#pomodoro-note-main_edit", {
-                        oninput: m.withAttr('value', ctrl.note),
-                        value: ctrl.note(),
-                        onkeypress: function (e) {
-                            if (e.keyCode == 13 && e.ctrlKey) {
-                                ctrl.save(ctrl.data.task()._id, ctrl.note());
+        return m(".pomodoro-note-main.ui.modal", [
+            m(".header", [
+                m("label", `Notes of ${ctrl.data.task().name } ( markdown supported )`),
+            ]),
+            m(".content", [
+                m(".ui.form", [
+                    m(".field", [
+                        m("textarea[type='text'][rows='15']#pomodoro-note-main_edit", {
+                            oninput: m.withAttr('value', ctrl.note),
+                            value: ctrl.note(),
+                            onkeypress: function (e) {
+                                if (e.keyCode == 13 && e.ctrlKey) {
+                                    ctrl.save(ctrl.data.task()._id, ctrl.note());
+                                }
                             }
-                        }
-                    }),
-                ]),
-                m("button.ui.button.orange.mini.right.floated", {
+                        }),
+                    ])
+                ])
+            ]),
+            m(".actions", [
+                m("button.ui.button.orange.mini.right", {
                     class: ctrl.sending()? 'loading': '',
                     onclick: () => ctrl.save(ctrl.data.task()._id, ctrl.note())
                 }, "Update (Ctrl + Enter)"),
+
             ])
         ])
     }

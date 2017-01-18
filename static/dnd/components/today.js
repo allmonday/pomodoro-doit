@@ -16,7 +16,6 @@ var today = {
     view: function (vm) {
         return m(".pomodoro-today-list_item.ui.segment", {
             class: `${vm.today.isRunning()? 'orange': ''}`, 
-            onclick: () => widget.service.setNote(vm.today),
             draggable: vm.offset() === 0,  // freeze if task is running
             ondrop: (e) => widget.service.onchange(vm.today, e),
             ondragstart: (e) => widget.service.interdragstart(vm.today, e),
@@ -49,6 +48,11 @@ var today = {
 
             vm.today.isToday()?
             m(".pomodoro-today-list_timer-edit.ui.labels.circular", [
+                m(".label.ui", {
+                    onclick: () => widget.service.setNote(vm.today),
+                }, [
+                    m("i.edit.icon"),
+                ]),
                 m(".label.ui", {
                     class: vm.today.pomodoros().length <= 1 ? "disabled" :"",
                     onclick: vm.today.pomodoros().length <= 1 ? ()=> {}: () => {widget.service.subPomo(vm.today._id()); }

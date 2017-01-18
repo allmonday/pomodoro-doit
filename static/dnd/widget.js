@@ -156,11 +156,24 @@ widget.controller = function update() {
             .modal("show");
     }.bind(vm);
 
+    // prepare for note edit modal
+    vm.setNote = widget.service.setNote = function setNote(item) {  // refactor?
+        this.clock.task().note = item.note();
+        this.clock.task()._id = item._id();
+        this.clock.task().name = item.name();
+        setTimeout(function () {
+            $(".pomodoro-note-main.ui.modal").modal("show");
+            // $("#pomodoro-note-main_edit").focus();
+        }, 100);
+    }.bind(vm);
 
     // update notes
     vm.updateNote = widget.service.updateNote = function updateNot(taskId, note) {
         todo.updateNote(taskId, note)
-            .then(this.init).then(this.showNote(true));
+            .then(this.init).then(this.showNote(true))
+            .then(() => {
+                $(".pomodoro-note-main.ui.modal").modal("hide");
+            });
     }.bind(vm);
 
     vm.updatePinTask = widget.service.updatePinTask = function updatePinTask(taskId, pinVal) {
@@ -229,15 +242,6 @@ widget.controller = function update() {
             }
         }
         todo.move(sourceid, targetid, isInter).then(this.init);
-    }.bind(vm);
-
-    vm.setNote = widget.service.setNote = function setNote(item) {  // refactor?
-        this.clock.task().note = item.note();
-        this.clock.task()._id = item._id();
-        this.clock.task().name = item.name();
-        setTimeout(function () {
-            $("#pomodoro-note-main_edit").focus();
-        }, 100);
     }.bind(vm);
 };
 
@@ -335,17 +339,13 @@ widget.view = function (vm) {
                     pomodoro: vm.clock.pomodoro,
                     updatePomodoro: vm.updatePomodoro  //cb
                 }),
-                vm.clock.task()._id ?
-                m("#pomodoro-note", [
-                    m(note, {
-                        key: `${vm.clock.task()._id}`,
-                        task: vm.clock.task,
-                    })
-                ]) : m("div",""),
-
             ]),
 
             /* modals */
+            m(note, {
+                key: `${vm.clock.task()._id}`,
+                task: vm.clock.task,
+            }),
             m(confirm),
             m(summary, { key: JSON.stringify(vm.today), today: vm.today }),
         ])
