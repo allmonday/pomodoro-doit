@@ -100,10 +100,12 @@ body {
 
 .pomodoro-task {
   &_item {
+    transition-property: box-shadow;
+    transition-duration: 0.2s;
     &:hover {
       @include hover-box-shadow;
       i.pomodoro-task_item-content-pin.icon {
-        display: initial;
+        opacity: 1;
       }
     }
     &.teal.ui.segment {
@@ -137,19 +139,23 @@ body {
       word-break: normal;
 
       &-pin.icon.pin {
+        transition-property: opacity;
+        transition-duration: 1s;
         position: absolute;
         top: 15px;
         right: 40px;
         color: #aaa;
         &.fixed {
-          display: initial;
           color: #888;
           transform: rotate(0deg);
+          opacity: 1;
         }
-        display: none;
+        // display: none;
+        opacity: 0;
         transform: rotate(45deg);
       }
       &-edit {
+        cursor: pointer;
         width: 190px;
         padding: 5px;
         &:focus {
@@ -192,6 +198,8 @@ body {
     }
   }
   &_item {
+    transition-property: box-shadow;
+    transition-duration: 0.2s;
     &:hover {
       @include hover-box-shadow;
     }

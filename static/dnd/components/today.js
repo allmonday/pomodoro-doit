@@ -15,7 +15,7 @@ var today = {
     },
     view: function (vm) {
         return m(".pomodoro-today-list_item.ui.segment", {
-            class: `${vm.offset() === 0 ? 'orange': ''}`, 
+            class: `${vm.today.isRunning()? 'orange': ''}`, 
             onclick: () => widget.service.setNote(vm.today),
             draggable: vm.offset() === 0,  // freeze if task is running
             ondrop: (e) => widget.service.onchange(vm.today, e),

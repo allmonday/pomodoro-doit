@@ -28,7 +28,7 @@ var task = {
     },
     view: function (vm) {
         return m(".pomodoro-task_item.ui.segment", {
-            class: `${vm.offset() ===0? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''} ${vm.sending()? 'loading': ''}`,
+            class: `${vm.task.fixedTop() ? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''} ${vm.sending()? 'loading': ''}`,
             draggable: vm.offset() === 0,
             ondragstart: widget.service.dragstart.bind(vm, vm.task)
         },[
