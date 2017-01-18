@@ -39,7 +39,6 @@ var task = {
             m(".pomodoro-task_item-content", {
                 draggable: false
             }, [
-                m("span", `${vm.task.assigned()? '( yesterday )': ''}`),
                 m("input.pomodoro-task_item-content-edit", {
                     oninput: m.withAttr('value', vm.task.name), 
                     value: vm.task.name(),

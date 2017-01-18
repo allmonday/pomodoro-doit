@@ -50,18 +50,18 @@ var today = {
             vm.today.isToday()?
             m(".pomodoro-today-list_timer-edit.ui.labels.circular", [
                 m(".label.ui", {
+                    class: vm.today.pomodoros().length <= 1 ? "disabled" :"",
+                    onclick: vm.today.pomodoros().length <= 1 ? ()=> {}: () => {widget.service.subPomo(vm.today._id()); }
+                }, [
+                    m("i.minus.icon"),
+                ]),
+
+                m(".label.ui", {
                     class: vm.today.pomodoros().length >= 5 ? "disabled" :"",
                     onclick: vm.today.pomodoros().length >= 5 ? () => {}: () => {widget.service.addPomo(vm.today);}
                     }, [
                     m("i.add.icon"),
                 ]),
-
-                m(".label.ui", {
-                    class: vm.today.pomodoros().length <= 1 ? "disabled" :"",
-                    onclick: vm.today.pomodoros().length <= 1 ? ()=> {}: () => {widget.service.subPomo(vm.today._id()); }
-                }, [
-                    m("i.minus.icon"),
-                ])
             ]): m("div"),
 
             m(pomodoro, {
