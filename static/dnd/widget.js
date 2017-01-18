@@ -116,10 +116,19 @@ widget.controller = function update() {
             .modal("show");
     }.bind(vm);
 
-    var cancelTask = function(name) {
-        todo.cancelTask(name).then(this.init);
-    }
-    vm.cancelTask = widget.service.cancelTask = cancelTask.bind(vm);
+    vm.cancelTask = widget.service.cancelTask = function cancelTask(taskId) {
+        let that = this;
+        $("#confirm-modal.ui.basic.modal")
+            .modal({ 
+                closable: false,
+                onDeny: function () {
+                },
+                onApprove: function () {
+                    todo.cancelTask(taskId).then(that.init);
+                }
+            })
+            .modal("show");
+    }.bind(vm);
 
     vm.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
         todo.updatePomodoro(taskId, pomodoroId, validTime, interuptCount).then(update.bind(vm));
