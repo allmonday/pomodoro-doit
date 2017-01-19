@@ -30,13 +30,12 @@ npm run dev
     - calender: http://bl.ocks.org/mbostock/4063318
 - [ ] 上https
 - [ ] nginx 优化访问
-- [ ] 检查 nextNode 不存在的原因
 - [ ] 添加周为单位的统计查看
 - [ ] timer 上限改为10 (待议, 可配置吧)
-- [ ] 优雅的弹窗实现
 - [ ] 统计功能 (不然一天白忙活, 没个总结)
 - [ ] 添加优先级按钮 (low normal high, 还是挺重要的/ 改为添加置顶功能
 - [ ] mongo 添加账号
+- [x] 检查 nextNode 不存在的原因 (因为查询的时候没有加入user._id 的限制, 所以差错了.)
 - [x] 添加限制条件
 - [x] scroll 有点卡, 找找原因,  transform: translateZ(0);
 - [x] 过零点强制刷新.

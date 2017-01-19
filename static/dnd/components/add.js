@@ -36,6 +36,7 @@ var AddItem = {
                                 } else {
                                     ctrl.add(); 
                                 }
+                                e.preventDefault(); 
                             }
                         })
                     }
