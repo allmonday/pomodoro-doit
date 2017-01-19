@@ -8,6 +8,7 @@ require("./clock.scss");
 var clock = {
     controller: function (data) {
 
+        util.log("clock init");
         let vm = this;
         vm.data = data;
         vm.validTime = m.prop(data.pomodoro().validTime || 0);
@@ -29,7 +30,11 @@ var clock = {
         }
 
         function count() {
+            if (typeof vm.data.pomodoro().startTime === "undefined") {
+                return;
+            }
             m.startComputation();
+
             let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
             if (elapsedTime.minutes >= 25)  {
 

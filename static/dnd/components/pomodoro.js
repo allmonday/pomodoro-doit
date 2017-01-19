@@ -13,6 +13,7 @@ var pomo = {
         util.log("pomodoro init");
         let vm = this;
         vm.task = data.today;
+        vm.loading = m.prop(false);
     },
     view: function (vm) {
         return m(".pomo", [
@@ -33,12 +34,16 @@ var pomo = {
                         'prepare': 
                             m(".pomo-item_start", [  // start btn
                                 m("button.icon.tiny.orange.circular.ui.button", {
-                                    class: !pomodoro.runnable()? "hide": "",
+                                    class: `${!pomodoro.runnable()? "hide": ""} ${vm.loading()? 'loading': ''}`,
                                     onclick: (e) => {
-                                        widget.service.startTimer({
-                                            taskId: vm.task,
-                                            pomodoroId: pomodoro
-                                        })
+                                        vm.loading(true);
+                                        setTimeout(function () {
+                                            vm.loading(false);
+                                            widget.service.startTimer({
+                                                taskId: vm.task,
+                                                pomodoroId: pomodoro
+                                            })
+                                        }, 200);
                                     } 
                                 }, [ m("i.play.icon"), ])
                             ]),

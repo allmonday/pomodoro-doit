@@ -288,13 +288,13 @@ widget.view = function (vm) {
 
                         }, ">"),
                         m("button.ui.tiny.icon.button", {
-                            class: `${vm.showNote()? '' : 'orange'}`,
+                            // class: `${vm.showNote()? '' : ''}`,
                             onclick: () => {
                                 vm.showNote(!vm.showNote());
                             }
                         },[
                             m("i.icon", {
-                                class: `${vm.showNote()? 'list' : 'edit'}`,
+                                class: `${vm.showNote()? 'compress' : 'expand'}`,
                             })
                         ]),
                     ])
