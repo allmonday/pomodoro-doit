@@ -146,10 +146,12 @@ dnd.route("/today")
             if (count >= 20 && !isinter)  {
                 return res.status(400).send({error: 'exceed limit of today'});
             } else {
-                        /* from todo -> today */
+                /* from todo -> today */
                 if (!isinter) { 
+                    console.log("move in from todo")
                     if (!targetid) {  // try to insert at head
-                        Task.find({date: todayString(), isHead: true})
+                        console.log("insert at head")
+                        Task.find({date: todayString(), user: req.user._id, isHead: true})
                             .then((items) => { 
                                 // assume today is empty
                                 let varable = {
@@ -246,7 +248,7 @@ dnd.route("/today")
                             })
                             .then(()=>{
                                 if (!targetid) { // is head? (targetid === null)
-                                    Task.findOne({date: todayString(), isHead: true})
+                                    Task.findOne({date: todayString(), user: req.user._id, isHead: true})
                                         .then((first) => {
                                             if (first) {
                                                 return q.all([
