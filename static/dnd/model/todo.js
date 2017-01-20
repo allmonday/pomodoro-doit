@@ -193,4 +193,28 @@ todo.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
         .then(refresh);
 }
 
+todo.getWeekData = () => {
+    return m.request({method: 'get', url: "/api/pomodoro/week"}).then((data) => {
+            return data.reduce((prev, item) => {
+                return prev.concat(item.pomodoros.filter((item) => { return item.status === true}));
+            }, [])
+            .map(item => item.startTime);
+        })
+
+        .then((data) => {
+            return _.groupBy(data,item => moment(item).startOf('day').subtract(14, 'hour').toDate())
+        })
+
+        .then((data) => {
+            var result = [];
+            _.forIn(data, (value, key) => {
+                result.push({
+                    x: key,
+                    y: value.length
+                })
+            })
+            return result;
+        })
+}
+
 module.exports = todo;

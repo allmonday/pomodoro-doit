@@ -1,5 +1,6 @@
 "use strict";
 
+var moment = require("moment");
 var config = require("../config");
 var q = require("q");
 var express = require("express");
@@ -403,6 +404,19 @@ dnd.route("/today/pomodoro")
             })
             .then(() => {
                 res.send();
+            })
+    })
+
+dnd.route("/week")
+    .get(function (req, res) {
+        var today = moment().toDate();
+        var weekAgo = moment().subtract(7, 'day').toDate();
+        var query = {user: req.user._id, pomodoros: { $elemMatch: { status: true, startTime: {$gt: weekAgo, $lt: today} }}}
+        Task.find(query, { pomodoros: 1})
+            .then((data) => {
+                res.send(data);
+            }, (err) => {
+                res.status(400).send(err);
             })
     })
 
