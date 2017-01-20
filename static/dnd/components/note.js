@@ -30,6 +30,7 @@ var note = {
                             onkeypress: function (e) {
                                 if (e.keyCode == 13 && e.ctrlKey) {
                                     ctrl.save(ctrl.data.task()._id, ctrl.note());
+                                    e.preventDefault(); 
                                 }
                             }
                         }),

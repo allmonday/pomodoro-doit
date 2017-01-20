@@ -91,8 +91,8 @@ widget.controller = function update() {
         dt.setData("Text", `inter-${item._id()}`);
     }
 
-    widget.service.addPomo = vm.addPomo = function(item) {
-        todo.addPomo(item._id()).then(this.init);
+    widget.service.addPomo = vm.addPomo = function(id) {
+        todo.addPomo(id).then(this.init);
     }.bind(vm);
 
     widget.service.subPomo = vm.subPomo = function(id) {
