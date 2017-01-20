@@ -16,18 +16,7 @@ var clock = {
         vm.timeFormatted = m.prop("...");
         vm.progress = m.prop("");
         vm.percent = m.prop("0");
-        vm.getPct = getPct;
-
-        function getPct(val) {
-            var r = 90;
-            var c = Math.PI*(r*2);
-        
-            if (val < 0) { val = 0;}
-            if (val > 100) { val = 100;}
-            
-            var pct = (val/100)*c;
-            return pct;
-        }
+        vm.getPct = util.getPct;
 
         function count() {
             if (typeof vm.data.pomodoro().startTime === "undefined") {
@@ -43,6 +32,12 @@ var clock = {
 
                 document.title = util.title;
                 $("#notice-voice")[0].play();
+
+                setTimeout(() => {
+                    widget.service.refreshRestClock()
+                    $("#rest-modal.ui.basic.modal").modal("show");
+                }, 2000);
+
                 util.notifyMe(vm.data.task().name);
                 widget.service.init();
 
@@ -65,12 +60,6 @@ var clock = {
         return m(".pomodoro-clock", [
             !_.isEmpty(ctrl.data.pomodoro()) ? m(".pomodoro-clock_view", [
                 m(".pomodoro-clock_view_progress", [
-                    // m(".pomodoro-clock_progress.ui.progress.orange",[
-                    //     m(".bar", {style: ctrl.progress()}, [
-                    //         m(".progress", `${Math.floor(ctrl.percent())}%`),
-                    //     ])
-                    // ]),
-                    // m(".ui.label.huge.orange", ctrl.timeFormatted()),
                     m("#pomodoro-pct", {
                         'data-pct': ctrl.timeFormatted() 
                     }, [
@@ -100,7 +89,6 @@ var clock = {
                 //     }, "update"),
                 // ])
             ]): m(".pomodoro-clock_empty", [
-                // m(".ui.large.top.left.attached.label.orange.pomodoro-clock-new", "Select a pomodoro to start!"),
                 m(".pomodoro-clock-banner", [
                     m("img[src='/imgs/tomato.svg'].pomodoro-clock-icon"),
                     m("h2.pomodoro-clock-title", "Pomodoro-DOIT!"),

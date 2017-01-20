@@ -12,6 +12,7 @@ var note = require("./components/note");
 var summary = require("./components/summary");
 var taskComponent = require("./components/task");
 var todayComponent = require("./components/today");
+var restComponent = require("./components/rest");
 // utils
 var util = require("./utils/util");
 var moment = require("moment");
@@ -143,7 +144,7 @@ widget.controller = function update() {
     // reset timer (cancel it)
     widget.service.resetPomodoro = vm.resetPomodoro = function (taskId, pomodoroId) {
         var that = this;
-        $(".ui.basic.modal")
+        $("#confirm-modal.ui.basic.modal")
             .modal({ 
                 closable: false,
                 onDeny: function () {
@@ -348,6 +349,7 @@ widget.view = function (vm) {
             }),
             m(confirm),
             m(summary, { key: JSON.stringify(vm.today), today: vm.today }),
+            m(restComponent),
         ])
     };
 
