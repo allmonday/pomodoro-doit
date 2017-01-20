@@ -17,6 +17,13 @@ var clock = {
         vm.progress = m.prop("");
         vm.percent = m.prop("0");
         vm.getPct = util.getPct;
+        function callRestModal () {
+            setTimeout(() => {
+                widget.service.refreshRestClock()
+                $("#rest-modal.ui.basic.modal").modal("show");
+                window.removeEventListener('focus', callRestModal);
+            }, 1000);
+        }
 
         function count() {
             if (typeof vm.data.pomodoro().startTime === "undefined") {
@@ -33,13 +40,14 @@ var clock = {
                 document.title = util.title;
                 $("#notice-voice")[0].play();
 
-                setTimeout(() => {
-                    widget.service.refreshRestClock()
-                    $("#rest-modal.ui.basic.modal").modal("show");
-                }, 2000);
-
                 util.notifyMe(vm.data.task().name);
                 widget.service.init();
+
+                if (window.blurred) {
+                    window.addEventListener('focus', callRestModal);
+                } else {
+                    callRestModal();
+                }
 
             } else {
 
