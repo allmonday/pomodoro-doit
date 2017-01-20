@@ -123,6 +123,23 @@ var title = "Pomodoro do it!!";
 
 var socket = io.connect();
 
+function formatSeconds(seconds) {
+    var seconds_left = seconds % 60
+    var minutes = Math.floor(seconds / 60);
+    return `${prefix_zero(minutes)} : ${prefix_zero(seconds_left)}`;
+}
+
+function getPct(val) {
+    var r = 90;
+    var c = Math.PI*(r*2);
+
+    if (val < 0) { val = 0;}
+    if (val > 100) { val = 100;}
+    
+    var pct = (val/100)*c;
+    return pct;
+}
+
 module.exports = {
     isFinished,
     isRunning,
@@ -137,5 +154,7 @@ module.exports = {
     log,
     logError,
     title,
-    socket
+    socket,
+    formatSeconds,
+    getPct,
 }
