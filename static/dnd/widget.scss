@@ -200,6 +200,9 @@ body {
   &_item {
     transition-property: box-shadow;
     transition-duration: 0.2s;
+    &.ui.segment:last-child {
+      margin-bottom: 20px;
+    }
     &:hover {
       @include hover-box-shadow;
     }
@@ -212,9 +215,6 @@ body {
     }
     &.ui.segment {
       padding-bottom: 0;
-    }
-    &.running {
-      // border: 1px solid #f26202;
     }
     &.ui.segment:first-child {
       margin-top: 15px;

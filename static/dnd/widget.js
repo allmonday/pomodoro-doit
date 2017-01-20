@@ -20,6 +20,8 @@ var moment = require("moment");
 
 // init
 util.requireNotificationPermission();
+window.addEventListener('blur', function() { console.log('blur'); window.blurred = true; });
+window.addEventListener('focus',  function() { console.log('focus'); window.blurred = false; });
 
 // reload page if tomorrow come.
 setTimeout(function () {
