@@ -1,0 +1,17 @@
+#pomodoro-week-chart-area {
+    $orange: rgba(242,113,28, 0.53);
+    $light-orange: rgba(242,113,28, 0.23);
+    display: block;
+    margin: 0 auto;
+    .bar {
+    fill: $orange;
+    }
+
+    .bar:hover {
+    fill: $light-orange;
+    }
+
+    .axis--x path {
+    display: none;
+    }
+}

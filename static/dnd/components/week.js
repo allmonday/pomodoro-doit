@@ -1,6 +1,7 @@
 var m = require("mithril");
 var util = require("../utils/util");
 var todo = require("../model/todo");
+require("./week.scss");
 
 var week = {
     controller: function () {
@@ -9,48 +10,45 @@ var week = {
         vm.week = todo.getWeekData();
         vm.draw = function (ctx, init, content) {
             if (!init) {
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: vm.week().map(item => item.x),
-                        datasets: [{
-                            data: vm.week().map(item => item.y),
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        width: 20,
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                categoryPercentage: 0.11,
-                                barPercentage: 1.8,
-                                time: {
-                                    isoWeekday: true,
-                                    displayFormats: {
-                                        week: 'll'
-                                    },
-                                    min: moment().subtract(7, 'day').endOf('day').toDate(),
-                                    max: moment().endOf('day').toDate(),
-                                    unit: 'day'
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    }
-                });
+                let data = vm.week();
+
+                var svg = d3.select("svg#pomodoro-week-chart-area"),
+                    margin = {top: 20, right: 20, bottom: 30, left: 40},
+                    width = +svg.attr("width") - margin.left - margin.right,
+                    height = +svg.attr("height") - margin.top - margin.bottom;
+
+                var x = d3.scaleBand().rangeRound([0, width]).padding(0.3),
+                    y = d3.scaleLinear().rangeRound([height, 0]);
+
+                var g = svg.append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                x.domain(data.map(function(d) { return d.x; }));
+                y.domain([0, d3.max(data, function(d) { return d.y; })]);
+
+                g.append("g")
+                    .attr("class", "axis axis--x")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x));
+
+                g.selectAll(".bar")
+                    .data(data)
+                    .enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function(d) { return x(d.x); })
+                    .attr("y", function(d) { return y(d.y); })
+                    .attr("width", x.bandwidth())
+                    .attr("height", function(d) { return height - y(d.y); });
 
             }
         }
     }, 
     view: function (vm) {
-        return m("canvas#pomodoro-week-chart[width='400'][height='180']", {
+        return m("#pomodoro-week-chart", {
             config: vm.draw 
-        })
+        }, [
+            m("svg#pomodoro-week-chart-area[width='400'][height='250']")
+        ])
     }
 }
 
