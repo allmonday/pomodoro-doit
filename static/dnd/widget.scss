@@ -41,9 +41,9 @@ body {
     flex-direction: column;
 
     // child
-    flex-grow: 1;
+    flex-grow: 0;
     border-right-width: 0;
-    // width: 300px;
+    width: 400px;
 
     &_items {
       &::-webkit-scrollbar { width: 0 !important }
@@ -58,9 +58,9 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    // width: 400px;
+    width: 500px;
     // child
-    flex-grow: 1;
+    flex-grow: 0;
     &-operate {
       margin-top: 10px;
       padding-bottom: 13px;
