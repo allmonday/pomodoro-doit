@@ -30,7 +30,7 @@ var week = {
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                 x.domain(data.map(function(d) { return d.x; }));
-                y.domain([0, d3.max(data, function(d) { return d.y; })]);
+                y.domain([0, d3.max(data, function(d) { return d.y > 2? d.y: 2; })]);
 
                 g.append("g")
                     .attr("class", "axis axis--x")
