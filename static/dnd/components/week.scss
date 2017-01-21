@@ -1,10 +1,12 @@
+$orange: rgba(242,113,28, 0.53);
+$light-orange: rgba(242,113,28, 0.23);
+
 #pomodoro-week-chart-area {
-    $orange: rgba(242,113,28, 0.53);
-    $light-orange: rgba(242,113,28, 0.23);
     display: block;
     margin: 0 auto;
     .bar {
     fill: $orange;
+    transition: fill .3s;
     }
 
     .bar:hover {
@@ -14,4 +16,16 @@
     .axis--x path {
     display: none;
     }
+    .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+    }
+}
+.d3-tip-content {
+    color: $orange;
+    transition: all 0.3s;
 }

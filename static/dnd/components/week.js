@@ -11,11 +11,17 @@ var week = {
         vm.draw = function (ctx, init, content) {
             if (!init) {
                 let data = vm.week();
+                var tip = d3.tip()
+                    .attr("class", "d3-tip")
+                    .offset([-10, 0])
+                    .html(d => `<span class='d3-tip-content'>${d.y < 1? 0: d.y}</span>`);
 
                 var svg = d3.select("svg#pomodoro-week-chart-area"),
                     margin = {top: 20, right: 20, bottom: 30, left: 40},
                     width = +svg.attr("width") - margin.left - margin.right,
                     height = +svg.attr("height") - margin.top - margin.bottom;
+
+                svg.call(tip);
 
                 var x = d3.scaleBand().rangeRound([0, width]).padding(0.3),
                     y = d3.scaleLinear().rangeRound([height, 0]);
@@ -38,7 +44,9 @@ var week = {
                     .attr("x", function(d) { return x(d.x); })
                     .attr("y", function(d) { return y(d.y); })
                     .attr("width", x.bandwidth())
-                    .attr("height", function(d) { return height - y(d.y); });
+                    .attr("height", function(d) { return height - y(d.y); })
+                    .on("mouseover", tip.show)
+                    .on("mouseout", tip.hide)
 
             }
         }

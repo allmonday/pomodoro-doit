@@ -224,7 +224,7 @@ todo.getWeekData = () => {
                 })
             })
             result = result.sort(item => item.x);
-            result = result.map(item => { return { x: moment(item.x).format("MM-DD") ,y: item.y}})
+            result = result.map(item => { return { x: moment(item.x).format("MM-DD") ,y: item.y || 0.02}})
             console.log(result);
             return result;
         })
