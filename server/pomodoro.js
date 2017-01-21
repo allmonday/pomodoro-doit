@@ -119,7 +119,7 @@ dnd.route("/task")
         })
     })
     .delete(function (req, res) {
-        Task.remove({_id: req.body._id})
+        Task.remove({_id: req.body._id, user: req.user._id})
             .then(() => {
                 res.send();
             })
@@ -180,7 +180,7 @@ dnd.route("/today")
                             })
 
                     } else {  // insert at other
-                        Task.findById(targetid)
+                        Task.findOne({_id: targetid, user: req.user._id})
                             .then((target) => { return q.when(target.nextNode); })
                             .then((nextNode) => {
                                 return Task.update({_id: req.body.sourceid}, 
@@ -265,7 +265,7 @@ dnd.route("/today")
 
                                 } else {
                                     // insert into target
-                                    Task.findById(targetid)
+                                    Task.findOne({_id: targetid, user: req.user._id})
                                         .then((target) => {
                                             if (!target.nextNode) { // is last one?
                                                 log("insert end");
@@ -300,7 +300,7 @@ dnd.route("/today")
     })
     .delete(function (req, res) {
         let currentid = req.body.id;
-        Task.findById(currentid)
+        Task.findOne({_id: currentid, user: req.user._id})
             .then((item) => {
                 let nextNode = item.nextNode;
 
@@ -327,7 +327,7 @@ dnd.route("/today/pomodoro/state")
     .post(function (req, res) {  // start pomodoro
         let taskid = req.body.taskId,
             pomodoroId = req.body.pomodoroId;
-        Task.findById(taskid)
+        Task.findOne({_id: taskid, user: req.user._id})
             .then((task) => {
                 let t = task.pomodoros.id(pomodoroId)
                 t.startTime = new Date();
@@ -342,7 +342,7 @@ dnd.route("/today/pomodoro/state")
     .put(function (req, res) {   // cancel , and reset pomorodo
         let taskId = req.body.taskId,
             pomodoroId = req.body.pomodoroId;
-        Task.findById(taskId)
+        Task.findOne({_id: taskId, user: req.user._id})
             .then((task) => {
                 let t = task.pomodoros.id(pomodoroId);
                 t.status = false;
@@ -357,7 +357,7 @@ dnd.route("/today/pomodoro/state")
 dnd.route("/today/pomodoro")
     .post(function (req, res) {  // add pomodoro
         let id = req.body.id;
-        Task.findById(id)
+        Task.findOne({_id: id, user: req.user._id})
             .then((task) => {
                 if (task.pomodoros.length < 5) {
                     task.pomodoros.push({})
@@ -375,7 +375,7 @@ dnd.route("/today/pomodoro")
             pomodoroId = req.body.pomodoroId,
             validTime = req.body.validTime,
             interuptCount = req.body.interuptCount;
-        Task.findById(taskId)
+        Task.findOne({_id: taskId, user: req.user._id})
             .then((task) => {
                 let t = task.pomodoros.id(pomodoroId);
                 t.validTime = validTime;
@@ -388,7 +388,7 @@ dnd.route("/today/pomodoro")
     })
     .delete(function (req, res) {  // delete pomodoro
         let id = req.body.id;
-        Task.findById(id)
+        Task.findOne({_id: id, user: req.user._id})
             .then((task) => {
                 if (task.pomodoros.length === 1) {
                     return q.when();
