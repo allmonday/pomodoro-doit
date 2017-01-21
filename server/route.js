@@ -45,7 +45,7 @@ router.get("/logout", function (req, res) {
 router.get("/signup", function (req, res) {
     var messages = req.flash("error");
     res.render("signup", {
-        messages: messages
+        messages: messages || []
     });
 });
 
@@ -77,9 +77,9 @@ router.post("/signup", function (req, res, next) {
 }));
 
 router.get("/", authenRedirect, function (req, res, next) {
-    var messages = req.flash("error") || [];
+    var messages = req.flash("error")
     res.render("index", {
-        messages: messages
+        messages: messages || []
     });
 });
 
