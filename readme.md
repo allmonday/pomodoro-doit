@@ -23,6 +23,8 @@ npm run dev
 
 几个改进点:
 
+- [ ] redraw 触发优化
+- [ ] 添加 tag 功能, 任务名称加 #tagName# 设置tag, 在task保存/更新的时候 提取保存tag, 显示的时候 ## 内容蓝色高亮
 - [ ] windows 的 ctrl + enter 好像没有效果
 - [ ] safari JSON.stringify 有问题, 需要重写一个signature 生成来描述变化 (本地有问题..线上倒是好的,, 奇怪)
 - [ ] 添加浮层的休息倒计时显示
