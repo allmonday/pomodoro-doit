@@ -250,7 +250,7 @@ widget.controller = function update() {
     }.bind(vm);
     vm.progressMessage = function () {
         if (vm.clock.totalPomodoroToday() === vm.clock.completedPomodoroToday()) {
-            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(vm.clock.totalPomodoroToday())}`;
+            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(25 * vm.clock.totalPomodoroToday())}`;
         } else {
             return `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED`;
         }
