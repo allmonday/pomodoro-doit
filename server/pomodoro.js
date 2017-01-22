@@ -13,6 +13,7 @@ var todayString = require("./utils/today").today;
 var yesterdayGetter = require("./utils/today").yesterday;
 var sortList = require("./utils/sort-today");
 var ensureAuthenticated = require("./utils/ensureAuthenticated");
+var getTags = require("./utils/tags");
 // var log = console.log;
 var log = function () {};
 
@@ -45,6 +46,7 @@ dnd.route("/task")
         }
         if (name) {
             updateObj.name = name;
+            updateObj.tags = getTags(name);
         }
         if (typeof fixedTop === 'boolean') {
             updateObj.fixedTop = fixedTop;
@@ -66,11 +68,13 @@ dnd.route("/task")
                 if (!req.body.name) {
                     return res.status(400).send({error: 'name is empty'});
                 }
+                let tags = getTags(req.body.name);
 
                 if (typeof prevNode === "undefined") {  // just create task 
                     var task = new Task({
                         name: req.body.name,
                         note: "",
+                        tags: tags,
                         pomodoros: [{}],
                         createTime: new Date(),
                         updateTime: new Date(),
@@ -87,6 +91,7 @@ dnd.route("/task")
                         name: req.body.name,
                         note: "",
                         assigned: true,
+                        tags: tags,
                         isHead: true,
                         pomodoros: [{}],
                         date: todayString(),
@@ -100,6 +105,7 @@ dnd.route("/task")
                     var task = new Task({
                         name: req.body.name,
                         note: "",
+                        tags: tags,
                         date: todayString(),
                         assigned: true,
                         pomodoros: [{}],

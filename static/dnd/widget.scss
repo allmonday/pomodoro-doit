@@ -135,6 +135,15 @@ body {
     &:first-child {
       border-top-width: 1px;
     }
+    &_tag {
+      background: #4CAF50;
+      border-radius: 2px;
+      color: #fefefe;
+      font-weight: light;
+      font-size: 12px;
+      padding: 1px 4px;
+      margin-right: 4px;
+    }
     &-content {
       margin-bottom: 0.6em;
       word-wrap: break-word;

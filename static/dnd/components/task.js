@@ -49,6 +49,11 @@ var task = {
                     }
                 })
             ]),
+            m(".pomodoro-task_item_tags", [
+                vm.task.tags().map(item => {
+                    return m("span.pomodoro-task_item_tag", item);
+                })
+            ]),
 
             /* pin */
             m("i.pomodoro-task_item-content-pin.pin.icon", {

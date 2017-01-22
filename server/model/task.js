@@ -17,6 +17,11 @@ var Task = mongoose.Schema({
     prevNode: { type: String, default: ""},
     nextNode: { type: String, default: ""},
     isHead: {type: Boolean, default: false },
+    tags: [{
+        type: String,
+        default: "",
+        trim: true
+    }],
     pomodoros: [
         pomodoroSchema
     ]
