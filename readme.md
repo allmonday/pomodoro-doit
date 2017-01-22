@@ -23,6 +23,8 @@ npm run dev
 
 几个改进点:
 
+- [ ] tag color http://stackoverflow.com/questions/11120840/hash-string-into-rgb-color
+- [ ] tag 添加filter
 - [ ] redraw 触发优化
 - [ ] 添加 tag 功能, 任务名称加 #tagName# 设置tag, 在task保存/更新的时候 提取保存tag, 显示的时候 ## 内容蓝色高亮
 - [ ] windows 的 ctrl + enter 好像没有效果
