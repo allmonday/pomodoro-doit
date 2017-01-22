@@ -248,6 +248,13 @@ widget.controller = function update() {
         }
         todo.move(sourceid, targetid, isInter).then(this.init);
     }.bind(vm);
+    vm.progressMessage = function () {
+        if (vm.clock.totalPomodoroToday() === vm.clock.completedPomodoroToday()) {
+            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(vm.clock.totalPomodoroToday())}`;
+        } else {
+            return `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED`;
+        }
+    }
 };
 
 widget.view = function (vm) {
@@ -274,8 +281,8 @@ widget.view = function (vm) {
             m("#pomodoro-today.ui.segment.orange", [
                 m(".pomodoro-today-list_display_estimated_total.ui.mini.message.orange", { style: 'flex-shrink: 0;' },[
                     vm.offset() === 0 ?
-                        m("span", `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED, PROGRESS: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`):
-                        m("span", moment().subtract(vm.offset(), 'day').format("YYYY-MM-DD")),
+                        m("span", `${vm.progressMessage()}, PROGRESS: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`):
+                        m("span", moment().subtract(vm.offset(), 'day').format("YYYY-MM-DD,dddd")),
 
                     m(".progress", { 
                         style : `width: ${Math.floor(100 * vm.clock.completedPomodoroToday()/vm.clock.totalPomodoroToday())}%;`
