@@ -1,6 +1,7 @@
 var m = require("mithril");
 var todo = require("../model/todo");
 var widget = require("../app");
+var util = require("../utils/util");
 
 var task = {
     controller: function (data) {
@@ -51,7 +52,9 @@ var task = {
             ]),
             m(".pomodoro-task_item_tags", [
                 vm.task.tags().map(item => {
-                    return m("span.pomodoro-task_item_tag", item);
+                    return m("span.pomodoro-task_item_tag", {
+                        style: `background: ${util.hashStringToColor(item)}`
+                    }, item);
                 })
             ]),
 

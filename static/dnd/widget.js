@@ -52,7 +52,8 @@ widget.controller = function update() {
     vm.init();
 
     // flags
-    vm.showNote = m.prop(false);
+    vm.showNote = m.prop(util.getShowItem());
+
     vm.offset = m.prop(0);   // date offset, yesterday == -1
 
     vm.prevDate = function () {
@@ -294,7 +295,9 @@ widget.view = function (vm) {
                         m("button.ui.tiny.icon.button", {
                             // class: `${vm.showNote()? '' : ''}`,
                             onclick: () => {
-                                vm.showNote(!vm.showNote());
+                                var val = !vm.showNote();
+                                vm.showNote(val);
+                                util.setShowItem(val);
                             }
                         },[
                             m("i.icon", {

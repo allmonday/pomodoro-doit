@@ -140,6 +140,40 @@ function getPct(val) {
     return pct;
 }
 
+function setShowItem (bool) {
+    localStorage.setItem('show', bool);
+}
+function getShowItem () {
+    var val = localStorage.getItem("show");
+
+    if (val === null) {
+        return false;
+    }
+    if (val === 'true') {
+        return true;
+    }
+    if (val === 'false') {
+        return false;
+    }
+}
+
+function djb2(str){
+  var hash = 5381;
+  for (var i = 0; i < str.length; i++) {
+    hash = ((hash << 5) + hash) + str.charCodeAt(i); /* hash * 33 + c */
+  }
+  return hash;
+}
+
+function hashStringToColor(str) {
+  var hash = djb2(str);
+  var r = (hash & 0xdd0000) >> 16;
+  var g = (hash & 0x00dd00) >> 8;
+  var b = hash & 0x0000dd;
+  return "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2);
+}
+
+
 module.exports = {
     isFinished,
     isRunning,
@@ -157,4 +191,7 @@ module.exports = {
     socket,
     formatSeconds,
     getPct,
+    setShowItem,
+    getShowItem,
+    hashStringToColor
 }
