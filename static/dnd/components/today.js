@@ -63,7 +63,7 @@ var today = {
                         setTimeout(() => {
                             vm.loading(false);
                             widget.service.subPomo(vm.today._id()); 
-                        }, 200);
+                        }, 100);
                     }
                 }, [
                     m("i.minus.icon"),
@@ -76,7 +76,7 @@ var today = {
                         setTimeout(() => {
                             vm.loading(false);
                             widget.service.addPomo(vm.today._id());
-                        }, 200);
+                        }, 100);
                     }
                     }, [
                     m("i.add.icon"),

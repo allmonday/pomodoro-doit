@@ -38,11 +38,12 @@
         New to us? <a href="/signup" class="">Sign Up</a>
     </div>
 
-    <% messages.forEach(function (msg) { %>
+    <% (messages || []).forEach(function (msg) { %>
         <div class="ui orange message">
             <%= msg %>
         </div>
     <% }) %>
+
 
   </div>
 </div>
@@ -78,6 +79,7 @@
             },
             submitHandler: function(form) {
                 // do other things for a valid form
+                // debugger
                 form.submit();
             }
         });

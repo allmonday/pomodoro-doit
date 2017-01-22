@@ -7,6 +7,11 @@ var passport = require("passport");
 var ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
 var authenRedirect = require("./utils/authenRedirect");
 
+var validateEmail = function(email) {
+    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return re.test(email)
+};
+
 router.get("/user/profile", ensureLoggedIn("/"), function (req, res) {
     res.render("profile");
 })
@@ -45,17 +50,22 @@ router.get("/logout", function (req, res) {
 router.get("/signup", function (req, res) {
     var messages = req.flash("error");
     res.render("signup", {
-        messages: messages
+        messages: messages || []
     });
 });
 
 router.post("/signup", function (req, res, next) {
     var PASSWORD_REG = /^(\w){6,20}$/;
     var username = req.body.username;
+    var email = req.body.email;
     var password = req.body.password;
     if (!PASSWORD_REG.test(password)) {
         req.flash("error", "Password invalid")
         return res.redirect("/signup");
+    }
+    if (!validateEmail(email)) {
+        req.flash("error", "Email invalid")
+        return res.redirect("/signup")
     }
 
     User.findOne({ username: username }, function (err, user) {
@@ -66,7 +76,8 @@ router.post("/signup", function (req, res, next) {
         }
         var newUser = new User({
             username: username,
-            password: password
+            password: password,
+            email: email
         });
         newUser.save(next);
     });
@@ -77,9 +88,9 @@ router.post("/signup", function (req, res, next) {
 }));
 
 router.get("/", authenRedirect, function (req, res, next) {
-    var messages = req.flash("error") || [];
+    var messages = req.flash("error")
     res.render("index", {
-        messages: messages
+        messages: messages || []
     });
 });
 

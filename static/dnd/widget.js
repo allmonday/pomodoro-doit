@@ -13,6 +13,7 @@ var summary = require("./components/summary");
 var taskComponent = require("./components/task");
 var todayComponent = require("./components/today");
 var restComponent = require("./components/rest");
+var weekComponent = require("./components/week");
 // utils
 var util = require("./utils/util");
 var moment = require("moment");
@@ -342,6 +343,8 @@ widget.view = function (vm) {
                     pomodoro: vm.clock.pomodoro,
                     updatePomodoro: vm.updatePomodoro  //cb
                 }),
+
+                m(weekComponent, {key: 1})
             ]),
 
             /* modals */

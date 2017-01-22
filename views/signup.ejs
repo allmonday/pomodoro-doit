@@ -22,6 +22,13 @@
             <div class="ui error message"></div>
             <div class="field">
                 <div class="ui left icon input">
+                    <i class="mail icon"></i>
+                    <input name="email" type="text" class="form-control" placeholder="Email" required autofocus>
+                </div>
+            </div>
+            <div class="ui error message"></div>
+            <div class="field">
+                <div class="ui left icon input">
                     <i class="lock icon"></i>
                     <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
                 </div>
@@ -47,6 +54,7 @@
             <%= msg %>
         </div>
     <% }) %>
+
   </div>
 </div>
 
@@ -77,6 +85,10 @@
                 password: {
                     required: true,
                     pw: true
+                },
+                email: {
+                    required: true,
+                    email: true
                 },
                 password_confirm: {
                     required: true,
