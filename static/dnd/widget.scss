@@ -63,6 +63,7 @@ body {
     width: 500px;
     // child
     flex-grow: 0;
+    padding-bottom: 0;
     &-operate {
       margin-top: 10px;
       padding-bottom: 13px;
@@ -336,7 +337,7 @@ body {
     z-index: 10;
     background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.1));
     &.above {
-      margin-bottom: 20px;
+      margin-bottom: 0px;
       height: 20px;
       margin-top: -9px;
       background: linear-gradient( rgba(255,255,255,0.1), #fff);

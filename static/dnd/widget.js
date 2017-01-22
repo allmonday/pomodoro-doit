@@ -290,8 +290,16 @@ widget.view = function (vm) {
                 ]),
 
                 m("#pomodoro-today-operate", [
-                    m("label.ui.button.mini.disabled", `${vm.offset()} days ago`),
+                    /* today summary */
+                    m(".pomodoro-today-list_summary.mini.ui.button.orange", {
+                        style: 'flex-shrink: 0;', 
+                        onclick: widget.service.summary 
+                    }, [
+                        m("i.icon.book"),
+                        m("span", "summary")
+                    ]),
                     m("#pomodoro-today-operate_group", [
+                        m("label.ui.button.mini.disabled", `${vm.offset()} days ago`),
                         m("button.ui.button.mini", { onclick: vm.prevDate }, "<"),
                         m("button.ui.button.mini.orange", { onclick: vm.backToday }, "Today"),
                         m("button.ui.button.mini", { 
@@ -311,7 +319,7 @@ widget.view = function (vm) {
                                 class: `${vm.showNote()? 'compress' : 'expand'}`,
                             })
                         ]),
-                    ])
+                    ]),
                 ]),
 
                 m(".pomodoro-util_cover"),
@@ -335,14 +343,6 @@ widget.view = function (vm) {
 
                 m(".pomodoro-util_cover.above"),
 
-                /* today summary */
-                m(".pomodoro-today-list_summary.ui.button.orange", {
-                    style: 'flex-shrink: 0;', 
-                    onclick: widget.service.summary 
-                }, [
-                    m("i.icon.book"),
-                    m("span", "summary")
-                ])
             ]),
 
             /* clock */
