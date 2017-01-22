@@ -105,6 +105,13 @@ function dragdrop(element, options) {
 	}
 }
 
+function dragIgnore (element) {
+    element.addEventListener("dragover", deactivate)
+    element.addEventListener("dragleave", deactivate)
+    element.addEventListener("dragend", deactivate)
+    function deactivate(e) {}
+}
+
 function calTomorrowTimeout() {
     let tomorrow = moment().add(1, 'day');
     let year = tomorrow.year();
@@ -193,5 +200,6 @@ module.exports = {
     getPct,
     setShowItem,
     getShowItem,
-    hashStringToColor
+    hashStringToColor,
+    dragIgnore
 }

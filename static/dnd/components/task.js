@@ -31,7 +31,8 @@ var task = {
         return m(".pomodoro-task_item.ui.segment", {
             class: `${vm.task.fixedTop() ? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''} ${vm.sending()? 'loading': ''}`,
             draggable: vm.offset() === 0,
-            ondragstart: widget.service.dragstart.bind(vm, vm.task)
+            ondrop: e => e.preventDefault(),
+            ondragstart: widget.service.dragstart.bind(vm, vm.task),
         },[
             // m("p.pomodoro-task_item-content", {
             // }, `${vm.task.assigned()? '( yesterday )': ''} ${vm.task.name()}`),
