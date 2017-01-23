@@ -1,6 +1,12 @@
 <% include _header %>
-    <div class="" style="height: 100%;">
-        <div class="ui fixed inverted menu">
+    <style>
+        .ui.fixed.menu .item {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+    </style>
+    <div class="pomodoro-headers" style="height: 100%;">
+        <div class="ui fixed menu">
             <div class="header item">
                 <img src='/imgs/tomato.svg' class="image">
                 POMODORO DOIT!
@@ -20,7 +26,7 @@
             -->
 
             <div class="item right">
-                <a href="/logout">Log out</a>
+                <a href="/logout" style="color: rgba(0,0,0,.87);">Log out</a>
             </div>
         </div>
 

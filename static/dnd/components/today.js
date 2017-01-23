@@ -33,6 +33,13 @@ var today = {
 
             m(".pomodoro-today-list_display", [
                 m("p.pomodoro-today-list_display_name", `${vm.today.name()}`),
+                m(".pomodoro-task_item_tags", [
+                    vm.today.tags().map(item => {
+                        return m("span.pomodoro-task_item_tag", {
+                            style: `background: ${util.hashStringToColor(item)}`
+                        }, item);
+                    })
+                ]),
                 vm.today.note() && vm.showNote() ?  m(".ui.pomodoro-today-list_display_note", [
                     m("div", m.trust(markdown.toHTML(vm.today.note())))
                 ]) : m("div"),

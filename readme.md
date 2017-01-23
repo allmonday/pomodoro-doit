@@ -23,22 +23,21 @@ npm run dev
 
 几个改进点:
 
-- [ ] tag color http://stackoverflow.com/questions/11120840/hash-string-into-rgb-color
 - [ ] tag 添加filter
 - [ ] redraw 触发优化
-- [ ] 添加 tag 功能, 任务名称加 #tagName# 设置tag, 在task保存/更新的时候 提取保存tag, 显示的时候 ## 内容蓝色高亮
 - [ ] windows 的 ctrl + enter 好像没有效果
 - [ ] safari JSON.stringify 有问题, 需要重写一个signature 生成来描述变化 (本地有问题..线上倒是好的,, 奇怪)
-- [ ] 添加浮层的休息倒计时显示
-- [ ] 数据显示调研, 使用svg(d3?) 或者其他
     - calender: http://bl.ocks.org/mbostock/4063318
 - [ ] 上https
 - [ ] nginx 优化访问
-- [ ] 添加周为单位的统计查看
-- [ ] timer 上限改为10 (待议, 可配置吧)
 - [ ] 统计功能 (不然一天白忙活, 没个总结)
-- [ ] 添加优先级按钮 (low normal high, 还是挺重要的/ 改为添加置顶功能
 - [ ] mongo 添加账号
+- [x] 添加优先级按钮 (low normal high, 还是挺重要的/ 改为添加置顶功能
+- [x] 数据显示调研, 使用svg(d3?) 或者其他
+- [x] 添加周为单位的统计查看
+- [x] 添加浮层的休息倒计时显示
+- [x] 添加 tag 功能, 任务名称加 #tagName# 设置tag, 在task保存/更新的时候 提取保存tag, 显示的时候 ## 内容蓝色高亮
+- [x] tag color http://stackoverflow.com/questions/11120840/hash-string-into-rgb-color
 - [x] 检查 nextNode 不存在的原因 (因为查询的时候没有加入user._id 的限制, 所以差错了.)
 - [x] 添加限制条件
 - [x] scroll 有点卡, 找找原因,  transform: translateZ(0);

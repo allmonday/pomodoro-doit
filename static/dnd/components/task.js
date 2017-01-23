@@ -1,6 +1,7 @@
 var m = require("mithril");
 var todo = require("../model/todo");
 var widget = require("../app");
+var util = require("../utils/util");
 
 var task = {
     controller: function (data) {
@@ -30,7 +31,8 @@ var task = {
         return m(".pomodoro-task_item.ui.segment", {
             class: `${vm.task.fixedTop() ? 'teal': ''} ${ vm.task.assigned()? 'assigned': ''} ${vm.sending()? 'loading': ''}`,
             draggable: vm.offset() === 0,
-            ondragstart: widget.service.dragstart.bind(vm, vm.task)
+            ondrop: e => e.preventDefault(),
+            ondragstart: widget.service.dragstart.bind(vm, vm.task),
         },[
             // m("p.pomodoro-task_item-content", {
             // }, `${vm.task.assigned()? '( yesterday )': ''} ${vm.task.name()}`),
@@ -51,7 +53,9 @@ var task = {
             ]),
             m(".pomodoro-task_item_tags", [
                 vm.task.tags().map(item => {
-                    return m("span.pomodoro-task_item_tag", item);
+                    return m("span.pomodoro-task_item_tag", {
+                        style: `background: ${util.hashStringToColor(item)}`
+                    }, item);
                 })
             ]),
 

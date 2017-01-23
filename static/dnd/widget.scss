@@ -20,7 +20,7 @@ body {
 
 #pomodoro-app {
   height: 100%;
-  padding-top: 55px;
+  padding-top: 36px;
   & .hide {
     display: none;
   }
@@ -48,6 +48,7 @@ body {
     width: 400px;
 
     &_items {
+      padding: 1px;
       &::-webkit-scrollbar { width: 0 !important }
       transform: translateZ(0);
       margin-top: 0;
@@ -63,6 +64,7 @@ body {
     width: 500px;
     // child
     flex-grow: 0;
+    padding-bottom: 0;
     &-operate {
       margin-top: 10px;
       padding-bottom: 13px;
@@ -71,6 +73,7 @@ body {
       }
     }
     &-list {
+      padding: 1px;
       transform: translateZ(0);
       flex-grow: 1;
       margin-top: 0;
@@ -136,19 +139,20 @@ body {
       border-top-width: 1px;
     }
     &_tag {
-      background: #4CAF50;
-      border-radius: 2px;
-      color: #fefefe;
+      background: #4caf50;
+      border-radius: 3px;
+      color: #fff;
       font-weight: light;
       font-size: 12px;
-      padding: 1px 4px;
       margin-right: 4px;
+      line-height: 1.1em;
+      padding: 1px 5px;
     }
     &-content {
       margin-bottom: 0.6em;
       word-wrap: break-word;
       word-break: normal;
-
+      margin-right: 30px;
       &-pin.icon.pin {
         transition-property: opacity;
         transition-duration: 1s;
@@ -167,7 +171,7 @@ body {
       }
       &-edit {
         cursor: pointer;
-        width: 190px;
+        width: 100%;
         padding: 5px;
         &:focus {
           outline: 1px solid #ececec;
@@ -335,7 +339,7 @@ body {
     z-index: 10;
     background: linear-gradient(to bottom, #fff, rgba(255,255,255,0.1));
     &.above {
-      margin-bottom: 20px;
+      margin-bottom: 0px;
       height: 20px;
       margin-top: -9px;
       background: linear-gradient( rgba(255,255,255,0.1), #fff);

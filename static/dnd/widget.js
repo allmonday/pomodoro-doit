@@ -52,7 +52,8 @@ widget.controller = function update() {
     vm.init();
 
     // flags
-    vm.showNote = m.prop(false);
+    vm.showNote = m.prop(util.getShowItem());
+
     vm.offset = m.prop(0);   // date offset, yesterday == -1
 
     vm.prevDate = function () {
@@ -247,6 +248,13 @@ widget.controller = function update() {
         }
         todo.move(sourceid, targetid, isInter).then(this.init);
     }.bind(vm);
+    vm.progressMessage = function () {
+        if (vm.clock.totalPomodoroToday() === vm.clock.completedPomodoroToday()) {
+            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(25 * vm.clock.totalPomodoroToday())}`;
+        } else {
+            return `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED`;
+        }
+    }
 };
 
 widget.view = function (vm) {
@@ -273,8 +281,8 @@ widget.view = function (vm) {
             m("#pomodoro-today.ui.segment.orange", [
                 m(".pomodoro-today-list_display_estimated_total.ui.mini.message.orange", { style: 'flex-shrink: 0;' },[
                     vm.offset() === 0 ?
-                        m("span", `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED, PROGRESS: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`):
-                        m("span", moment().subtract(vm.offset(), 'day').format("YYYY-MM-DD")),
+                        m("span", `${vm.progressMessage()}, PROGRESS: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`):
+                        m("span", moment().subtract(vm.offset(), 'day').format("YYYY-MM-DD,dddd")),
 
                     m(".progress", { 
                         style : `width: ${Math.floor(100 * vm.clock.completedPomodoroToday()/vm.clock.totalPomodoroToday())}%;`
@@ -282,8 +290,16 @@ widget.view = function (vm) {
                 ]),
 
                 m("#pomodoro-today-operate", [
-                    m("label.ui.button.mini.disabled", `${vm.offset()} days ago`),
+                    /* today summary */
+                    m(".pomodoro-today-list_summary.mini.ui.button.orange", {
+                        style: 'flex-shrink: 0;', 
+                        onclick: widget.service.summary 
+                    }, [
+                        m("i.icon.book"),
+                        m("span", "summary")
+                    ]),
                     m("#pomodoro-today-operate_group", [
+                        m("label.ui.button.mini.disabled", `${vm.offset()} days ago`),
                         m("button.ui.button.mini", { onclick: vm.prevDate }, "<"),
                         m("button.ui.button.mini.orange", { onclick: vm.backToday }, "Today"),
                         m("button.ui.button.mini", { 
@@ -294,14 +310,16 @@ widget.view = function (vm) {
                         m("button.ui.tiny.icon.button", {
                             // class: `${vm.showNote()? '' : ''}`,
                             onclick: () => {
-                                vm.showNote(!vm.showNote());
+                                var val = !vm.showNote();
+                                vm.showNote(val);
+                                util.setShowItem(val);
                             }
                         },[
                             m("i.icon", {
                                 class: `${vm.showNote()? 'compress' : 'expand'}`,
                             })
                         ]),
-                    ])
+                    ]),
                 ]),
 
                 m(".pomodoro-util_cover"),
@@ -325,14 +343,6 @@ widget.view = function (vm) {
 
                 m(".pomodoro-util_cover.above"),
 
-                /* today summary */
-                m(".pomodoro-today-list_summary.ui.button.orange", {
-                    style: 'flex-shrink: 0;', 
-                    onclick: widget.service.summary 
-                }, [
-                    m("i.icon.book"),
-                    m("span", "summary")
-                ])
             ]),
 
             /* clock */
