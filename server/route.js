@@ -6,6 +6,7 @@ var router = express.Router();
 var passport = require("passport");
 var ensureLoggedIn = require("connect-ensure-login").ensureLoggedIn;
 var authenRedirect = require("./utils/authenRedirect");
+var ensureAuthenticated = require("./utils/ensureAuthenticated");
 
 var validateEmail = function(email) {
     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -86,6 +87,27 @@ router.post("/signup", function (req, res, next) {
     failureRedirect: "/signup",
     failureFlash: true
 }));
+
+router.post("/user/password", ensureAuthenticated, function (req, res) {
+    var PASSWORD_REG = /^(\w){6,20}$/;
+    var password = req.body.new;
+    if (!PASSWORD_REG.test(password)) {
+        return res.status(400).send({ error: "password invalid"});
+    }
+    console.log("save it")
+    User.findById(req.user._id).then(user => {
+        user.email = user.email || "default@default.com";
+        user.password = password;
+        return user.save();
+    }).then(() => {
+        console.log("success");
+        res.send({ success: true})
+    }, (err) => {
+        console.error(err);
+        res.status(400).send(err);
+    })
+})
+
 
 router.get("/", authenRedirect, function (req, res, next) {
     var messages = req.flash("error")

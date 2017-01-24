@@ -9,7 +9,8 @@ var config = {
         // rxdemo: "./static/rx-demo.js",
         // contact: "./static/component.js",
         // dnd: "./static/dnd.js",
-        'pomodoro': "./static/pomodoro"
+        'pomodoro': "./static/pomodoro",
+        'profile': "./static/profile"
     },
     output:{
         filename: process.env.ENV === 'prod' ? "./static/bundle/[name].[hash].js": "./static/bundle/[name].js"

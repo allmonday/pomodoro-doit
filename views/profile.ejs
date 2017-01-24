@@ -1,23 +1,41 @@
 <% include _header %>
+    <style>
+        .ui.fixed.menu .item {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+        #main-content {
+            padding-top: 80px;
+        }
+    </style>
 
     <div class="" style="height: 100%;">
-        <div class="ui fixed inverted menu">
+        <div class="ui fixed menu">
             <div class="header item">
                 <img src='/imgs/tomato.svg' class="image">
                 POMODORO DOIT!
             </div>
-            <div class="ui simple item">
+
+            <div class="ui simple dropdown item">
                 welcome! <%= currentUser.username %>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a href="/app/pomodoro" class="item">Pomodoro</a>
+                </div>
             </div>
+
             <div class="item right">
-                <a href="/logout">Log out</a>
+                <a href="/logout" style="color: rgba(0,0,0,.87);">Log out</a>
             </div>
         </div>
-
-        <audio id="notice-voice" controls="controls">
-            <source src="/imgs/notice.mp3" type="audio/mpeg">
-            <embed height="100" width="100" src="/imgs/notice.mp3" />
-        </audio>
-
+        <div class="ui container" id="main-content">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <div id="pomodoro-profile"></div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script src="<%= manifest.profile.js.replace(/\.\/static/, '') %>"></script>
 <% include _footer %>
