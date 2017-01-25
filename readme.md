@@ -21,17 +21,27 @@ npm run dev
 感觉还谈不上好用, 一来受制于浏览器页面之内, 无法做到app独立显示在窗口之中, 容易被忽视
 二是番茄用来预估时间的功能没有体现, 要显示出来今天还有多少时间的预估工作量
 
-几个改进点:
+2017-01-25, update:
+经过一阵子的修改, 处于基本可用的状态, 但是这个架构的可扩展性不佳, 如果要加功能, 需要做不小的重构
 
+- 数据库, nosql => sql
+- 后端, node -> node, go, scala, ruby 选一个
+- 前端 typescript + mithril (or React) + Redux
+
+
+## 改进点
+
+- [ ] 设计目标管理页面
+- [ ] windows 的 ctrl + enter 好像没有效果
 - [ ] tag 添加filter
 - [ ] redraw 触发优化
-- [ ] windows 的 ctrl + enter 好像没有效果
 - [ ] safari JSON.stringify 有问题, 需要重写一个signature 生成来描述变化 (本地有问题..线上倒是好的,, 奇怪)
     - calender: http://bl.ocks.org/mbostock/4063318
-- [ ] 上https
 - [ ] nginx 优化访问
 - [ ] 统计功能 (不然一天白忙活, 没个总结)
 - [ ] mongo 添加账号
+- [x] 上https
+- [x] 完善了title 倒计时显示
 - [x] 添加优先级按钮 (low normal high, 还是挺重要的/ 改为添加置顶功能
 - [x] 数据显示调研, 使用svg(d3?) 或者其他
 - [x] 添加周为单位的统计查看
@@ -59,16 +69,15 @@ npm run dev
 - [x] 删除操作弹框确认
 - [x] 添加快捷键
 
-# understanding mithril
 
-# long term todo 
+## 长期计划
 
 - [ ] server 端换个go 试试
 - [ ] react 重构
 - [ ] typescript
 - [ ] use scala as backend
 
-# pomotodo 收费功能清单, 研究下可用性
+## pomotodo 收费功能清单, 研究下可用性
 
 - 重复任务提醒
 - 时钟长度设置
