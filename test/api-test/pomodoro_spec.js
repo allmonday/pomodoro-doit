@@ -45,11 +45,20 @@ describe("APIs of user authentication", function () {
             .end(done)
     });
 
+    it("test signup, error mail syntax", function (done) {  // dont understand..
+        agent
+            .post("/signup")
+            .type("form")
+            .send({password: "123123", username: "tangkikodo", email: "tang@"})
+            .expect("Location", "/signup")
+            .end(done)
+    });
+
     it("test signup", function (done) {  // dont understand..
         agent
             .post("/signup")
             .type("form")
-            .send({password: "123456", username: "tangkikodo"})
+            .send({password: "123456", username: "tangkikodo", email: "tangkikodo@e.com"})
             .expect("Location", "/")
             .end(done)
     });
