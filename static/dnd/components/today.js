@@ -33,7 +33,9 @@ var today = {
             }
         }, [
             vm.showNote()?
-                m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", [
+                m(".pomodoro-today-list_display_estimated.ui.top.left.attached.orange.label", {
+                    class: `${vm.today.finished() ? 'finished':''}`
+                }, [
                     m("i.icon.hourglass.end"),
                     m("span", `${25 * vm.today.pomodoros().length} minutes`)
                 ]):

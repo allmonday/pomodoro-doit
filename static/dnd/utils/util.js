@@ -65,10 +65,10 @@ function notifyMe(name) {
   if (Notification.permission !== "granted")
     Notification.requestPermission();
   else {
-    var notification = new Notification('Times UP!', {
+    var notification = new Notification('Take a break!', {
     //   requireInteraction: true,
       icon: '/imgs/tomato.png',
-      body: `Take a break~`,
+      body: name,
     });
     notification.onclick = function () {
         window.focus(); 
