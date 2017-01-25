@@ -66,7 +66,7 @@ function notifyMe(name) {
     Notification.requestPermission();
   else {
     var notification = new Notification('Times UP!', {
-      requireInteraction: true,
+    //   requireInteraction: true,
       icon: '/imgs/tomato.png',
       body: `Take a break~`,
     });
