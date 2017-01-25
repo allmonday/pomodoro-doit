@@ -271,9 +271,9 @@ body {
     &_img {
       height: 36px;
     }
-    &_note.ui.segment {
+    &_note {
       margin-top: 1em;
-      margin-bottom: 2em;
+      margin-bottom: 1em;
     }
     &_estimated_total.ui.message {
       text-align: center;
@@ -302,10 +302,8 @@ body {
     }
   }
   &_timer-edit {
-    &:hover {
-    }
     opacity: 0;
-    transition: opacity 0.3s;
+    // transition: opacity 0.3s;
     position: absolute;
     top: 15px;
     right: 60px;

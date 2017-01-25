@@ -12,6 +12,12 @@ var pomodoro = function (data) {
 	// calculated prop
 	this.runnable = m.prop(data.runnable || false);
 	this.taskId = m.prop(data.taskId || "");
+	this.signature = function () {
+		return [
+			this.runnable(),
+			this.status(),
+		].join("");
+	}
 }
 
 pomodoro.prototype.isFinished = function() {

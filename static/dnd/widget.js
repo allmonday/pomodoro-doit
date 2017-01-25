@@ -333,7 +333,8 @@ widget.view = function (vm) {
                 }, [
                     vm.today().map(function(today) {
                         return m(todayComponent, {
-                            key: `${JSON.stringify(today)}`,
+                            // key: `${JSON.stringify(today)}`,
+                            key: today.signature(),
                             today: today,
                             showNote: vm.showNote,
                             offset: vm.offset,

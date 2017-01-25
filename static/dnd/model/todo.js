@@ -56,6 +56,15 @@ todo.TODAY = function (data) {  // class for today tasks
     this.tags = m.prop(data.tags || []);
 
     // computed prop
+    this.signature = function () {
+        return [
+            this._id(),
+            this.assigned(),
+            this.pomodoros().map(i => i.signature()).join(''),
+            this.tags().join(''),
+            this.note()
+        ].join('')
+    };
     this.finished = m.prop(_.every(data.pomodoros, { status: true }));
 	this.prevNode = m.prop(data.prevNode || "");
     let that = this;

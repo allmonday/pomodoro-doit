@@ -13,6 +13,14 @@ var today = {
         vm.today = data.today
         vm.showNote = data.showNote;
         vm.loading = m.prop(false);
+        vm.save = (e) => {
+            $(e.target).blur();
+            vm.loading(true);
+            setTimeout(() => {
+                widget.service.updateName(vm.today._id(), vm.today.name())
+                vm.loading(false);
+            }, 400);
+        }
     },
     view: function (vm) {
         return m(".pomodoro-today-list_item.ui.segment", {
@@ -32,7 +40,26 @@ var today = {
                 m("div"),
 
             m(".pomodoro-today-list_display", [
-                m("p.pomodoro-today-list_display_name", `${vm.today.name()}`),
+
+                /* editable content */
+                m(".pomodoro-today-list-content", {
+                    draggable: false,
+                    style: 'margin-right: 130px;'
+                }, [
+                    m("input.pomodoro-task_item-content-edit", {
+                        oninput: m.withAttr('value', vm.today.name), 
+                        value: vm.today.name(),
+                        onkeypress: (e) => {
+                            if (e.keyCode === 13) {
+                                vm.save(e);
+                            }
+                        }
+                    })
+                ]),
+                vm.today.note() && vm.showNote() ?  m(".ui.pomodoro-today-list_display_note", [
+                    m("div", m.trust(markdown.toHTML(vm.today.note())))
+                ]) : m("div"),
+                // m("p.pomodoro-today-list_display_name", `${vm.today.name()}`),
                 m(".pomodoro-task_item_tags", [
                     vm.today.tags().map(item => {
                         return m("span.pomodoro-task_item_tag", {
@@ -40,9 +67,6 @@ var today = {
                         }, item);
                     })
                 ]),
-                vm.today.note() && vm.showNote() ?  m(".ui.pomodoro-today-list_display_note", [
-                    m("div", m.trust(markdown.toHTML(vm.today.note())))
-                ]) : m("div"),
             ]),
 
             // if today && not finished  && not running  => show remove button

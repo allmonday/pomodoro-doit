@@ -23,10 +23,10 @@ dnd.all('/*',ensureAuthenticated);
 dnd.route("/task")
     .get(function (req, res) {
         // Task.find({$or: [
-        //             {assigned: false, user: req.user._id},   // unassigned task
-        //             {assigned: true, date: yesterdayGetter(), user: req.user._id}   // 
+        //             {assigned: false, user: req.user.id},   // unassigned task
+        //             {assigned: true, date: yesterdayGetter(), user: req.user.id}   // 
         //         ]})
-        Task.find({assigned: false, user: req.user._id})
+        Task.find({assigned: false, user: req.user.id})
             // .sort({assigned: -1, fixedTop: -1})
             .sort({fixedTop: -1, createTime: 1})
             .then(function (data) {
@@ -58,7 +58,7 @@ dnd.route("/task")
             });
     })
     .post(function (req, res) {
-        Task.count({assigned: false, user: req.user._id}).then((count) => {
+        Task.count({assigned: false, user: req.user.id}).then((count) => {
             if (count >= 20) {
                 return res.status(400).send({error: 'exceed limit of todo'});
 
@@ -125,7 +125,7 @@ dnd.route("/task")
         })
     })
     .delete(function (req, res) {
-        Task.remove({_id: req.body._id, user: req.user._id})
+        Task.remove({_id: req.body._id, user: req.user.id})
             .then(() => {
                 res.send();
             })
@@ -158,7 +158,7 @@ dnd.route("/today")
                     console.log("move in from todo")
                     if (!targetid) {  // try to insert at head
                         console.log("insert at head")
-                        Task.find({date: todayString(), user: req.user._id, isHead: true})
+                        Task.find({date: todayString(), user: req.user.id, isHead: true})
                             .then((items) => { 
                                 // assume today is empty
                                 let varable = {
@@ -186,7 +186,7 @@ dnd.route("/today")
                             })
 
                     } else {  // insert at other
-                        Task.findOne({_id: targetid, user: req.user._id})
+                        Task.findOne({_id: targetid, user: req.user.id})
                             .then((target) => { return q.when(target.nextNode); })
                             .then((nextNode) => {
                                 return Task.update({_id: req.body.sourceid}, 
@@ -255,7 +255,7 @@ dnd.route("/today")
                             })
                             .then(()=>{
                                 if (!targetid) { // is head? (targetid === null)
-                                    Task.findOne({date: todayString(), user: req.user._id, isHead: true})
+                                    Task.findOne({date: todayString(), user: req.user.id, isHead: true})
                                         .then((first) => {
                                             if (first) {
                                                 return q.all([
@@ -271,7 +271,7 @@ dnd.route("/today")
 
                                 } else {
                                     // insert into target
-                                    Task.findOne({_id: targetid, user: req.user._id})
+                                    Task.findOne({_id: targetid, user: req.user.id})
                                         .then((target) => {
                                             if (!target.nextNode) { // is last one?
                                                 log("insert end");
@@ -306,7 +306,7 @@ dnd.route("/today")
     })
     .delete(function (req, res) {
         let currentid = req.body.id;
-        Task.findOne({_id: currentid, user: req.user._id})
+        Task.findOne({_id: currentid, user: req.user.id})
             .then((item) => {
                 let nextNode = item.nextNode;
 
@@ -333,7 +333,7 @@ dnd.route("/today/pomodoro/state")
     .post(function (req, res) {  // start pomodoro
         let taskid = req.body.taskId,
             pomodoroId = req.body.pomodoroId;
-        Task.findOne({_id: taskid, user: req.user._id})
+        Task.findOne({_id: taskid, user: req.user.id})
             .then((task) => {
                 let t = task.pomodoros.id(pomodoroId)
                 t.startTime = new Date();
@@ -348,7 +348,7 @@ dnd.route("/today/pomodoro/state")
     .put(function (req, res) {   // cancel , and reset pomorodo
         let taskId = req.body.taskId,
             pomodoroId = req.body.pomodoroId;
-        Task.findOne({_id: taskId, user: req.user._id})
+        Task.findOne({_id: taskId, user: req.user.id})
             .then((task) => {
                 let t = task.pomodoros.id(pomodoroId);
                 t.status = false;
@@ -363,7 +363,7 @@ dnd.route("/today/pomodoro/state")
 dnd.route("/today/pomodoro")
     .post(function (req, res) {  // add pomodoro
         let id = req.body.id;
-        Task.findOne({_id: id, user: req.user._id})
+        Task.findOne({_id: id, user: req.user.id})
             .then((task) => {
                 if (task.pomodoros.length < 5) {
                     task.pomodoros.push({})
@@ -381,7 +381,7 @@ dnd.route("/today/pomodoro")
             pomodoroId = req.body.pomodoroId,
             validTime = req.body.validTime,
             interuptCount = req.body.interuptCount;
-        Task.findOne({_id: taskId, user: req.user._id})
+        Task.findOne({_id: taskId, user: req.user.id})
             .then((task) => {
                 let t = task.pomodoros.id(pomodoroId);
                 t.validTime = validTime;
@@ -394,7 +394,7 @@ dnd.route("/today/pomodoro")
     })
     .delete(function (req, res) {  // delete pomodoro
         let id = req.body.id;
-        Task.findOne({_id: id, user: req.user._id})
+        Task.findOne({_id: id, user: req.user.id})
             .then((task) => {
                 if (task.pomodoros.length === 1) {
                     return q.when();
@@ -417,7 +417,7 @@ dnd.route("/week")
     .get(function (req, res) {
         var today = moment().toDate();
         var weekAgo = moment().subtract(7, 'day').toDate();
-        var query = {user: req.user._id, pomodoros: { $elemMatch: { status: true, startTime: {$gt: weekAgo, $lt: today} }}}
+        var query = {user: req.user.id, pomodoros: { $elemMatch: { status: true, startTime: {$gt: weekAgo, $lt: today} }}}
         Task.find(query, { pomodoros: 1})
             .then((data) => {
                 res.send(data);
