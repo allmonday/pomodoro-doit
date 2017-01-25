@@ -283,7 +283,6 @@ widget.view = function (vm) {
                     vm.offset() === 0 ?
                         m("span", `${vm.progressMessage()}, PROGRESS: ${vm.clock.completedPomodoroToday()}/${vm.clock.totalPomodoroToday()}.`):
                         m("span", moment().subtract(vm.offset(), 'day').format("YYYY-MM-DD,dddd")),
-
                     m(".progress", { 
                         style : `width: ${Math.floor(100 * vm.clock.completedPomodoroToday()/vm.clock.totalPomodoroToday())}%;`
                     })
@@ -333,12 +332,11 @@ widget.view = function (vm) {
                 }, [
                     vm.today().map(function(today) {
                         return m(todayComponent, {
-                            // key: `${JSON.stringify(today)}`,
-                            key: today.signature(),
-                            today: today,
-                            showNote: vm.showNote,
-                            offset: vm.offset,
-                        });
+                                key: today.signature(),
+                                today: today,
+                                showNote: vm.showNote,
+                                offset: vm.offset,
+                            })
                     })
                 ]),
 

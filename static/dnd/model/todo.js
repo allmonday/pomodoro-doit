@@ -44,9 +44,10 @@ todo.TODO = function (data) {  // class for tasks
 };
 
 todo.TODAY = function (data) {  // class for today tasks
-
+    var all_finished = true;
     var global_has_one_runnable = false;  // for today, flag one runnable pomo is found.
 	data = data || {};
+
 	this._id = m.prop(data._id ||"");
 	this.name = m.prop(data.name || "");
 	this.nextNode = m.prop(data.nextNode || "");
@@ -65,7 +66,6 @@ todo.TODAY = function (data) {  // class for today tasks
             this.note()
         ].join('')
     };
-    this.finished = m.prop(_.every(data.pomodoros, { status: true }));
 	this.prevNode = m.prop(data.prevNode || "");
     let that = this;
     that.isRunning = m.prop(false);
@@ -101,6 +101,8 @@ todo.TODAY = function (data) {  // class for today tasks
             } 
         }
 
+        all_finished = all_finished && pomoInstance.isFinished();  // check all pomo finished
+
         prev.push(pomoInstance);
 
         // calculate count only for today
@@ -109,6 +111,9 @@ todo.TODAY = function (data) {  // class for today tasks
 
         return prev;
 	}, []));
+
+    // this.finished = m.prop(_.every(data.pomodoros, { status: true }));
+    this.finished = m.prop(all_finished);
 };
 
 todo.task = function(date) {

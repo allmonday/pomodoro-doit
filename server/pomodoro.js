@@ -41,10 +41,10 @@ dnd.route("/task")
 
         var updateObj = {};
 
-        if (note) {
+        if (typeof note === 'string') {
             updateObj.note = note;
         }
-        if (name) {
+        if (typeof name === 'string') {
             updateObj.name = name;
             updateObj.tags = getTags(name);
         }
