@@ -6,7 +6,7 @@ var pomodoroSchema = require("./pomodoro");
 
 var Task = mongoose.Schema({
     user: { type: Schema.Types.ObjectId, ref: "User" },
-    date: { type: String, default: ""},
+    date: { type: String, default: "", index: true},
     name: { type: String, required: true},
     note: String,
     fixedTop: { type: Boolean, default: false},   // keep on top
