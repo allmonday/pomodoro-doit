@@ -6,6 +6,9 @@ var pomodoroSchema = new mongoose.Schema({
     startTime: {type: Date , default: "", index: true},
     interuptCount: {type: Number, default: 0 } ,
     validTime: { type: Number, default: 25}
+}, {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
 })
 
 module.exports = pomodoroSchema;

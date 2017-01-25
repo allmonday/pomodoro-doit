@@ -25,6 +25,9 @@ var Task = mongoose.Schema({
     pomodoros: [
         pomodoroSchema
     ]
+}, {
+    toObject: { virtuals: true },
+    toJSON: { virtuals: true }
 })
 
 Task.static("getToday", function (date) {
