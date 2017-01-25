@@ -31,6 +31,7 @@ npm run dev
 
 ## 改进点
 
+- [ ] make it resizable https://github.com/RickStrahl/jquery-resizable
 - [ ] 设计目标管理页面
 - [ ] windows 的 ctrl + enter 好像没有效果
 - [ ] tag 添加filter
