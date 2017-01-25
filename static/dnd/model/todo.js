@@ -216,7 +216,6 @@ todo.getWeekData = () => {
         return prev;
     }, {});
 
-    // console.log(dateRange);
     return m.request({method: 'get', url: "/api/pomodoro/week"}).then((data) => {
             return data.reduce((prev, item) => {
                 return prev.concat(item.pomodoros.filter((item) => { return item.status === true}));
@@ -241,7 +240,6 @@ todo.getWeekData = () => {
             })
             result = result.sort(item => item.x);
             result = result.map(item => { return { x: moment(item.x).format("MM-DD") ,y: item.y || 0.02}})
-            console.log(result);
             return result;
         })
 }

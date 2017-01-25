@@ -1,9 +1,10 @@
 var m = require("mithril");
 var util = require("../utils/util");
 var widget = require("../app");
-// var _ = require("lodash");
 
 require("./clock.scss");
+
+var myWorker = new Worker("/timer.js");
 
 var clock = {
     controller: function (data) {
@@ -17,6 +18,7 @@ var clock = {
         vm.progress = m.prop("");
         vm.percent = m.prop("0");
         vm.getPct = util.getPct;
+
         function callRestModal () {
             setTimeout(() => {
                 widget.service.refreshRestClock()
@@ -26,10 +28,10 @@ var clock = {
         }
 
         function count() {
+            util.log("trigger count");
             if (typeof vm.data.pomodoro().startTime === "undefined") {
                 return;
             }
-            m.startComputation();
 
             let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
             if (elapsedTime.minutes >= 25)  {
@@ -55,13 +57,17 @@ var clock = {
                 vm.percent(elapsedTime.percent);
                 vm.timeFormatted(elapsedTime.reversedFormatted);
                 document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
-                setTimeout(count, 1000);
+                // setTimeout(count, 1000);
             }
-            m.endComputation();
         }
 
         if (!_.isEmpty(vm.data.pomodoro())) {
-            count();
+            // count();
+            myWorker.onmessage = (e) => {
+                count();
+            }
+        } else {
+            myWorker.onmessage = () => {}
         }
     },
     view: function (ctrl) {
