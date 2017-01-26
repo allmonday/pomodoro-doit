@@ -272,6 +272,7 @@ widget.view = function (vm) {
             /* pomodoro task */
             m("#pomodoro-task.ui.teal.segment", [
                 m(addItem, {addHandler: vm.addTask, addTodayHandler: vm.addTodayTask }),
+                m(".pomodoro-util_cover"),
                 m("#pomodoro-task_items.ui.list", [
                     vm.task()
                         .filter(item => {
