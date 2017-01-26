@@ -213,7 +213,7 @@ todo.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
 
 todo.getWeekData = () => {
 
-    let dateRange = [7, 6, 5, 4, 3, 2, 1].reduce((prev, i) => {
+    let dateRange = [8, 7, 6, 5, 4, 3, 2, 1].reduce((prev, i) => {
         prev[moment().subtract(i, 'day').startOf('day')] = 0;
         return prev;
     }, {});
@@ -227,8 +227,8 @@ todo.getWeekData = () => {
         .then(data => {
             return data.reduce((prev, item) => {
                 let key = moment(item).startOf('day');
-                let val = dateRange[key] || 0;
-                dateRange[key] = val + 1;
+                let val = prev[key] || 0;
+                prev[key] = val + 1;
                 return prev;
             }, dateRange);
         })
@@ -240,7 +240,8 @@ todo.getWeekData = () => {
                     y: value
                 })
             })
-            result = result.sort(item => -moment(item.x).valueOf());
+
+            result = _.sortBy(result, item => moment(item.x).valueOf());
             result = result.map(item => { return { x: moment(item.x).format("MM-DD") ,y: item.y || 0.02}})
             return result;
         })
