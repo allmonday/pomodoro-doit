@@ -33,6 +33,7 @@ todo.runningTask = function () {
 
 todo.TODO = function (data) {  // class for tasks
 	this._id = m.prop(data._id ||"");
+	this.id = m.prop(data.id ||"");
 	this.name = m.prop(data.name || "");
     this.note = m.prop(data.note || "");
     this.assigned = m.prop(data.assigned || false);
@@ -49,6 +50,7 @@ todo.TODAY = function (data) {  // class for today tasks
 	data = data || {};
 
 	this._id = m.prop(data._id ||"");
+	this.id = m.prop(data.id ||"");
 	this.name = m.prop(data.name || "");
 	this.nextNode = m.prop(data.nextNode || "");
     this.note = m.prop(data.note || "");
@@ -238,7 +240,7 @@ todo.getWeekData = () => {
                     y: value
                 })
             })
-            result = result.sort(item => item.x);
+            result = result.sort(item => -moment(item.x).valueOf());
             result = result.map(item => { return { x: moment(item.x).format("MM-DD") ,y: item.y || 0.02}})
             return result;
         })

@@ -11,7 +11,7 @@ describe('Utils', function() {
       expect(today(t)).to.equal("2016-12-05");
     });
 
-    it('should get yester days year-month-date', function() {
+    it('should get yesterdays year-month-date', function() {
       var t = "2016/12/5 12:11:21";
       expect(yesterday(t)).to.equal("2016-12-04");
     });
