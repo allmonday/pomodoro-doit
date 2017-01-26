@@ -4,6 +4,11 @@
             padding-top: 0px;
             padding-bottom: 0px;
         }
+        #pomodoro-app-loading {
+            margin-top: 200px;
+            border: 0!important;
+            box-shadow: inherit!important;
+        }
     </style>
     <div class="pomodoro-headers" style="height: 100%;">
         <div class="ui fixed menu">
@@ -30,7 +35,9 @@
             <embed height="100" width="100" src="/imgs/notice.mp3" />
         </audio>
 
-        <div class="" id="pomodoro-app"></div>
+        <div class="" id="pomodoro-app">
+            <div id="pomodoro-app-loading" class="ui container segment loading"></div>
+        </div>
     </div>
     <script>
 
