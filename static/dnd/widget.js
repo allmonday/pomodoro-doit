@@ -16,7 +16,7 @@ var restComponent = require("./components/rest");
 var weekComponent = require("./components/week");
 // utils
 var util = require("./utils/util");
-var moment = require("moment");
+// var moment = require("moment");
 
 // init
 util.requireNotificationPermission();
