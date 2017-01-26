@@ -142,6 +142,10 @@ body {
       margin-top: 10px;
     }
     &_tag {
+      &.selected {
+        padding: 5px 10px;
+        border-radius: 3px;
+      }
       &:first-child {
         margin-left: 3px;
       }

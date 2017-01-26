@@ -7,6 +7,7 @@ var task = {
     controller: function (data) {
         let vm = this;
         vm.task = data.task;
+        vm.tagName = data.tagName;
         vm.offset = data.offset;
         vm.sending = m.prop(false);
         vm.pin = (e) => {
@@ -54,7 +55,11 @@ var task = {
             m(".pomodoro-task_item_tags", [
                 vm.task.tags().map(item => {
                     return m("span.pomodoro-task_item_tag", {
-                        style: `background: ${util.hashStringToColor(item)}`
+                        class: item === vm.tagName() ? 'selected': '', 
+                        style: `background: ${util.hashStringToColor(item)}`,
+                        onclick: () => {
+                            widget.service.setTagFilter(item);
+                        }
                     }, item);
                 })
             ]),

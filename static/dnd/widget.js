@@ -56,6 +56,15 @@ widget.controller = function update() {
 
     vm.offset = m.prop(0);   // date offset, yesterday == -1
 
+    vm.tagFilter = m.prop("");
+    widget.service.setTagFilter = function (tag) {
+        if (this.tagFilter()) {
+            this.tagFilter("");
+        } else {
+            this.tagFilter(tag);
+        }
+    }.bind(vm);
+
     vm.prevDate = function () {
         vm.offset(vm.offset() + 1) ;
         vm.today = todo.today(moment().subtract(vm.offset(), 'days').format("YYYY-MM-DD"));
@@ -263,13 +272,16 @@ widget.view = function (vm) {
             /* pomodoro task */
             m("#pomodoro-task.ui.teal.segment", [
                 m(addItem, {addHandler: vm.addTask, addTodayHandler: vm.addTodayTask }),
-                m(".pomodoro-util_cover"),
                 m("#pomodoro-task_items.ui.list", [
                     vm.task()
-                        .filter((task) => { return !task.finished();})
+                        .filter(item => {
+                            if (vm.tagFilter() === "") return true;
+                            return item.tags().indexOf(vm.tagFilter()) > -1;
+                        })
                         .map(function (task) {
                             return m(taskComponent, {
                                 task: task, 
+                                tagName: vm.tagFilter,
                                 offset: vm.offset,
                                 key: `${task._id()}${task.fixedTop()}${task.tags().join('')}}`
                             })
