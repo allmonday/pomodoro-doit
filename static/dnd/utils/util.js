@@ -1,5 +1,6 @@
 "use strict";
 // var moment = require("moment");
+
 function isFinished(date, range) {
     range = range || 25;
     if (date) {
@@ -180,6 +181,7 @@ function hashStringToColor(str) {
   return "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2);
 }
 
+var timerWorker = new Worker("/timer.js");
 
 module.exports = {
     isFinished,
@@ -201,5 +203,6 @@ module.exports = {
     setShowItem,
     getShowItem,
     hashStringToColor,
-    dragIgnore
+    dragIgnore,
+    timerWorker  
 }

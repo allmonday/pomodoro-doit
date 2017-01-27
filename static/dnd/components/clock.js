@@ -4,7 +4,6 @@ var widget = require("../app");
 
 require("./clock.scss");
 
-var myWorker = new Worker("/timer.js");
 
 var clock = {
     controller: function (data) {
@@ -57,17 +56,16 @@ var clock = {
                 vm.percent(elapsedTime.percent);
                 vm.timeFormatted(elapsedTime.reversedFormatted);
                 document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
-                // setTimeout(count, 1000);
             }
         }
 
         if (!_.isEmpty(vm.data.pomodoro())) {
             // count();
-            myWorker.onmessage = (e) => {
+            util.timerWorker.onmessage = (e) => {
                 count();
             }
         } else {
-            myWorker.onmessage = () => {}
+            util.timerWorker.onmessage = () => {}
         }
     },
     view: function (ctrl) {
