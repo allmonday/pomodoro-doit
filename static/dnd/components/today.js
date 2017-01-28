@@ -37,7 +37,7 @@ var today = {
                     class: `${vm.today.finished() ? 'finished':''}`
                 }, [
                     m("i.icon.hourglass.end"),
-                    m("span", `${25 * vm.today.pomodoros().length} minutes`)
+                    m("span", `${widget.service.user().range() * vm.today.pomodoros().length} minutes`)
                 ]):
                 m("div"),
 

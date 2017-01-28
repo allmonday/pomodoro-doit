@@ -16,7 +16,6 @@ var restComponent = require("./components/rest");
 var weekComponent = require("./components/week");
 // utils
 var util = require("./utils/util");
-// var moment = require("moment");
 
 // init
 util.requireNotificationPermission();
@@ -32,24 +31,31 @@ widget.controller = function update() {
 
     let vm = this;
 
-    var init = function() {  // initialization function
+    vm.initUser = function initUser() {
+        this.user = todo.user();
+        widget.service.user = this.user;
+    }.bind(vm);
+
+    var initPomo = function() {  // initialization function
         util.log("init widget");
         document.title = util.title;
         this.task = todo.task();
         this.today = todo.today();
         this.clock = todo.runningTask();
+        console.log(util.getRange());
     }
-    widget.service.init = init.bind(vm);
+    vm.init = widget.service.init = initPomo.bind(vm);
 
     util.socket.on("refresh-broadcast", function () {
         console.log('refresh');
         vm.init(); 
     })
+
     util.socket.emit("join", $("#user-name").text());
 
     // initialization
-    vm.init = init.bind(vm);
     vm.init();
+    vm.initUser();
 
     // flags
     vm.showNote = m.prop(util.getShowItem());
@@ -257,11 +263,13 @@ widget.controller = function update() {
         }
         todo.move(sourceid, targetid, isInter).then(this.init);
     }.bind(vm);
+
     vm.progressMessage = function () {
+        let range = widget.service.user().range();
         if (vm.clock.totalPomodoroToday() === vm.clock.completedPomodoroToday()) {
-            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(25 * vm.clock.totalPomodoroToday())}`;
+            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(range * vm.clock.totalPomodoroToday())}`;
         } else {
-            return `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED`;
+            return `${ util.minToHour(range *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED`;
         }
     }
 };

@@ -33,7 +33,7 @@ var clock = {
             }
 
             let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
-            if (elapsedTime.minutes >= 25)  {
+            if (elapsedTime.minutes >= widget.service.user().range())  {
 
                 vm.progress("width: 100%;");
                 vm.timeFormatted('has finished');

@@ -31,6 +31,11 @@ todo.runningTask = function () {
     return running;
 }
 
+todo.USER = function (data) {
+    this.username = m.prop(data.username || "");
+    this.range = m.prop(data.range || 25);
+}
+
 todo.TODO = function (data) {  // class for tasks
 	this._id = m.prop(data._id ||"");
 	this.id = m.prop(data.id ||"");
@@ -117,6 +122,17 @@ todo.TODAY = function (data) {  // class for today tasks
     // this.finished = m.prop(_.every(data.pomodoros, { status: true }));
     this.finished = m.prop(all_finished);
 };
+
+todo.user = function () {
+    return m.request({ method: 'GET', url: '/api/pomodoro/user', type: todo.USER, initialValue: {}}).then(data => {
+        util.setRange(data.range());
+        return data;
+    });
+}
+
+todo.updateRange = function (range) {
+    return m.request({ method: 'PUT', url: '/api/pomodoro/user', data: { range: range}});
+}
 
 todo.task = function(date) {
     return m.request({ method: "GET", url: `/api/pomodoro/task/`, type: todo.TODO, initialValue: []});

@@ -18,6 +18,7 @@ var userSchema = mongoose.Schema({
     createdAt: {type: Date, default: Date.now },
     displayName: String,
     bio: String,
+    range: { type: Number, default: 25, min: 10, max: 60 },
     tasks: [{ type: Schema.Types.ObjectId, ref: 'Task'}],
 })
 

@@ -20,6 +20,24 @@ var log = function () {};
 // all api/dnd is login-required
 dnd.all('/*',ensureAuthenticated);
 
+dnd.route("/user")
+    .get(function (req, res) {
+        return res.send(_.pick(req.user, ['username', 'range']));
+    })
+    .put(function (req, res) {
+        var range = req.body.range;
+        if (range <= 60 && range >= 10) {
+            User.update({_id: req.user.id}, {$set: { range: range}})
+                .then(() => {
+                    return res.send();
+                }, err => {
+                    return res.status(400).send(err);
+                })
+        } else {
+            res.status(400).send({ error: 'out of range'})
+        }
+    })  // update range
+
 dnd.route("/task")
     .get(function (req, res) {
         // Task.find({$or: [
