@@ -434,7 +434,7 @@ dnd.route("/today/pomodoro")
 dnd.route("/week")
     .get(function (req, res) {
         var today = moment().toDate();
-        var weekAgo = moment().subtract(7, 'day').toDate();
+        var weekAgo = moment().subtract(8, 'day').toDate();
         var query = {user: req.user.id, pomodoros: { $elemMatch: { status: true, startTime: {$gt: weekAgo, $lt: today} }}}
         Task.find(query, { pomodoros: 1})
             .then((data) => {
