@@ -1,8 +1,7 @@
 var m = require("mithril");
 var util = require("../utils/util");
 var widget = require("../app");
-
-require("./timer.scss");
+require("./pomodoro.scss");
 
 function choose(key, obj) {
     return obj[key];

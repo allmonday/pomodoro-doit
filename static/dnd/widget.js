@@ -30,6 +30,7 @@ setTimeout(function () {
 widget.controller = function update() {
 
     let vm = this;
+    vm.loading = m.prop(false);
 
     vm.initUser = function initUser() {
         this.user = todo.user();
@@ -69,6 +70,14 @@ widget.controller = function update() {
         } else {
             this.tagFilter(tag);
         }
+    }.bind(vm);
+
+    widget.service.setOffset = function (offset) {
+        if (this.offset() === offset) {
+            return;
+        }
+        this.offset(offset);
+        this.today = todo.today(moment().subtract(this.offset(), 'days').format("YYYY-MM-DD"));
     }.bind(vm);
 
     vm.prevDate = function () {
@@ -224,6 +233,7 @@ widget.controller = function update() {
     };
 
     vm.onchange = widget.service.onchange = function moveTask(item, e) {
+        var that = this;
         let prev = util.isTop(e);
         e.target.classList.remove("over");
         e.stopPropagation();  // ul also has it
@@ -275,7 +285,9 @@ widget.controller = function update() {
 };
 
 widget.view = function (vm) {
-    return m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments", [
+    return m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments.segment", {
+        class: `${ vm.loading() ? 'loading': ''}` 
+    }, [
 
             /* pomodoro task */
             m("#pomodoro-task.ui.teal.segment", [

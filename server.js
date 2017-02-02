@@ -83,9 +83,12 @@ app.get("/app/pomodoro", ensureLoggedIn("/") ,function (req, res) {
     res.render('mithril-dnd');
 })
 
+app.get("/app/diary", ensureLoggedIn("/"), function (req, res) {
+    res.render('diary')
+})
+
 io.on("connection", function (socket) {
     socket.on("refresh", function (roomName) {
-        // console.log('refresh ' + roomName)
         socket.broadcast.to(roomName).emit("refresh-broadcast");
     })
 

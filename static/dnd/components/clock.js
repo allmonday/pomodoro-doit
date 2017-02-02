@@ -84,27 +84,16 @@ var clock = {
                         ])
                     ]),
                 ]),
-                // m(".ui.form", {style: 'overflow: hidden;'}, [
-                //     m(".two.fields", [
-                //         m(".field", [
-                //             m("label", "valid time"),
-                //             m("input[type='number'][max='25'][min='0']", {oninput: m.withAttr('value', ctrl.validTime), value: ctrl.validTime()}),
-
-                //         ]),
-                //         m(".field", [
-                //             m("label", "interupt count"),
-                //             m("input[type='number'][max='3'][min='0']", {oninput: m.withAttr('value', ctrl.interuptCount), value: ctrl.interuptCount()}),
-                //         ]),
-                //     ]),
-                //     m("button.ui.button.mini.orange.right.floated", {onclick: () => {
-                //         ctrl.data.updatePomodoro(ctrl.data.task()._id, ctrl.data.pomodoro()._id, ctrl.validTime(), ctrl.interuptCount())}
-                //     }, "update"),
-                // ])
             ]): m(".pomodoro-clock_empty", [
                 m(".pomodoro-clock-banner", [
-                    m("img[src='/imgs/tomato.svg'].pomodoro-clock-icon"),
-                    m("h2.pomodoro-clock-title", "Pomodoro-DOIT!"),
-                    m(".ui.message.compact", "Todolist-like Pomodoro clock!")
+                    m(".ui.message.compact", {
+                        style: "text-align: left;"
+                    }, [
+                        m("p", "1. create a todo task (today task)"),
+                        m("p", "2. drag todo task into today task area"),
+                        m("p", "3. adjust count of pomodoro (max 5)"),
+                        m("p", "4. click play to start your pomodoro, enjoy"),
+                    ]),
 
                 ])
             ]),

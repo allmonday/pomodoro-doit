@@ -1,0 +1,37 @@
+<% include _header %>
+    <style>
+        .ui.fixed.menu .item {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+        #main-content {
+            padding-top: 80px;
+        }
+    </style>
+
+    <div class="" style="height: 100%;">
+        <div class="ui fixed menu">
+            <div class="header item">
+                <img src='/imgs/tomato.svg' class="image">
+                POMODORO DOIT!
+            </div>
+
+            <div class="ui simple dropdown item">
+                welcome! <%= currentUser.username %>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a href="/app/pomodoro" class="item">Pomodoro</a>
+                </div>
+            </div>
+
+            <div class="item right">
+                <a href="/logout" style="color: rgba(0,0,0,.87);">Log out</a>
+            </div>
+        </div>
+        <div class="ui container" id="main-content">
+            <div id="pomodoro-diary"></div>
+        </div>
+    </div>
+
+    <script src="<%= manifest.diary.js.replace(/\.\/static/, '') %>"></script>
+<% include _footer %>

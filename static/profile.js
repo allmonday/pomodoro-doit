@@ -58,10 +58,10 @@ profile.view = function (vm) {
         ]),
         m(".eight.wide.column", [
             m(".ui.segment", [
-                m(".ui.label.attached.left.top", "set range"),
+                m(".ui.label.attached.left.top", "set range (for each pomodoro)"),
                 m("form.ui.form", [
                     m(".field", [
-                        m("label", "range"),
+                        m("label", "range (minute)"),
                         m("input[name='range'][type='number'][min='10'][max='60'][step='5']", binds(vm.user().range))
                     ]),
                     m(".field", [

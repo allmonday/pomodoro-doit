@@ -258,7 +258,7 @@ todo.getWeekData = () => {
             })
 
             result = _.sortBy(result, item => moment(item.x).valueOf());
-            result = result.map(item => { return { x: moment(item.x).format("MM-DD") ,y: item.y || 0.02}})
+            result = result.map(item => { return { x: moment(item.x).format("YYYY-MM-DD") ,y: item.y || 0.02}})
             return result;
         })
 }
