@@ -293,7 +293,7 @@ widget.view = function (vm) {
             m("#pomodoro-task.ui.teal.segment", [
                 m(addItem, {addHandler: vm.addTask, addTodayHandler: vm.addTodayTask }),
                 m(".pomodoro-util_cover"),
-                m("#pomodoro-task_items.ui.list", [
+                m("#pomodoro-task_items.ui.list", 
                     vm.task()
                         .filter(item => {
                             if (vm.tagFilter() === "") return true;
@@ -307,7 +307,7 @@ widget.view = function (vm) {
                                 key: `${task._id()}${task.fixedTop()}${task.tags().join('')}}`
                             })
                     })
-                ]),
+                ),
             ]),
 
             /* pomodoro today */
@@ -362,7 +362,7 @@ widget.view = function (vm) {
                     config: function (element, isInitialized) { if (!isInitialized) { util.dragdrop(element) } },
                     class: vm.showNote()? '': 'fold'
 
-                }, [
+                }, 
                     vm.today().map(function(today) {
                         return m(todayComponent, {
                                 key: today.signature(),
@@ -371,7 +371,7 @@ widget.view = function (vm) {
                                 offset: vm.offset,
                             })
                     })
-                ]),
+                ),
 
                 m(".pomodoro-util_cover.above"),
 

@@ -15,7 +15,7 @@ var pomo = {
         vm.loading = m.prop(false);
     },
     view: function (vm) {
-        return m(".pomo", [
+        return m(".pomo", 
             vm.task.pomodoros().map(function (pomodoro) {
                 return m(".pomo-item", { 
                     key: pomodoro._id(),
@@ -60,7 +60,7 @@ var pomo = {
                     }),
                 ]);
             })
-        ])
+        )
     }
 }
 
