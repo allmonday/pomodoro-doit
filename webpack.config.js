@@ -10,7 +10,8 @@ var config = {
         // contact: "./static/component.js",
         // dnd: "./static/dnd.js",
         'pomodoro': "./static/pomodoro",
-        'profile': "./static/profile"
+        'profile': "./static/profile",
+        'diary': "./static/diary"
     },
     output:{
         filename: process.env.ENV === 'prod' ? "./static/bundle/[name].[hash].js": "./static/bundle/[name].js"

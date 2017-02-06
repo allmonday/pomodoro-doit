@@ -16,7 +16,6 @@ var restComponent = require("./components/rest");
 var weekComponent = require("./components/week");
 // utils
 var util = require("./utils/util");
-var moment = require("moment");
 
 // init
 util.requireNotificationPermission();
@@ -31,30 +30,55 @@ setTimeout(function () {
 widget.controller = function update() {
 
     let vm = this;
+    vm.loading = m.prop(false);
 
-    var init = function() {  // initialization function
+    vm.initUser = function initUser() {
+        this.user = todo.user();
+        widget.service.user = this.user;
+    }.bind(vm);
+
+    var initPomo = function() {  // initialization function
         util.log("init widget");
         document.title = util.title;
         this.task = todo.task();
         this.today = todo.today();
         this.clock = todo.runningTask();
+        console.log(util.getRange());
     }
-    widget.service.init = init.bind(vm);
+    vm.init = widget.service.init = initPomo.bind(vm);
 
     util.socket.on("refresh-broadcast", function () {
         console.log('refresh');
         vm.init(); 
     })
+
     util.socket.emit("join", $("#user-name").text());
 
     // initialization
-    vm.init = init.bind(vm);
     vm.init();
+    vm.initUser();
 
     // flags
     vm.showNote = m.prop(util.getShowItem());
 
     vm.offset = m.prop(0);   // date offset, yesterday == -1
+
+    vm.tagFilter = m.prop("");
+    widget.service.setTagFilter = function (tag) {
+        if (this.tagFilter()) {
+            this.tagFilter("");
+        } else {
+            this.tagFilter(tag);
+        }
+    }.bind(vm);
+
+    widget.service.setOffset = function (offset) {
+        if (this.offset() === offset) {
+            return;
+        }
+        this.offset(offset);
+        this.today = todo.today(moment().subtract(this.offset(), 'days').format("YYYY-MM-DD"));
+    }.bind(vm);
 
     vm.prevDate = function () {
         vm.offset(vm.offset() + 1) ;
@@ -209,6 +233,7 @@ widget.controller = function update() {
     };
 
     vm.onchange = widget.service.onchange = function moveTask(item, e) {
+        var that = this;
         let prev = util.isTop(e);
         e.target.classList.remove("over");
         e.stopPropagation();  // ul also has it
@@ -248,33 +273,41 @@ widget.controller = function update() {
         }
         todo.move(sourceid, targetid, isInter).then(this.init);
     }.bind(vm);
+
     vm.progressMessage = function () {
+        let range = widget.service.user().range();
         if (vm.clock.totalPomodoroToday() === vm.clock.completedPomodoroToday()) {
-            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(25 * vm.clock.totalPomodoroToday())}`;
+            return `ALL COMPLETED, TOTAL TIME: ${util.minToHour(range * vm.clock.totalPomodoroToday())}`;
         } else {
-            return `${ util.minToHour(25 *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED`;
+            return `${ util.minToHour(range *(vm.clock.totalPomodoroToday() - vm.clock.completedPomodoroToday()))} ESTIMATED`;
         }
     }
 };
 
 widget.view = function (vm) {
-    return m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments", [
+    return m("#pomodoro-container.ui.container.fluid.raised.horizontal.segments.segment", {
+        class: `${ vm.loading() ? 'loading': ''}` 
+    }, [
 
             /* pomodoro task */
             m("#pomodoro-task.ui.teal.segment", [
                 m(addItem, {addHandler: vm.addTask, addTodayHandler: vm.addTodayTask }),
                 m(".pomodoro-util_cover"),
-                m("#pomodoro-task_items.ui.list", [
+                m("#pomodoro-task_items.ui.list", 
                     vm.task()
-                        .filter((task) => { return !task.finished();})
+                        .filter(item => {
+                            if (vm.tagFilter() === "") return true;
+                            return item.tags().indexOf(vm.tagFilter()) > -1;
+                        })
                         .map(function (task) {
                             return m(taskComponent, {
                                 task: task, 
+                                tagName: vm.tagFilter,
                                 offset: vm.offset,
                                 key: `${task._id()}${task.fixedTop()}${task.tags().join('')}}`
                             })
                     })
-                ]),
+                ),
             ]),
 
             /* pomodoro today */
@@ -329,7 +362,7 @@ widget.view = function (vm) {
                     config: function (element, isInitialized) { if (!isInitialized) { util.dragdrop(element) } },
                     class: vm.showNote()? '': 'fold'
 
-                }, [
+                }, 
                     vm.today().map(function(today) {
                         return m(todayComponent, {
                                 key: today.signature(),
@@ -338,7 +371,7 @@ widget.view = function (vm) {
                                 offset: vm.offset,
                             })
                     })
-                ]),
+                ),
 
                 m(".pomodoro-util_cover.above"),
 

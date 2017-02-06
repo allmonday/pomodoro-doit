@@ -12,8 +12,8 @@
         position: absolute!important;
         right: -9px;
         top: 2px;
-    }
-    .tomato.enlarge .pomodoro-today-list_display_img {
-        // height: 46px;
+        .play.icon:before {
+            padding-left: 2px;
+        }
     }
 }

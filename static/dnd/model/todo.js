@@ -31,8 +31,14 @@ todo.runningTask = function () {
     return running;
 }
 
+todo.USER = function (data) {
+    this.username = m.prop(data.username || "");
+    this.range = m.prop(data.range || 25);
+}
+
 todo.TODO = function (data) {  // class for tasks
 	this._id = m.prop(data._id ||"");
+	this.id = m.prop(data.id ||"");
 	this.name = m.prop(data.name || "");
     this.note = m.prop(data.note || "");
     this.assigned = m.prop(data.assigned || false);
@@ -49,6 +55,7 @@ todo.TODAY = function (data) {  // class for today tasks
 	data = data || {};
 
 	this._id = m.prop(data._id ||"");
+	this.id = m.prop(data.id ||"");
 	this.name = m.prop(data.name || "");
 	this.nextNode = m.prop(data.nextNode || "");
     this.note = m.prop(data.note || "");
@@ -115,6 +122,17 @@ todo.TODAY = function (data) {  // class for today tasks
     // this.finished = m.prop(_.every(data.pomodoros, { status: true }));
     this.finished = m.prop(all_finished);
 };
+
+todo.user = function () {
+    return m.request({ method: 'GET', url: '/api/pomodoro/user', type: todo.USER, initialValue: {}}).then(data => {
+        util.setRange(data.range());
+        return data;
+    });
+}
+
+todo.updateRange = function (range) {
+    return m.request({ method: 'PUT', url: '/api/pomodoro/user', data: { range: range}});
+}
 
 todo.task = function(date) {
     return m.request({ method: "GET", url: `/api/pomodoro/task/`, type: todo.TODO, initialValue: []});
@@ -211,7 +229,7 @@ todo.updatePomodoro = (taskId, pomodoroId, validTime, interuptCount) => {
 
 todo.getWeekData = () => {
 
-    let dateRange = [7, 6, 5, 4, 3, 2, 1].reduce((prev, i) => {
+    let dateRange = [7, 6, 5, 4, 3, 2, 1, 0].reduce((prev, i) => {
         prev[moment().subtract(i, 'day').startOf('day')] = 0;
         return prev;
     }, {});
@@ -225,8 +243,8 @@ todo.getWeekData = () => {
         .then(data => {
             return data.reduce((prev, item) => {
                 let key = moment(item).startOf('day');
-                let val = dateRange[key] || 0;
-                dateRange[key] = val + 1;
+                let val = prev[key] || 0;
+                prev[key] = val + 1;
                 return prev;
             }, dateRange);
         })
@@ -238,8 +256,9 @@ todo.getWeekData = () => {
                     y: value
                 })
             })
-            result = result.sort(item => item.x);
-            result = result.map(item => { return { x: moment(item.x).format("MM-DD") ,y: item.y || 0.02}})
+
+            result = _.sortBy(result, item => moment(item.x).valueOf());
+            result = result.map(item => { return { x: moment(item.x).format("YYYY-MM-DD") ,y: item.y || 0.02}})
             return result;
         })
 }

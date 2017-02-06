@@ -1,8 +1,7 @@
 var m = require("mithril");
 var util = require("../utils/util");
 var widget = require("../app");
-
-require("./timer.scss");
+require("./pomodoro.scss");
 
 function choose(key, obj) {
     return obj[key];
@@ -16,7 +15,7 @@ var pomo = {
         vm.loading = m.prop(false);
     },
     view: function (vm) {
-        return m(".pomo", [
+        return m(".pomo", 
             vm.task.pomodoros().map(function (pomodoro) {
                 return m(".pomo-item", { 
                     key: pomodoro._id(),
@@ -61,7 +60,7 @@ var pomo = {
                     }),
                 ]);
             })
-        ])
+        )
     }
 }
 

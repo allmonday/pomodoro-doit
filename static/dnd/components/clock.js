@@ -4,7 +4,6 @@ var widget = require("../app");
 
 require("./clock.scss");
 
-var myWorker = new Worker("/timer.js");
 
 var clock = {
     controller: function (data) {
@@ -34,7 +33,7 @@ var clock = {
             }
 
             let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
-            if (elapsedTime.minutes >= 25)  {
+            if (elapsedTime.minutes >= widget.service.user().range())  {
 
                 vm.progress("width: 100%;");
                 vm.timeFormatted('has finished');
@@ -57,17 +56,16 @@ var clock = {
                 vm.percent(elapsedTime.percent);
                 vm.timeFormatted(elapsedTime.reversedFormatted);
                 document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
-                // setTimeout(count, 1000);
             }
         }
 
         if (!_.isEmpty(vm.data.pomodoro())) {
             // count();
-            myWorker.onmessage = (e) => {
+            util.timerWorker.onmessage = (e) => {
                 count();
             }
         } else {
-            myWorker.onmessage = () => {}
+            util.timerWorker.onmessage = () => {}
         }
     },
     view: function (ctrl) {
@@ -86,27 +84,16 @@ var clock = {
                         ])
                     ]),
                 ]),
-                // m(".ui.form", {style: 'overflow: hidden;'}, [
-                //     m(".two.fields", [
-                //         m(".field", [
-                //             m("label", "valid time"),
-                //             m("input[type='number'][max='25'][min='0']", {oninput: m.withAttr('value', ctrl.validTime), value: ctrl.validTime()}),
-
-                //         ]),
-                //         m(".field", [
-                //             m("label", "interupt count"),
-                //             m("input[type='number'][max='3'][min='0']", {oninput: m.withAttr('value', ctrl.interuptCount), value: ctrl.interuptCount()}),
-                //         ]),
-                //     ]),
-                //     m("button.ui.button.mini.orange.right.floated", {onclick: () => {
-                //         ctrl.data.updatePomodoro(ctrl.data.task()._id, ctrl.data.pomodoro()._id, ctrl.validTime(), ctrl.interuptCount())}
-                //     }, "update"),
-                // ])
             ]): m(".pomodoro-clock_empty", [
                 m(".pomodoro-clock-banner", [
-                    m("img[src='/imgs/tomato.svg'].pomodoro-clock-icon"),
-                    m("h2.pomodoro-clock-title", "Pomodoro-DOIT!"),
-                    m(".ui.message.compact", "Todolist-like Pomodoro clock!")
+                    m(".ui.message.compact", {
+                        style: "text-align: left;"
+                    }, [
+                        m("p", "1. create a todo task (today task)"),
+                        m("p", "2. drag todo task into today task area"),
+                        m("p", "3. adjust count of pomodoro (max 5)"),
+                        m("p", "4. click play to start your pomodoro, enjoy"),
+                    ]),
 
                 ])
             ]),

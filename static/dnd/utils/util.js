@@ -1,7 +1,18 @@
 "use strict";
 // var moment = require("moment");
+
+var _range = 25;
+
+var setRange = function(newRange) {
+    _range = newRange;
+}
+
+var getRange = function () {
+    return _range;
+}
+
 function isFinished(date, range) {
-    range = range || 25;
+    range = range || _range;
     if (date) {
         return moment(date).add(range, 'minute').isBefore();
     } else {
@@ -10,7 +21,7 @@ function isFinished(date, range) {
 }
 
 function isRunning(status, date, range) {
-    range = range || 25;
+    range = range || _range;
     if (!status) {
         return false;
     } else {
@@ -28,10 +39,10 @@ function prefix_zero(num) {
 function elapsed(date) {
     let minutes = moment().diff(date, 'minute'); 
     let seconds = moment().diff(date, 'second');
-    let percent = seconds / (25 * 60) * 100;
+    let percent = seconds / (_range * 60) * 100;
     let left_seconds = seconds - 60 * minutes;
 
-    let rev_seconds = moment(date).add(25, 'minute').diff(new Date, 'second');
+    let rev_seconds = moment(date).add(_range, 'minute').diff(new Date, 'second');
     let reversed_seconds = rev_seconds % 60;
     let reversed_minutes = Math.floor(rev_seconds / 60);
 
@@ -180,6 +191,7 @@ function hashStringToColor(str) {
   return "#" + ("0" + r.toString(16)).substr(-2) + ("0" + g.toString(16)).substr(-2) + ("0" + b.toString(16)).substr(-2);
 }
 
+var timerWorker = new Worker("/timer.js");
 
 module.exports = {
     isFinished,
@@ -201,5 +213,8 @@ module.exports = {
     setShowItem,
     getShowItem,
     hashStringToColor,
-    dragIgnore
+    dragIgnore,
+    timerWorker,
+    setRange,
+    getRange
 }

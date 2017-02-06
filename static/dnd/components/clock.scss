@@ -31,12 +31,12 @@
 }
 
 #pomodoro-pct {
-//   transform: translateZ(0);
+  transform: translateZ(0);
   display: block;
   height: 200px;
   width: 200px;
   margin: 2em auto;
-  box-shadow: 0 0 0.2em #aaa;
+//   box-shadow: 0 0 0.2em #aaa;
   border-radius: 100%;
   position: relative;
 
@@ -47,7 +47,7 @@
     width: 160px;
     left: 50%;
     top: 50%;
-    box-shadow: inset 0 0 0.2em #ccc;
+    // box-shadow: inset 0 0 0.2em #ccc;
     content: attr(data-pct);
     margin-top: -80px;
     margin-left: -80px;

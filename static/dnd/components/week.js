@@ -1,6 +1,7 @@
 var m = require("mithril");
 var util = require("../utils/util");
 var todo = require("../model/todo");
+var widget = require("../app");
 require("./week.scss");
 
 var week = {
@@ -29,7 +30,7 @@ var week = {
                 var g = svg.append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-                x.domain(data.map(function(d) { return d.x; }));
+                x.domain(data.map(function(d) { return d.x.slice(5); }));
                 y.domain([0, d3.max(data, function(d) { return d.y > 2? d.y: 2; })]);
 
                 g.append("g")
@@ -41,7 +42,11 @@ var week = {
                     .data(data)
                     .enter().append("rect")
                     .attr("class", "bar")
-                    .attr("x", function(d) { return x(d.x); })
+                    .on("click", function (d) {
+                        var diff = moment().diff(moment(d.x), 'days');
+                        widget.service.setOffset(diff);
+                    })
+                    .attr("x", function(d) { return x(d.x.slice(5)); })
                     .attr("y", function(d) { return y(d.y); })
                     .attr("width", x.bandwidth())
                     .attr("height", function(d) { return height - y(d.y); })

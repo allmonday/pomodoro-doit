@@ -222,6 +222,29 @@ describe("APIs of task creation and pomodoro add & sub ", function () {
             })
             .end(done);
     })
+    it("update range", function (done) {
+        agent.put("/api/pomodoro/user")
+            .send({ range: 40 })
+            .expect(200)
+            .end(done);
+    })
+    it("range shoud be 40", function (done) {
+        agent.get("/api/pomodoro/user")
+            .expect(200)
+            .expect(function (res) {
+                assert.equal(res.body.range, 40)
+            })
+            .end(done);
+    })
+    it("update range out of 60", function (done) {
+        agent.put("/api/pomodoro/user")
+            .send({ range: 70 })
+            .expect(400)
+            .expect(function (res) {
+                assert.equal(res.body.error, 'out of range')
+            })
+            .end(done);
+    })
 })
 
 describe("APIs access control: not logged in", function () {
