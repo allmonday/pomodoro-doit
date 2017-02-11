@@ -34,14 +34,12 @@ var clock = {
 
             let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
             if (elapsedTime.minutes < widget.service.user().range())  {
-                if (window.blurred) {
-                    // ignore refresh callback if tab deactived
-                    return;
-                }
-                vm.progress(`width: ${elapsedTime.percent}%;`);
-                vm.percent(elapsedTime.percent);
-                vm.timeFormatted(elapsedTime.reversedFormatted);
                 document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
+                if (!window.blurred) {
+                    vm.progress(`width: ${elapsedTime.percent}%;`);
+                    vm.percent(elapsedTime.percent);
+                    vm.timeFormatted(elapsedTime.reversedFormatted);
+                }
 
             } else {
 
