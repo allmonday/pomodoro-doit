@@ -380,13 +380,11 @@ widget.view = function (vm) {
             /* clock */
             m("#pomodoro-clock.ui.segment", [
                 m(clock, {
-                    key: JSON.stringify(vm.clock.pomodoro),
                     task: vm.clock.task,
                     pomodoro: vm.clock.pomodoro,
                     updatePomodoro: vm.updatePomodoro  //cb
                 }),
-
-                m(weekComponent, {key: 1})
+                m(weekComponent)
             ]),
 
             /* modals */

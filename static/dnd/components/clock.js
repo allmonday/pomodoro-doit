@@ -50,7 +50,9 @@ var clock = {
                 document.title = util.title;
                 $("#notice-voice")[0].play();
 
-                util.notifyMe(vm.data.task().name);
+                if (window.blurred) {
+                    util.notifyMe(vm.data.task().name);
+                }
                 widget.service.init();
 
                 if (window.blurred) {
