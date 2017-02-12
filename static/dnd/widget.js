@@ -35,6 +35,7 @@ widget.controller = function update() {
     vm.initUser = function initUser() {
         this.user = todo.user();
         widget.service.user = this.user;
+        this.week = todo.getWeekData();
     }.bind(vm);
 
     var initPomo = function() {  // initialization function
@@ -384,7 +385,7 @@ widget.view = function (vm) {
                     pomodoro: vm.clock.pomodoro,
                     updatePomodoro: vm.updatePomodoro  //cb
                 }),
-                m(weekComponent)
+                m(weekComponent, {week: vm.week})
             ]),
 
             /* modals */

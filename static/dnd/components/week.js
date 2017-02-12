@@ -5,10 +5,10 @@ var widget = require("../app");
 require("./week.scss");
 
 var week = {
-    controller: function () {
+    controller: function (data) {
         util.log("week init");
         let vm = this;
-        vm.week = todo.getWeekData();
+        vm.week = data.week;
         vm.draw = function (ctx, init, content) {
             if (!init) {
                 let data = vm.week();
