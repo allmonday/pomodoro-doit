@@ -27,7 +27,6 @@ var clock = {
         }
 
         function count() {
-            // util.log("trigger count");
             if (typeof vm.data.pomodoro().startTime === "undefined") {
                 return;
             }
@@ -36,9 +35,11 @@ var clock = {
             if (elapsedTime.minutes < widget.service.user().range())  {
                 document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
                 if (!window.blurred) {
+                    util.log("trigger count");
                     vm.progress(`width: ${elapsedTime.percent}%;`);
                     vm.percent(elapsedTime.percent);
                     vm.timeFormatted(elapsedTime.reversedFormatted);
+                    m.redraw();
                 }
 
             } else {
