@@ -27,13 +27,21 @@ var clock = {
         }
 
         function count() {
-            util.log("trigger count");
+            // util.log("trigger count");
             if (typeof vm.data.pomodoro().startTime === "undefined") {
                 return;
             }
 
             let elapsedTime = util.elapsed(vm.data.pomodoro().startTime);
-            if (elapsedTime.minutes >= widget.service.user().range())  {
+            if (elapsedTime.minutes < widget.service.user().range())  {
+                document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
+                if (!window.blurred) {
+                    vm.progress(`width: ${elapsedTime.percent}%;`);
+                    vm.percent(elapsedTime.percent);
+                    vm.timeFormatted(elapsedTime.reversedFormatted);
+                }
+
+            } else {
 
                 vm.progress("width: 100%;");
                 vm.timeFormatted('has finished');
@@ -50,20 +58,12 @@ var clock = {
                     callRestModal();
                 }
 
-            } else {
-
-                vm.progress(`width: ${elapsedTime.percent}%;`);
-                vm.percent(elapsedTime.percent);
-                vm.timeFormatted(elapsedTime.reversedFormatted);
-                document.title = `${elapsedTime.reversedFormattedForTitle} ${vm.data.task().name}`
             }
         }
 
         if (!_.isEmpty(vm.data.pomodoro())) {
-            // count();
-            util.timerWorker.onmessage = (e) => {
-                count();
-            }
+            // util.timerWorker.onmessage = (e) => { count();}
+            util.timerWorker.onmessage = count;
         } else {
             util.timerWorker.onmessage = () => {}
         }
