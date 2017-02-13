@@ -381,6 +381,7 @@ widget.view = function (vm) {
             /* clock */
             m("#pomodoro-clock.ui.segment", [
                 m(clock, {
+                    key: JSON.stringify(vm.clock),
                     task: vm.clock.task,
                     pomodoro: vm.clock.pomodoro,
                     updatePomodoro: vm.updatePomodoro  //cb
