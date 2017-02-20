@@ -31,6 +31,7 @@ npm run dev
 
 ## 改进点
 
+- [ ] notification 可能出现阻塞导致的多个同时弹出
 - [ ] 添加查找功能, 根据标题和内容查找
 - [ ] make it resizable https://github.com/RickStrahl/jquery-resizable
 - [ ] 设计目标管理页面
