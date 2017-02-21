@@ -94,7 +94,7 @@ var clock = {
                     }, [
                         m("p", "1. create a todo task (today task)"),
                         m("p", "2. drag todo task into today task area"),
-                        m("p", "3. adjust count of pomodoro (max 5)"),
+                        m("p", "3. adjust count of pomodoro (max 10)"),
                         m("p", "4. click play to start your pomodoro, enjoy"),
                         m("p", "*. use #tag# syntax to create tags for the task"),
                     ]),

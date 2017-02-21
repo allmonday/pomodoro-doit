@@ -103,8 +103,8 @@ var today = {
                 ]),
 
                 m(".label.ui", {
-                    class: vm.today.pomodoros().length >= 5 ? "disabled" :"",
-                    onclick: vm.today.pomodoros().length >= 5 ? () => {}: () => {
+                    class: vm.today.pomodoros().length >= 10 ? "disabled" :"",
+                    onclick: vm.today.pomodoros().length >= 10 ? () => {}: () => {
                         vm.loading(true);
                         setTimeout(() => {
                             vm.loading(false);

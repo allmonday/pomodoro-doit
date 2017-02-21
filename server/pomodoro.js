@@ -383,7 +383,7 @@ dnd.route("/today/pomodoro")
         let id = req.body.id;
         Task.findOne({_id: id, user: req.user.id})
             .then((task) => {
-                if (task.pomodoros.length < 5) {
+                if (task.pomodoros.length < 10) {
                     task.pomodoros.push({})
                     return task.save()
                 } else {
