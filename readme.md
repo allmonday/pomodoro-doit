@@ -1,4 +1,4 @@
-# mithril demo
+# pomodoro doit
 
 ## demo
 <a href="https://www.pomodorodoit.com" target="_blank">https://www.pomodorodoit.com</a>
