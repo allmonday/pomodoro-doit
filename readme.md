@@ -1,7 +1,7 @@
 # mithril demo
 
 ## demo
-[https://www.pomodorodoit.com](https://www.pomodorodoit.com)
+<a href="https://www.pomodorodoit.com" target="_blank">https://www.pomodorodoit.com</a>
 
 ## start
 
