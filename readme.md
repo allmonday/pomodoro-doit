@@ -1,6 +1,7 @@
 # pomodoro doit
 
 ## demo
+
 <a href="https://www.pomodorodoit.com" target="_blank">https://www.pomodorodoit.com</a>
 
 ## start
@@ -13,8 +14,9 @@
 ### run
 
 ```shell
-cnpm install -g nodemon
-cnpm install -g istanbul
+npm install -g nodemon
+npm install -g istanbul
+npm install
 npm run dev
 ```
 
