@@ -91,7 +91,6 @@ io.on("connection", function (socket) {
     socket.on("refresh", function (roomName) {
         socket.broadcast.to(roomName).emit("refresh-broadcast");
     })
-
     socket.on("join", function (roomName) {
         socket.join(roomName);
     })
