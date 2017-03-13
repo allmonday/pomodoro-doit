@@ -436,7 +436,7 @@ dnd.route("/week")
         var today = moment().toDate();
         var weekAgo = moment().subtract(8, 'day').toDate();
         var query = {user: req.user.id, pomodoros: { $elemMatch: { status: true, startTime: {$gt: weekAgo, $lt: today} }}}
-        Task.find(query, { pomodoros: 1})
+        Task.find(query, { pomodoros: 1, tags: 1})
             .then((data) => {
                 res.send(data);
             }, (err) => {

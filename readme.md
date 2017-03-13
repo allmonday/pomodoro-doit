@@ -1,6 +1,16 @@
 # mithril demo
 
+## demo
+<a href="https://www.pomodorodoit.com" target="_blank">https://www.pomodorodoit.com</a>
+
 ## start
+
+### requirement
+
+- node
+- mongodb
+
+### run
 
 ```shell
 cnpm install -g nodemon
@@ -8,28 +18,7 @@ cnpm install -g istanbul
 npm run dev
 ```
 
-## todo
-- pause pomodoro
-- use separated panel editing note
-- rename
-    - Pomokodo
-- add account
-- edit task
-
-## 体验
-
-感觉还谈不上好用, 一来受制于浏览器页面之内, 无法做到app独立显示在窗口之中, 容易被忽视
-二是番茄用来预估时间的功能没有体现, 要显示出来今天还有多少时间的预估工作量
-
-2017-01-25, update:
-经过一阵子的修改, 处于基本可用的状态, 但是这个架构的可扩展性不佳, 如果要加功能, 需要做不小的重构
-
-- 数据库, nosql => sql
-- 后端, node -> node, go, scala, ruby 选一个
-- 前端 typescript + mithril (or React) + Redux
-
-
-## 改进点
+## improvments
 
 - [ ] notification 可能出现阻塞导致的多个同时弹出
 - [ ] 添加查找功能, 根据标题和内容查找
@@ -73,20 +62,20 @@ npm run dev
 - [x] 添加快捷键
 
 
-## 长期计划
-
-- [ ] server 端换个go 试试
-- [ ] react 重构
-- [ ] typescript
-- [ ] use scala as backend
-
-## pomotodo 收费功能清单, 研究下可用性
+## future
 
 - 重复任务提醒
 - 时钟长度设置
 - 补充番茄
-- 子任务 (?)
-- 周报功能 (邮件? 手动?)
+- 周报功能
 - 打断记录
 - 自定义音效 (到时提示和背景音效)
 - icon 的base64 img 实时变化挺好的
+
+## updates
+2017-01-25, update:
+经过一阵子的修改, 处于基本可用的状态, 但是这个架构的可扩展性不佳, 如果要加功能, 需要做不小的重构
+
+- 数据库, nosql => sql
+- 后端, node -> ruby
+- 前端 typescript + mithril(or react) + Redux
