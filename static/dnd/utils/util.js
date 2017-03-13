@@ -77,7 +77,7 @@ function notifyMe(name) {
     Notification.requestPermission();
   else {
     var notification = new Notification('Take a break!', {
-    //   requireInteraction: true,
+      requireInteraction: true,
       icon: '/imgs/tomato.png',
       body: name,
     });
