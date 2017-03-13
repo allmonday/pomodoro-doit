@@ -1,5 +1,5 @@
 # pomodoro doit
-
+[![Build Status](https://travis-ci.org/allmonday/pomodoro-doit.svg?branch=master)](https://travis-ci.org/allmonday/pomodoro-doit)
 ## demo
 
 <a href="https://www.pomodorodoit.com" target="_blank">https://www.pomodorodoit.com</a>
