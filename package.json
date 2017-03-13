@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && npm run build && mocha -w --recursive --reporter dot",
+    "test": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && npm run build && mocha --recursive --reporter dot",
+    "testw": "export MONGOURL='mongodb://localhost:27017/pomodoro-test' && npm run build && mocha -w --recursive --reporter dot",
     "cover": "istanbul cover ./node_modules/.bin/_mocha -- test/unit-test/*.js -R spec && open coverage/lcov-report/index.html",
     "build": "webpack",
     "publish": "export ENV='prod' && webpack -p",
